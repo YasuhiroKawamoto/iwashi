@@ -24,6 +24,8 @@ Scene* HelloWorld::createScene()
 // on "init" you need to initialize your instance
 bool HelloWorld::init()
 {
+	std::string str = "hello";
+
     /**  you can create scene with following comment code instead of using csb file.
     // 1. super init first
     if ( !Layer::init() )
