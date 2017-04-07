@@ -12,7 +12,7 @@ Scene* Play::createScene()
     auto scene = Scene::create();
     
     // 'layer' is an autorelease object
-    auto layer = HelloWorld::create();
+    auto layer = Play::create();
 
     // add layer as a child to scene
     scene->addChild(layer);
@@ -85,6 +85,13 @@ bool Play::init()
         return false;
     }
     
+	// updateを呼び出す設定
+	this->scheduleUpdate();
+
+	//
+	auto listener = cocos2d::EventListenerKeyboard::create();
+	listener->onKeyPressed = CC_CALLBACK_2(Play::onKeyPressed, this);
+
     auto rootNode = CSLoader::createNode("MainScene.csb");
 
     addChild(rootNode);
@@ -92,18 +99,65 @@ bool Play::init()
 	//　イワシは3秒に一回くらい
 	/* イワシ */
 	// イワシ生成
-	Sprite*iwashi = Sprite::create("");
+//	Sprite*iwashi = Sprite::create("");
 
-	this->addChild(iwashi);
-
+//	this->addChild(iwashi);
 
 	/* アクション？ */
 	// イワシ行動
 
+	// 親ノードの作成
+	m_pParentNode = Node::create();
+	m_pParentNode->setPosition(960, 50);
+
+	// １P初期化
+	m_player1 = Sprite::create("tekito.png");
+
+	m_pParentNode->addChild(m_player1);	// カーソルを親ノードに追加
+	
+	MoveBy* up = MoveBy::create(2, Vec3(0, 300, 0));
+	MoveBy* down = MoveBy::create(2, Vec3(0, -300, 0));
+
+	Sequence* upDown = Sequence::create(up, down, nullptr);
+	RepeatForever* rUpDown = RepeatForever::create(upDown);
+
+	m_pParentNode->runAction(rUpDown);
+
+	// 音波初期化
+	m_wave = Sprite::create("Images\\Sonic_1.png");
+	m_wave->setScale(0.4f);
+	m_wave->setVisible(false);
+
+	m_pParentNode->addChild(m_wave);	// 音波を親ノードに追加
 
 
+	this->addChild(m_pParentNode);
 
     return true;
+}
+
+// 毎フレーム呼び出されるupdate関数
+void Play::update(float delta)
+{
+
+
+}
+
+void Play::onKeyPressed(cocos2d::EventKeyboard::KeyCode key_code, cocos2d::Event* key_event)
+{
+
+	cocos2d::log("test");
+	switch (key_code)
+	{
+	case cocos2d::EventKeyboard::KeyCode::KEY_ENTER:
+		cocos2d::log("test");
+		m_wave->setVisible(true);
+		runAction(MoveBy::create(1, Vec3(0, 10, 0)));
+		break;
+	default:
+		break;
+	}
+
 }
 
 

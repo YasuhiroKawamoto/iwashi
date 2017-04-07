@@ -12,11 +12,24 @@ public:
     // Here's a difference. Method 'init' in cocos2d-x returns bool, instead of returning 'id' in cocos2d-iphone
     virtual bool init();
 
+	void update(float delta) override;
+
+	void onKeyPressed(cocos2d::EventKeyboard::KeyCode key_code, cocos2d::Event* key_event);
+
+	// プレイヤー1
+	cocos2d::Sprite* m_player1;
+
+	// 音波
+	cocos2d::Sprite* m_wave;
+
+	// プレイヤーと音波の親ノード
+	cocos2d::Node* m_pParentNode;
+
     // implement the "static create()" method manually
     CREATE_FUNC(Play);
 
 
-	cocos2d::Sprite*iwashi;
+	cocos2d::Sprite* iwashi;
 
 };
 
