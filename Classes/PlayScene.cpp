@@ -4,6 +4,13 @@
 
 USING_NS_CC;
 
+////////////////////////////////////////////////////////
+//														
+// 
+// 
+/////////////////////////////////////////////////////////
+
+
 using namespace cocostudio::timeline;
 
 Scene* Play::createScene()
@@ -12,7 +19,7 @@ Scene* Play::createScene()
     auto scene = Scene::create();
     
     // 'layer' is an autorelease object
-    auto layer = HelloWorld::create();
+    auto layer = Play::create();
 
     // add layer as a child to scene
     scene->addChild(layer);
@@ -93,14 +100,23 @@ bool Play::init()
 	/* イワシ */
 	// イワシ生成
 	Sprite*iwashi = Sprite::create("");
-
+	Sprite->setPosition(Vec2(100.0f, 0.0f));
 	this->addChild(iwashi);
 
 
-	/* アクション？ */
+	/* アクション */
 	// イワシ行動
 
+	Size screenSize = Director::getInstance()->getscreenSize();
+	auto iwashi = Sprite::create("");
+	iwashi->setPosition(Vec2(iwashi->getContentSize))
 
+	MoveTo*move = MoveTo::create(10.0f, Vec2(0.0f, 100.0f));
+
+
+	
+
+	iwasi->runaction();
 
 
     return true;

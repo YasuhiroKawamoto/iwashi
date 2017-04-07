@@ -15,7 +15,7 @@ public:
     // implement the "static create()" method manually
     CREATE_FUNC(Play);
 
-
+	// イワシのスプライト
 	cocos2d::Sprite*iwashi;
 
 };
