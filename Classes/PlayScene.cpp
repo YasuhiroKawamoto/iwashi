@@ -1,4 +1,4 @@
-#include "HelloWorldScene.h"
+#include "PlayScene.h"
 #include "cocostudio/CocoStudio.h"
 #include "ui/CocosGUI.h"
 
@@ -6,7 +6,7 @@ USING_NS_CC;
 
 using namespace cocostudio::timeline;
 
-Scene* HelloWorld::createScene()
+Scene* Play::createScene()
 {
     // 'scene' is an autorelease object
     auto scene = Scene::create();
@@ -22,7 +22,7 @@ Scene* HelloWorld::createScene()
 }
 
 // on "init" you need to initialize your instance
-bool HelloWorld::init()
+bool Play::init()
 {
     /**  you can create scene with following comment code instead of using csb file.
     // 1. super init first
@@ -77,6 +77,7 @@ bool HelloWorld::init()
     this->addChild(sprite, 0);
     **/
     
+
     //////////////////////////////
     // 1. super init first
     if ( !Layer::init() )
@@ -88,5 +89,21 @@ bool HelloWorld::init()
 
     addChild(rootNode);
 
+	//　イワシは3秒に一回くらい
+	/* イワシ */
+	// イワシ生成
+	Sprite*iwashi = Sprite::create("");
+
+	this->addChild(iwashi);
+
+
+	/* アクション？ */
+	// イワシ行動
+
+
+
+
     return true;
 }
+
+
