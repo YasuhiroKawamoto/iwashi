@@ -6,6 +6,11 @@
 # Icon must end with two \r
 Icon
 
+# User-specific files
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
 
 # Thumbnails
 ._*
