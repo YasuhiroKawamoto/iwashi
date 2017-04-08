@@ -7,7 +7,6 @@
 ****************************************************************************/
 /* ---- ライブラリのインクルード ---------- */
 #include "BackGround.h"
-#include "../GameManager.h"
 USING_NS_CC;
 
 bool BackGround::init()
