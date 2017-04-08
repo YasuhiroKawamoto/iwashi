@@ -6,6 +6,9 @@ USING_NS_CC;
 
 using namespace cocostudio::timeline;
 
+const int SPRIITE_SIZE = 256;
+const int SCREEN_WIDTH = 960;
+
 Scene* Play::createScene()
 {
     // 'scene' is an autorelease object
@@ -21,11 +24,28 @@ Scene* Play::createScene()
     return scene;
 }
 
+// ===========================================
+// @>概　要:タッチ座標に音波を生成
+//
+// @>引　数:タッチ座標
+//
+// @>戻り値:なし
+// ===========================================
 void  Play::CreateWave(Vec2 pos)
 {
-	m_wave = Sprite::create("Images\\Sonic_1.png");
+	// 画像ファイルの読み込み
+	m_wave = Sprite::create("Images\\wave_anm.png");
+
+	// 最初のパターン画像を切り抜き
+	m_wave->setTextureRect(Rect(0, 0, SPRIITE_SIZE, SPRIITE_SIZE));
+
+	// 座標をタッチ座標に変更
 	m_wave->setPosition(Vec2(pos.x, pos.y));
-	m_wave->setScale(0.6f);
+
+	// サイズをいい感じに調整
+	m_wave->setScale(0.4f);
+
+	// プレイシーンに追加
 	this->addChild(m_wave);
 }
 
@@ -109,23 +129,20 @@ bool Play::init()
 
     addChild(rootNode);
 
-	//　イワシは3秒に一回くらい
-	/* イワシ */
-	// イワシ生成
-//	Sprite*iwashi = Sprite::create("");
-
-//	this->addChild(iwashi);
-
-	/* アクション？ */
-	// イワシ行動
-
     return true;
 }
 
 // 毎フレーム呼び出されるupdate関数
 void Play::update(float delta)
 {
+	static int cnt = 0;
 
+	cnt++;
+	cnt %= 90;
+	if (m_wave != nullptr)
+	{
+		m_wave->setTextureRect(Rect(0, (cnt/30)*SPRIITE_SIZE, SPRIITE_SIZE, SPRIITE_SIZE));
+	}
 }
 
 bool Play::onTouchBegan(cocos2d::Touch* touch, cocos2d::Event* unused_event)
@@ -140,23 +157,22 @@ bool Play::onTouchBegan(cocos2d::Touch* touch, cocos2d::Event* unused_event)
 	}
 
 	// 画面半部より左がタップされたときの処理
-	if (touch_pos.x < (960 / 2))
+	if (touch_pos.x < (SCREEN_WIDTH / 2))
 	{
 		Play::CreateWave(Vec2(0, touch_pos.y));
 		m_wave->setFlippedX(true);
 
-		// 音波移動
-		m_wave->runAction(MoveBy::create(2.0f, Vec3(1000, 0, 0)));
+		// 画面外まで音波移動
+		m_wave->runAction(MoveBy::create(4.0f, Vec3(SCREEN_WIDTH+ SCREEN_WIDTH, 0, 0)));
 		return true;
 	}
 
-	// 画面半部より右がタップされたときの処理
-	else
+	else // 画面半部より右がタップされたときの処理
 	{
-		Play::CreateWave(Vec2(960, touch_pos.y));
+		Play::CreateWave(Vec2(SCREEN_WIDTH, touch_pos.y));
 
-		// 音波移動
-		m_wave->runAction(MoveBy::create(2.0f, Vec3(-1000, 0, 0)));
+		// 画面外まで音波移動
+		m_wave->runAction(MoveBy::create(4.0f, Vec3(-(SCREEN_WIDTH+SCREEN_WIDTH), 0, 0)));
 		return true;
 	}
 
