@@ -4,13 +4,6 @@
 
 USING_NS_CC;
 
-////////////////////////////////////////////////////////
-//														
-// 
-// 
-/////////////////////////////////////////////////////////
-
-
 using namespace cocostudio::timeline;
 
 Scene* Play::createScene()
@@ -26,6 +19,14 @@ Scene* Play::createScene()
 
     // return the scene
     return scene;
+}
+
+void  Play::CreateWave(Vec2 pos)
+{
+	m_wave = Sprite::create("Images\\Sonic_1.png");
+	m_wave->setPosition(Vec2(pos.x, pos.y));
+	m_wave->setScale(0.6f);
+	this->addChild(m_wave);
 }
 
 // on "init" you need to initialize your instance
@@ -92,6 +93,18 @@ bool Play::init()
         return false;
     }
     
+	// updateを呼び出す設定
+	this->scheduleUpdate();
+
+	// イベントリスナーを作成
+	EventListenerTouchOneByOne* listener = EventListenerTouchOneByOne::create();
+
+	// イベントリスナーに各コールバック関数をセットする
+	listener->onTouchBegan = CC_CALLBACK_2(Play::onTouchBegan, this);
+
+
+	_eventDispatcher->addEventListenerWithSceneGraphPriority(listener, this);
+
     auto rootNode = CSLoader::createNode("MainScene.csb");
 
     addChild(rootNode);
@@ -99,27 +112,54 @@ bool Play::init()
 	//　イワシは3秒に一回くらい
 	/* イワシ */
 	// イワシ生成
-	Sprite*iwashi = Sprite::create("");
-	Sprite->setPosition(Vec2(100.0f, 0.0f));
-	this->addChild(iwashi);
+//	Sprite*iwashi = Sprite::create("");
 
+//	this->addChild(iwashi);
 
-	/* アクション */
+	/* アクション？ */
 	// イワシ行動
-
-	Size screenSize = Director::getInstance()->getscreenSize();
-	auto iwashi = Sprite::create("");
-	iwashi->setPosition(Vec2(iwashi->getContentSize))
-
-	MoveTo*move = MoveTo::create(10.0f, Vec2(0.0f, 100.0f));
-
-
-	
-
-	iwasi->runaction();
-
 
     return true;
 }
 
+// 毎フレーム呼び出されるupdate関数
+void Play::update(float delta)
+{
 
+}
+
+bool Play::onTouchBegan(cocos2d::Touch* touch, cocos2d::Event* unused_event)
+{
+	// タッチ座標を取得
+	Vec2 touch_pos = touch->getLocation();
+
+	// y座標に制限を付ける
+	if (touch_pos.y > 400)
+	{
+		touch_pos.y = 400;
+	}
+
+	// 画面半部より左がタップされたときの処理
+	if (touch_pos.x < (960 / 2))
+	{
+		Play::CreateWave(Vec2(0, touch_pos.y));
+		m_wave->setFlippedX(true);
+
+		// 音波移動
+		m_wave->runAction(MoveBy::create(2.0f, Vec3(1000, 0, 0)));
+		return true;
+	}
+
+	// 画面半部より右がタップされたときの処理
+	else
+	{
+		Play::CreateWave(Vec2(960, touch_pos.y));
+
+		// 音波移動
+		m_wave->runAction(MoveBy::create(2.0f, Vec3(-1000, 0, 0)));
+		return true;
+	}
+
+	return false;
+
+}
