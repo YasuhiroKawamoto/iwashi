@@ -20,16 +20,32 @@ public:
 	bool onTouchBegan(cocos2d::Touch* touch, cocos2d::Event* unused_event);
 
 	// 音波生成関数
-	void CreateWave(cocos2d::Vec2 pos);
+	void CreateWave(cocos2d::Vec2 pos, int player);
 
-	// プレイヤー1
-	cocos2d::Sprite* m_player1;
+	// 音波が画面外に出たら再発射可能にする
+	void Reload();
 
-	// プレイヤー2
-	cocos2d::Sprite* m_player2;
+	// アニメーション更新
+	void AnimationUpdate();
+
+
+
+	// 背景
+	cocos2d::Sprite* m_bg;
 
 	// 音波
-	cocos2d::Sprite* m_wave;
+	cocos2d::Sprite* m_parent_wave;	// 全ての音波の親ノード
+	cocos2d::Sprite* m_wave[2];		// 音波のスプライト
+
+	// それぞれのプレイヤが音波を発射出来るか
+	bool canShoot_1p;
+	bool canShoot_2p;
+
+	int se_wave;
+	int bgm_play;
+	int m_animation_cnt;
+
+
 
 
     // implement the "static create()" method manually

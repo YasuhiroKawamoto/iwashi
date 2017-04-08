@@ -2,12 +2,26 @@
 #include "cocostudio/CocoStudio.h"
 #include "ui/CocosGUI.h"
 
+#include "audio\include\AudioEngine.h"
+
+
 USING_NS_CC;
 
+using namespace cocos2d::experimental;
 using namespace cocostudio::timeline;
 
 const int SPRIITE_SIZE = 256;
 const int SCREEN_WIDTH = 960;
+
+const int ANIMETION＿PUTTURNS = 3;
+const int ANIMETION＿FRAME = 30;
+
+
+enum PLAYER
+{
+	PLAYER_1,
+	PLAYER_2
+};
 
 Scene* Play::createScene()
 {
@@ -27,27 +41,83 @@ Scene* Play::createScene()
 // ===========================================
 // @>概　要:タッチ座標に音波を生成
 //
-// @>引　数:タッチ座標
+// @>引　数:タッチ座標(Vec2), どっちのプレイヤーがうったか(int)
 //
 // @>戻り値:なし
 // ===========================================
-void  Play::CreateWave(Vec2 pos)
+void  Play::CreateWave(Vec2 pos, int player)
 {
-	// 画像ファイルの読み込み
-	m_wave = Sprite::create("Images\\wave_anm.png");
 
-	// 最初のパターン画像を切り抜き
-	m_wave->setTextureRect(Rect(0, 0, SPRIITE_SIZE, SPRIITE_SIZE));
+		// 画像ファイルの読み込み
+		m_wave[player] = Sprite::create("Images\\wave_anm.png");
 
-	// 座標をタッチ座標に変更
-	m_wave->setPosition(Vec2(pos.x, pos.y));
+		// 最初のパターン画像を切り抜き
+		m_wave[player]->setTextureRect(Rect(0, 0, SPRIITE_SIZE, SPRIITE_SIZE));
 
-	// サイズをいい感じに調整
-	m_wave->setScale(0.4f);
+		// 座標をタッチ座標に変更
+		m_wave[player]->setPosition(Vec2(pos.x, pos.y));
 
-	// プレイシーンに追加
-	this->addChild(m_wave);
+		// サイズをいい感じに調整
+		m_wave[player]->setScale(0.4f);
+
+	
+	// 親ノードに追加
+	this->addChild(m_wave[player]);
 }
+
+
+// ===========================================
+// @>概　要:音波が画面外に出たら再発射可能にする
+//
+// @>引　数:なし
+//
+// @>戻り値:なし
+// ===========================================
+void Play::Reload()
+{
+	// 画面外に出たら発射状態を回復
+	if (m_wave[PLAYER_1] != nullptr)
+	{
+		if (m_wave[PLAYER_1]->getPosition().x > SCREEN_WIDTH)
+		{
+			canShoot_1p = true;
+		}
+	}
+
+	if (m_wave[PLAYER_2] != nullptr)
+	{
+		if (m_wave[PLAYER_2]->getPosition().x < 0)
+		{
+			canShoot_2p = true;
+		}
+	}
+}
+
+// ===========================================
+// @>概　要:アニメーションの更新
+//
+// @>引　数:なし
+//
+// @>戻り値:なし
+// ===========================================
+void Play::AnimationUpdate()
+{
+	// アニメ―ションカウントの増加
+	m_animation_cnt++;
+
+	// 最大90フレーム設定
+	m_animation_cnt %= ANIMETION＿FRAME * ANIMETION＿PUTTURNS;
+
+	// 2つの音波のスプライトをそれぞれ切り替える
+	for (int i = 0; i < 2; i++)
+	{
+		if (m_wave[i] != nullptr)
+		{
+			m_wave[i]->setTextureRect(Rect(0, (m_animation_cnt / ANIMETION＿FRAME)*SPRIITE_SIZE, SPRIITE_SIZE, SPRIITE_SIZE));
+		}
+	}
+}
+
 
 // on "init" you need to initialize your instance
 bool Play::init()
@@ -113,6 +183,12 @@ bool Play::init()
         return false;
     }
     
+	// 変数初期化
+	m_animation_cnt = 0;
+
+	canShoot_1p = true;
+	canShoot_2p = true;
+
 	// updateを呼び出す設定
 	this->scheduleUpdate();
 
@@ -121,13 +197,29 @@ bool Play::init()
 
 	// イベントリスナーに各コールバック関数をセットする
 	listener->onTouchBegan = CC_CALLBACK_2(Play::onTouchBegan, this);
-
-
+	
 	_eventDispatcher->addEventListenerWithSceneGraphPriority(listener, this);
 
-    auto rootNode = CSLoader::createNode("MainScene.csb");
 
-    addChild(rootNode);
+	// 背景
+	m_bg = Sprite::create("Images\\BG.png");
+	m_bg->setAnchorPoint(Vec2(0, 0));
+	this->addChild(m_bg);
+
+	// BGMのプリロード
+	AudioEngine::preload("Sounds\\SeenBGM.ogg");
+
+	// SEのプリロード
+	AudioEngine::preload("Sounds\\Sonic.ogg");
+
+	// 親ノードを作成
+	m_parent_wave = Sprite::create();
+
+	// 親ノードをシーンに追加
+	this->addChild(m_parent_wave);
+
+	// BGM再生
+	se_wave = AudioEngine::play2d("Sounds\\SeenBGM.ogg", true);
 
     return true;
 }
@@ -135,14 +227,12 @@ bool Play::init()
 // 毎フレーム呼び出されるupdate関数
 void Play::update(float delta)
 {
-	static int cnt = 0;
+	// アニメーション更新
+	AnimationUpdate();
 
-	cnt++;
-	cnt %= 90;
-	if (m_wave != nullptr)
-	{
-		m_wave->setTextureRect(Rect(0, (cnt/30)*SPRIITE_SIZE, SPRIITE_SIZE, SPRIITE_SIZE));
-	}
+	// 画面外に出たら発射状態を回復
+	Reload();
+
 }
 
 bool Play::onTouchBegan(cocos2d::Touch* touch, cocos2d::Event* unused_event)
@@ -159,23 +249,49 @@ bool Play::onTouchBegan(cocos2d::Touch* touch, cocos2d::Event* unused_event)
 	// 画面半部より左がタップされたときの処理
 	if (touch_pos.x < (SCREEN_WIDTH / 2))
 	{
-		Play::CreateWave(Vec2(0, touch_pos.y));
-		m_wave->setFlippedX(true);
+		// 発射可能状態の時
+		if (canShoot_1p)
+		{
+			Play::CreateWave(Vec2(0, touch_pos.y), PLAYER_1);
+			m_wave[0]->setFlippedX(true);
 
-		// 画面外まで音波移動
-		m_wave->runAction(MoveBy::create(4.0f, Vec3(SCREEN_WIDTH+ SCREEN_WIDTH, 0, 0)));
-		return true;
+			// アニメーションリセット
+			m_animation_cnt = 0;
+
+			// 発射を不可に
+			canShoot_1p = false;
+
+			// 画面外まで音波移動
+			m_wave[PLAYER_1]->runAction(MoveBy::create(4.0f, Vec3(SCREEN_WIDTH + SCREEN_WIDTH, 0, 0)));
+
+			// SE再生
+			se_wave = AudioEngine::play2d("Sounds\\Sonic.ogg");
+
+			return true;
+		}
 	}
 
 	else // 画面半部より右がタップされたときの処理
 	{
-		Play::CreateWave(Vec2(SCREEN_WIDTH, touch_pos.y));
+		// 発射可能状態の時
+		if (canShoot_2p)
+		{
+			Play::CreateWave(Vec2(SCREEN_WIDTH, touch_pos.y), PLAYER_2);
 
-		// 画面外まで音波移動
-		m_wave->runAction(MoveBy::create(4.0f, Vec3(-(SCREEN_WIDTH+SCREEN_WIDTH), 0, 0)));
-		return true;
+			// アニメーションリセット
+			m_animation_cnt = 0;
+
+			// 発射を不可に
+			canShoot_2p = false;
+
+			// 画面外まで音波移動
+			m_wave[PLAYER_2]->runAction(MoveBy::create(4.0f, Vec3(-(SCREEN_WIDTH + SCREEN_WIDTH), 0, 0)));
+
+			// SE再生
+			se_wave = AudioEngine::play2d("Sounds\\Sonic.ogg");
+
+			return true;
+		}
 	}
-
 	return false;
-
 }
