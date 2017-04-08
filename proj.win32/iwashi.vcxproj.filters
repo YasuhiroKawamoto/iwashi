@@ -10,6 +10,9 @@
     <Filter Include="src">
       <UniqueIdentifier>{bb6c862e-70e9-49d9-81b7-3829a6f50471}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ResultScene">
+      <UniqueIdentifier>{07f61f9d-1aa4-473c-bd59-34a3bc4b1c81}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -24,6 +27,18 @@
     <ClCompile Include="..\Classes\PlayScene.cpp">
       <Filter>src</Filter>
     </ClCompile>
+    <ClCompile Include="..\Classes\ResultScene\BackGround.cpp">
+      <Filter>ResultScene</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\ResultScene\ResultLayer.cpp">
+      <Filter>ResultScene</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\ResultScene\ResultScene.cpp">
+      <Filter>ResultScene</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\ResultScene\Score.cpp">
+      <Filter>ResultScene</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="main.h">
@@ -37,6 +52,18 @@
     </ClInclude>
     <ClInclude Include="..\Classes\PlayScene.h">
       <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\ResultScene\BackGround.h">
+      <Filter>ResultScene</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\ResultScene\ResultLayer.h">
+      <Filter>ResultScene</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\ResultScene\ResultScene.h">
+      <Filter>ResultScene</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\ResultScene\Score.h">
+      <Filter>ResultScene</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
