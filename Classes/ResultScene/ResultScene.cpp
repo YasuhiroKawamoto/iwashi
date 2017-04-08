@@ -1,8 +1,8 @@
 /***************************************************************************
 *|
-*|	概要　　PlaySceneクラスの定義
-*|　作成者　GF3 17 中田湧介
-*|　作成日　2017/2/28
+*|	概要　　ResultSceneクラスの定義
+*|　作成者　GS2 16 中田湧介
+*|　作成日　2017/4/08
 *|___________________________________________________________________________
 ****************************************************************************/
 
@@ -10,6 +10,7 @@
 #include "ResultScene.h"
 #include "ResultLayer.h"
 #include "EventListenerGesture.h"
+#include "ResultScene\Score.h"
 #include "audio\include\AudioEngine.h"
 USING_NS_CC;
 using namespace cocos2d::experimental;
@@ -76,7 +77,9 @@ bool ResultScene::onTouchBegan(Touch* touch, Event* pEvent)
 	//Scene* nextScene = TitleScene::create();
 	////フェードトランジション
 	//nextScene = TransitionOriginal::create(1.0f, nextScene);
-
+	if (Score::SceneFlag == true)
+	{
+	}
 	//// 次のシーンに移行
 	//_director->replaceScene(nextScene);
 	//int id = AudioEngine::play2d("Sonic.ogg");
