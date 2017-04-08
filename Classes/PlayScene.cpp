@@ -77,20 +77,20 @@ Scene* Play::createScene()
 void  Play::CreateWave(Vec2 pos, int player)
 {
 
-		// 画像ファイルの読み込み
-		m_wave[player] = Sprite::create("Images\\wave_anm.png");
+	// 画像ファイルの読み込み
+	m_wave[player] = Sprite::create("Images\\wave_anm.png");
 
-		// 最初のパターン画像を切り抜き
-		m_wave[player]->setTextureRect(Rect(0, 0, SPRIITE_SIZE, SPRIITE_SIZE));
+	// 最初のパターン画像を切り抜き
+	m_wave[player]->setTextureRect(Rect(0, 0, SPRIITE_SIZE, SPRIITE_SIZE));
 
-		// 座標をタッチ座標に変更
-		m_wave[player]->setPosition(Vec2(pos.x, pos.y));
+	// 座標をタッチ座標に変更
+	m_wave[player]->setPosition(Vec2(pos.x, pos.y));
 
-		// サイズをいい感じに調整
-		m_wave[player]->setScale(0.4f);
+	// サイズをいい感じに調整
+	m_wave[player]->setScale(0.4f);
 
-	
-	// 親ノードに追加
+
+	// シーンに追加
 	this->addChild(m_wave[player]);
 }
 
@@ -135,14 +135,14 @@ void Play::AnimationUpdate()
 	m_animation_cnt++;
 
 	// 最大90フレーム設定
-	m_animation_cnt %= ANIMETION＿FRAME * ANIMETION＿PUTTURNS;
+	m_animation_cnt %= 90;
 
 	// 2つの音波のスプライトをそれぞれ切り替える
 	for (int i = 0; i < 2; i++)
 	{
 		if (m_wave[i] != nullptr)
 		{
-			m_wave[i]->setTextureRect(Rect(0, (m_animation_cnt / ANIMETION＿FRAME)*SPRIITE_SIZE, SPRIITE_SIZE, SPRIITE_SIZE));
+			m_wave[i]->setTextureRect(Rect(0, (m_animation_cnt / 30)*SPRIITE_SIZE, SPRIITE_SIZE, SPRIITE_SIZE));
 		}
 	}
 }
@@ -155,18 +155,19 @@ void Play::AnimationUpdate()
 //!
 //! @return なし
 //----------------------------------------------------------------------
-//void Play::RenderTimeLabel()
-//{
-//	//中心座標
-//	auto size = Director::getInstance()->getWinSize();
-//	//タイマー ラベルの追加
-//	int second = static_cast < int >(m_timer); // int 型 に キャスト する
-//	auto timeLabel = Label::createWithSystemFont(StringUtils::toString(second), "Arial Felt", 16);
-//	timeLabel->setPosition(Vec2(size.width - TIME_LABEL_WIDTH, size.height - TIME_LABEL_HEIGHT));
-//	timeLabel->setScale(SCALSE_SIZE);
-//	this->setTimeLabel(timeLabel);
-//	this->addChild(m_TimeLabel);
-//}
+void Play::RenderTimeLabel()
+{
+	//中心座標
+	auto size = Director::getInstance()->getWinSize();
+	//タイマー ラベルの追加
+	int second = static_cast < int >(m_timer); // int 型 に キャスト する
+	auto timeLabel = Label::createWithSystemFont(StringUtils::toString(second), "Arial Felt", 16);
+	timeLabel->setPosition(Vec2(size.width - TIME_LABEL_WIDTH, size.height - TIME_LABEL_HEIGHT));
+	timeLabel->setScale(SCALSE_SIZE);
+	this->setTimeLabel(timeLabel);
+	this->addChild(m_TimeLabel);
+}
+
 //----------------------------------------------------------------------
 //! @brief RendertextTimeLabel
 //!
@@ -280,10 +281,18 @@ bool Play::init()
 	canShoot_1p = true;
 	canShoot_2p = true;
 
-	auto rootNode = CSLoader::createNode("MainScene.csb");
+	for (int i = 0; i < 2; i++)
+	{
+		m_wave[i] = nullptr;
+	}
 
-	addChild(rootNode);
 
+	// 背景
+	m_bg = Sprite::create("Images\\BG.png");
+	m_bg->setAnchorPoint(Vec2(0, 0));
+	this->addChild(m_bg);
+
+	// TIME描画
 	RenderTimeLabel();
 	RendertextTimeLabel();
 
@@ -298,23 +307,11 @@ bool Play::init()
 	
 	_eventDispatcher->addEventListenerWithSceneGraphPriority(listener, this);
 
-
-	// 背景
-	m_bg = Sprite::create("Images\\BG.png");
-	m_bg->setAnchorPoint(Vec2(0, 0));
-	this->addChild(m_bg);
-
 	// BGMのプリロード
 	AudioEngine::preload("Sounds\\SeenBGM.ogg");
 
 	// SEのプリロード
 	AudioEngine::preload("Sounds\\Sonic.ogg");
-
-	// 親ノードを作成
-	m_parent_wave = Sprite::create();
-
-	// 親ノードをシーンに追加
-	this->addChild(m_parent_wave);
 
 	// BGM再生
 	se_wave = AudioEngine::play2d("Sounds\\SeenBGM.ogg", true);
@@ -355,8 +352,10 @@ void Play::update(float delta)
 
 	// 画面外に出たら発射状態を回復
 	Reload();
-	UpadateTime();//残り時間の更新
-	static int cnt = 0;
+
+	//残り時間の更新
+	UpadateTime();
+
 
 }
 //----------------------------------------------------------------------

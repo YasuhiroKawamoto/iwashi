@@ -24,10 +24,10 @@ public:
 	// 音波生成関数
 	void CreateWave(cocos2d::Vec2 pos, int player);
 
-<<<<<<< HEAD
+
 	// 音波が画面外に出たら再発射可能にする
 	void Reload();
-=======
+
 	//残り時間の描画関数
 	void RenderTimeLabel();
 	//TIMEの描画関数
@@ -36,7 +36,6 @@ public:
 	void UpadateTime();
 	// プレイヤー1
 	cocos2d::Sprite* m_player1;
->>>>>>> 28ebc700a722ea50db509ecbd38ff83fea90b0ad
 
 	// アニメーション更新
 	void AnimationUpdate();
@@ -46,8 +45,7 @@ public:
 	// 背景
 	cocos2d::Sprite* m_bg;
 
-	// 音波
-	cocos2d::Sprite* m_parent_wave;	// 全ての音波の親ノード
+	// 音波	
 	cocos2d::Sprite* m_wave[2];		// 音波のスプライト
 
 	// それぞれのプレイヤが音波を発射出来るか
