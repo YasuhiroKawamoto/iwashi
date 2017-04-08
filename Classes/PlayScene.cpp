@@ -21,6 +21,14 @@ Scene* Play::createScene()
     return scene;
 }
 
+void  Play::CreateWave(Vec2 pos)
+{
+	m_wave = Sprite::create("Images\\Sonic_1.png");
+	m_wave->setPosition(Vec2(pos.x, pos.y));
+	m_wave->setScale(0.6f);
+	this->addChild(m_wave);
+}
+
 // on "init" you need to initialize your instance
 bool Play::init()
 {
@@ -88,9 +96,14 @@ bool Play::init()
 	// updateを呼び出す設定
 	this->scheduleUpdate();
 
-	//
-	auto listener = cocos2d::EventListenerKeyboard::create();
-	listener->onKeyPressed = CC_CALLBACK_2(Play::onKeyPressed, this);
+	// イベントリスナーを作成
+	EventListenerTouchOneByOne* listener = EventListenerTouchOneByOne::create();
+
+	// イベントリスナーに各コールバック関数をセットする
+	listener->onTouchBegan = CC_CALLBACK_2(Play::onTouchBegan, this);
+
+
+	_eventDispatcher->addEventListenerWithSceneGraphPriority(listener, this);
 
     auto rootNode = CSLoader::createNode("MainScene.csb");
 
@@ -106,33 +119,6 @@ bool Play::init()
 	/* アクション？ */
 	// イワシ行動
 
-	// 親ノードの作成
-	m_pParentNode = Node::create();
-	m_pParentNode->setPosition(960, 50);
-
-	// １P初期化
-	m_player1 = Sprite::create("tekito.png");
-
-	m_pParentNode->addChild(m_player1);	// カーソルを親ノードに追加
-	
-	MoveBy* up = MoveBy::create(2, Vec3(0, 300, 0));
-	MoveBy* down = MoveBy::create(2, Vec3(0, -300, 0));
-
-	Sequence* upDown = Sequence::create(up, down, nullptr);
-	RepeatForever* rUpDown = RepeatForever::create(upDown);
-
-	m_pParentNode->runAction(rUpDown);
-
-	// 音波初期化
-	m_wave = Sprite::create("Images\\Sonic_1.png");
-	m_wave->setScale(0.4f);
-	m_wave->setVisible(false);
-
-	m_pParentNode->addChild(m_wave);	// 音波を親ノードに追加
-
-
-	this->addChild(m_pParentNode);
-
     return true;
 }
 
@@ -140,24 +126,40 @@ bool Play::init()
 void Play::update(float delta)
 {
 
-
 }
 
-void Play::onKeyPressed(cocos2d::EventKeyboard::KeyCode key_code, cocos2d::Event* key_event)
+bool Play::onTouchBegan(cocos2d::Touch* touch, cocos2d::Event* unused_event)
 {
+	// タッチ座標を取得
+	Vec2 touch_pos = touch->getLocation();
 
-	cocos2d::log("test");
-	switch (key_code)
+	// y座標に制限を付ける
+	if (touch_pos.y > 400)
 	{
-	case cocos2d::EventKeyboard::KeyCode::KEY_ENTER:
-		cocos2d::log("test");
-		m_wave->setVisible(true);
-		runAction(MoveBy::create(1, Vec3(0, 10, 0)));
-		break;
-	default:
-		break;
+		touch_pos.y = 400;
 	}
 
+	// 画面半部より左がタップされたときの処理
+	if (touch_pos.x < (960 / 2))
+	{
+		Play::CreateWave(Vec2(0, touch_pos.y));
+		m_wave->setFlippedX(true);
+
+		// 音波移動
+		m_wave->runAction(MoveBy::create(2.0f, Vec3(1000, 0, 0)));
+		return true;
+	}
+
+	// 画面半部より右がタップされたときの処理
+	else
+	{
+		Play::CreateWave(Vec2(960, touch_pos.y));
+
+		// 音波移動
+		m_wave->runAction(MoveBy::create(2.0f, Vec3(-1000, 0, 0)));
+		return true;
+	}
+
+	return false;
+
 }
-
-
