@@ -25,11 +25,11 @@ public:
 	void CreateWave(cocos2d::Vec2 pos);
 
 	//残り時間の描画関数
-	//void RenderTimeLabel();
+	void RenderTimeLabel();
 	//TIMEの描画関数
-	//void RendertextTimeLabel();
+	void RendertextTimeLabel();
 	//残り時間の更新関数
-	//void UpadateTime();
+	void UpadateTime();
 	// プレイヤー1
 	cocos2d::Sprite* m_player1;
 
@@ -40,8 +40,8 @@ public:
 	cocos2d::Sprite* m_wave;
 
 
-	//CC_SYNTHESIZE(float, m_timer, Second);//残り秒数をfloatに変換する
-	//CC_SYNTHESIZE_RETAIN(cocos2d::Label*, m_TimeLabel, TimeLabel);//ラベルを新しくセットする関数をつくる
+	CC_SYNTHESIZE(float, m_timer, Second);//残り秒数をfloatに変換する
+	CC_SYNTHESIZE_RETAIN(cocos2d::Label*, m_TimeLabel, TimeLabel);//ラベルを新しくセットする関数をつくる
 
     // implement the "static create()" method manually
     CREATE_FUNC(Play);
