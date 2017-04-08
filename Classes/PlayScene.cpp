@@ -6,26 +6,29 @@ USING_NS_CC;
 
 using namespace cocostudio::timeline;
 
-//const float TIME_LIMIT_SECOND = 1800;//残り時間（６０秒）
-//const float DECREASE_TIME = 0.5;//減っていく時間
-//const int RETURN_TIME = 30;//fpsを分単位に戻す
-//const float SCALSE_SIZE = 5.0;
-//const int TIME_LABEL_WIDTH = 350;
-//const int TIME_LABEL_HEIGHT = 70;
-//const int TEXT_TIME_LABEL_WIDTH = 550;
-//const int TEXT_TIME_LABEL_HEIGHT = 70;
+const float TIME_LIMIT_SECOND = 1800;//残り時間（６０秒）
+const float DECREASE_TIME = 0.5;//減っていく時間
+const int RETURN_TIME = 30;//fpsを分単位に戻す
+const float SCALSE_SIZE = 5.0;//文字を大きくするサイズ
+//ラベルの高さと幅
+const int TIME_LABEL_WIDTH = 350;
+const int TIME_LABEL_HEIGHT = 70;
+const int TEXT_TIME_LABEL_WIDTH = 550;
+const int TEXT_TIME_LABEL_HEIGHT = 70;
 
-////コンストラクタ
-//Play::Play()
-//	:m_timer(TIME_LIMIT_SECOND)
-//	, m_TimeLabel(NULL)
-//{
-//}
-////デストラクター
-//Play::~Play()
-//{
-//	CC_SAFE_RELEASE_NULL(m_TimeLabel);//m_TimeLabelを破棄
-//}
+const int SPRIITE_SIZE = 256;
+const int SCREEN_WIDTH = 960;
+//コンストラクタ
+Play::Play()
+	:m_timer(TIME_LIMIT_SECOND)
+	, m_TimeLabel(NULL)
+{
+}
+//デストラクター
+Play::~Play()
+{
+	CC_SAFE_RELEASE_NULL(m_TimeLabel);//m_TimeLabelを破棄
+}
 //----------------------------------------------------------------------
 //! @brief createScene
 //!
@@ -47,18 +50,28 @@ Scene* Play::createScene()
     // return the scene
     return scene;
 }
-//----------------------------------------------------------------------
-//! @brief CreateWave
-//!
-//! @param[in] Vec2 pos
-//!
-//! @return なし
-//----------------------------------------------------------------------
+// ===========================================
+// @>概　要:タッチ座標に音波を生成
+//
+// @>引　数:タッチ座標
+//
+// @>戻り値:なし
+// ===========================================
 void  Play::CreateWave(Vec2 pos)
 {
-	m_wave = Sprite::create("Images\\Sonic_1.png");
+	// 画像ファイルの読み込み
+	m_wave = Sprite::create("Images\\wave_anm.png");
+
+	// 最初のパターン画像を切り抜き
+	m_wave->setTextureRect(Rect(0, 0, SPRIITE_SIZE, SPRIITE_SIZE));
+
+	// 座標をタッチ座標に変更
 	m_wave->setPosition(Vec2(pos.x, pos.y));
-	m_wave->setScale(0.6f);
+
+	// サイズをいい感じに調整
+	m_wave->setScale(0.4f);
+
+	// プレイシーンに追加
 	this->addChild(m_wave);
 }
 //----------------------------------------------------------------------
@@ -88,17 +101,17 @@ void  Play::CreateWave(Vec2 pos)
 //! @return なし
 //----------------------------------------------------------------------
 
-//void Play::RendertextTimeLabel()
-//{
-//	//中心座標
-//	auto size = Director::getInstance()->getWinSize();
-//
-//	// タイマーヘッダーの追加
-//	auto textTimeLabel = Label::createWithSystemFont(" TIME", "Arial Felt", 16);
-//	textTimeLabel->setPosition(Vec2(size.width - TEXT_TIME_LABEL_WIDTH, size.height - TEXT_TIME_LABEL_HEIGHT));
-//	textTimeLabel->setScale(SCALSE_SIZE);
-//	this->addChild(textTimeLabel);
-//}
+void Play::RendertextTimeLabel()
+{
+	//中心座標
+	auto size = Director::getInstance()->getWinSize();
+
+	// タイマーヘッダーの追加
+	auto textTimeLabel = Label::createWithSystemFont(" TIME", "Arial Felt", 16);
+	textTimeLabel->setPosition(Vec2(size.width - TEXT_TIME_LABEL_WIDTH, size.height - TEXT_TIME_LABEL_HEIGHT));
+	textTimeLabel->setScale(SCALSE_SIZE);
+	this->addChild(textTimeLabel);
+}
 //----------------------------------------------------------------------
 //! @brief UpadateTime
 //!
@@ -107,14 +120,14 @@ void  Play::CreateWave(Vec2 pos)
 //! @return なし
 //----------------------------------------------------------------------
 
-//void Play::UpadateTime()
-//{
-//	// 残り 秒 数 を 減らす
-//	m_timer -= DECREASE_TIME;
-//	// 残り 秒 数 の 表示 を 更新 する
-//	int second = static_cast < int >(m_timer / RETURN_TIME); // int 型 に キャスト する
-//	m_TimeLabel->setString(StringUtils::toString(second));
-//}
+void Play::UpadateTime()
+{
+	// 残り 秒 数 を 減らす
+	m_timer -= DECREASE_TIME;
+	// 残り 秒 数 の 表示 を 更新 する
+	int second = static_cast < int >(m_timer / RETURN_TIME); // int 型 に キャスト する
+	m_TimeLabel->setString(StringUtils::toString(second));
+}
 //----------------------------------------------------------------------
 //! @brief init
 //!
@@ -186,10 +199,10 @@ bool Play::init()
     }
 	auto rootNode = CSLoader::createNode("MainScene.csb");
 
-	//addChild(rootNode);
+	addChild(rootNode);
 
-	//RenderTimeLabel();
-	//RendertextTimeLabel();
+	RenderTimeLabel();
+	RendertextTimeLabel();
 
 	// updateを呼び出す設定
 	this->scheduleUpdate();
@@ -231,7 +244,15 @@ bool Play::init()
 //----------------------------------------------------------------------
 void Play::update(float delta)
 {
-	//UpadateTime();//残り時間の更新
+	UpadateTime();//残り時間の更新
+	static int cnt = 0;
+
+	cnt++;
+	cnt %= 90;
+	if (m_wave != nullptr)
+	{
+		m_wave->setTextureRect(Rect(0, (cnt/30)*SPRIITE_SIZE, SPRIITE_SIZE, SPRIITE_SIZE));
+	}
 }
 //----------------------------------------------------------------------
 //! @brief onTouchBegan
@@ -252,23 +273,22 @@ bool Play::onTouchBegan(cocos2d::Touch* touch, cocos2d::Event* unused_event)
 	}
 
 	// 画面半部より左がタップされたときの処理
-	if (touch_pos.x < (960 / 2))
+	if (touch_pos.x < (SCREEN_WIDTH / 2))
 	{
 		Play::CreateWave(Vec2(0, touch_pos.y));
 		m_wave->setFlippedX(true);
 
-		// 音波移動
-		m_wave->runAction(MoveBy::create(2.0f, Vec3(1000, 0, 0)));
+		// 画面外まで音波移動
+		m_wave->runAction(MoveBy::create(4.0f, Vec3(SCREEN_WIDTH+ SCREEN_WIDTH, 0, 0)));
 		return true;
 	}
 
-	// 画面半部より右がタップされたときの処理
-	else
+	else // 画面半部より右がタップされたときの処理
 	{
-		Play::CreateWave(Vec2(960, touch_pos.y));
+		Play::CreateWave(Vec2(SCREEN_WIDTH, touch_pos.y));
 
-		// 音波移動
-		m_wave->runAction(MoveBy::create(2.0f, Vec3(-1000, 0, 0)));
+		// 画面外まで音波移動
+		m_wave->runAction(MoveBy::create(4.0f, Vec3(-(SCREEN_WIDTH+SCREEN_WIDTH), 0, 0)));
 		return true;
 	}
 
