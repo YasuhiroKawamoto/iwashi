@@ -10,8 +10,19 @@ USING_NS_CC;
 using namespace cocos2d::experimental;
 using namespace cocostudio::timeline;
 
+const float TIME_LIMIT_SECOND = 1800;//残り時間（６０秒）
+const float DECREASE_TIME = 0.5;//減っていく時間
+const int RETURN_TIME = 30;//fpsを分単位に戻す
+const float SCALSE_SIZE = 5.0;//文字を大きくするサイズ
+//ラベルの高さと幅
+const int TIME_LABEL_WIDTH = 350;
+const int TIME_LABEL_HEIGHT = 70;
+const int TEXT_TIME_LABEL_WIDTH = 550;
+const int TEXT_TIME_LABEL_HEIGHT = 70;
+
 const int SPRIITE_SIZE = 256;
 const int SCREEN_WIDTH = 960;
+
 
 const int ANIMETION＿PUTTURNS = 3;
 const int ANIMETION＿FRAME = 30;
@@ -22,6 +33,25 @@ enum PLAYER
 	PLAYER_1,
 	PLAYER_2
 };
+
+//コンストラクタ
+Play::Play()
+	:m_timer(TIME_LIMIT_SECOND)
+	, m_TimeLabel(NULL)
+{
+}
+//デストラクター
+Play::~Play()
+{
+	CC_SAFE_RELEASE_NULL(m_TimeLabel);//m_TimeLabelを破棄
+}
+//----------------------------------------------------------------------
+//! @brief createScene
+//!
+//! @param[in] なし
+//!
+//! @return  scene
+//----------------------------------------------------------------------
 
 Scene* Play::createScene()
 {
@@ -37,7 +67,6 @@ Scene* Play::createScene()
     // return the scene
     return scene;
 }
-
 // ===========================================
 // @>概　要:タッチ座標に音波を生成
 //
@@ -119,6 +148,68 @@ void Play::AnimationUpdate()
 }
 
 
+//----------------------------------------------------------------------
+//! @brief RenderTimeLabel
+//!
+//! @param[in] なし
+//!
+//! @return なし
+//----------------------------------------------------------------------
+//void Play::RenderTimeLabel()
+//{
+//	//中心座標
+//	auto size = Director::getInstance()->getWinSize();
+//	//タイマー ラベルの追加
+//	int second = static_cast < int >(m_timer); // int 型 に キャスト する
+//	auto timeLabel = Label::createWithSystemFont(StringUtils::toString(second), "Arial Felt", 16);
+//	timeLabel->setPosition(Vec2(size.width - TIME_LABEL_WIDTH, size.height - TIME_LABEL_HEIGHT));
+//	timeLabel->setScale(SCALSE_SIZE);
+//	this->setTimeLabel(timeLabel);
+//	this->addChild(m_TimeLabel);
+//}
+//----------------------------------------------------------------------
+//! @brief RendertextTimeLabel
+//!
+//! @param[in] なし
+//!
+//! @return なし
+//----------------------------------------------------------------------
+
+void Play::RendertextTimeLabel()
+{
+	//中心座標
+	auto size = Director::getInstance()->getWinSize();
+
+	// タイマーヘッダーの追加
+	auto textTimeLabel = Label::createWithSystemFont(" TIME", "Arial Felt", 16);
+	textTimeLabel->setPosition(Vec2(size.width - TEXT_TIME_LABEL_WIDTH, size.height - TEXT_TIME_LABEL_HEIGHT));
+	textTimeLabel->setScale(SCALSE_SIZE);
+	this->addChild(textTimeLabel);
+}
+//----------------------------------------------------------------------
+//! @brief UpadateTime
+//!
+//! @param[in] なし
+//!
+//! @return なし
+//----------------------------------------------------------------------
+
+void Play::UpadateTime()
+{
+	// 残り 秒 数 を 減らす
+	m_timer -= DECREASE_TIME;
+	// 残り 秒 数 の 表示 を 更新 する
+	int second = static_cast < int >(m_timer / RETURN_TIME); // int 型 に キャスト する
+	m_TimeLabel->setString(StringUtils::toString(second));
+}
+//----------------------------------------------------------------------
+//! @brief init
+//!
+//! @param[in] なし
+//!
+//! @return true or false
+//----------------------------------------------------------------------
+
 // on "init" you need to initialize your instance
 bool Play::init()
 {
@@ -175,19 +266,26 @@ bool Play::init()
     this->addChild(sprite, 0);
     **/
     
-
     //////////////////////////////
     // 1. super init first
     if ( !Layer::init() )
     {
         return false;
     }
+
     
 	// 変数初期化
 	m_animation_cnt = 0;
 
 	canShoot_1p = true;
 	canShoot_2p = true;
+
+	auto rootNode = CSLoader::createNode("MainScene.csb");
+
+	addChild(rootNode);
+
+	RenderTimeLabel();
+	RendertextTimeLabel();
 
 	// updateを呼び出す設定
 	this->scheduleUpdate();
@@ -221,10 +319,35 @@ bool Play::init()
 	// BGM再生
 	se_wave = AudioEngine::play2d("Sounds\\SeenBGM.ogg", true);
 
+	_eventDispatcher->addEventListenerWithSceneGraphPriority(listener, this);
+
+	//　イワシは3秒に一回くらい
+	/* イワシ */
+	// イワシ生成
+//	Sprite*iwashi = Sprite::create("");
+
+//	this->addChild(iwashi);
+
+	/* アクション？ */
+	// イワシ行動
+
+	///////////////////////////////////////////
+	//残りタイムが0になったらリザルト画面に行く
+	///////////////////////////////////////////
+	//if (m_timer < 0)
+	//{
+
+	//}
+
     return true;
 }
-
-// 毎フレーム呼び出されるupdate関数
+//----------------------------------------------------------------------
+//! @brief update(毎フレーム呼び出されるupdate関数)
+//!
+//! @param[in] なし
+//!
+//! @return 
+//----------------------------------------------------------------------
 void Play::update(float delta)
 {
 	// アニメーション更新
@@ -232,9 +355,17 @@ void Play::update(float delta)
 
 	// 画面外に出たら発射状態を回復
 	Reload();
+	UpadateTime();//残り時間の更新
+	static int cnt = 0;
 
 }
-
+//----------------------------------------------------------------------
+//! @brief onTouchBegan
+//!
+//! @param[in] cocos2d::Touch* touch, cocos2d::Event* unused_event
+//!
+//! @return true or false
+//----------------------------------------------------------------------
 bool Play::onTouchBegan(cocos2d::Touch* touch, cocos2d::Event* unused_event)
 {
 	// タッチ座標を取得

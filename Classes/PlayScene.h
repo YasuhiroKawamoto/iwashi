@@ -6,6 +6,8 @@
 class Play : public cocos2d::Layer
 {
 public:
+	Play();
+	~Play();
     // there's no 'id' in cpp, so we recommend returning the class instance pointer
     static cocos2d::Scene* createScene();
 
@@ -22,8 +24,19 @@ public:
 	// 音波生成関数
 	void CreateWave(cocos2d::Vec2 pos, int player);
 
+<<<<<<< HEAD
 	// 音波が画面外に出たら再発射可能にする
 	void Reload();
+=======
+	//残り時間の描画関数
+	void RenderTimeLabel();
+	//TIMEの描画関数
+	void RendertextTimeLabel();
+	//残り時間の更新関数
+	void UpadateTime();
+	// プレイヤー1
+	cocos2d::Sprite* m_player1;
+>>>>>>> 28ebc700a722ea50db509ecbd38ff83fea90b0ad
 
 	// アニメーション更新
 	void AnimationUpdate();
@@ -47,6 +60,9 @@ public:
 
 
 
+
+	CC_SYNTHESIZE(float, m_timer, Second);//残り秒数をfloatに変換する
+	CC_SYNTHESIZE_RETAIN(cocos2d::Label*, m_TimeLabel, TimeLabel);//ラベルを新しくセットする関数をつくる
 
     // implement the "static create()" method manually
     CREATE_FUNC(Play);
