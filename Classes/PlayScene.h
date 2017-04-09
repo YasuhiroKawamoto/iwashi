@@ -34,6 +34,10 @@ public:
 	void RendertextTimeLabel();
 	//残り時間の更新関数
 	void UpadateTime();
+	//鰯の生成関数
+	void FormIwasHi();
+	//鰯が画面外に出たら削除する関数
+	void DeletIwashi();
 	// プレイヤー1
 	cocos2d::Sprite* m_player1;
 
@@ -55,6 +59,7 @@ public:
 	int se_wave;
 	int bgm_play;
 	int m_animation_cnt;
+	bool m_flag;//鰯を生成させるフラグ
 
 
 
@@ -64,8 +69,6 @@ public:
 
     // implement the "static create()" method manually
     CREATE_FUNC(Play);
-
-
 	cocos2d::Sprite* iwashi;
 
 };

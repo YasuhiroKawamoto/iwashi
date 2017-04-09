@@ -38,6 +38,7 @@ enum PLAYER
 Play::Play()
 	:m_timer(TIME_LIMIT_SECOND)
 	, m_TimeLabel(NULL)
+	,m_flag(true)
 {
 }
 //デストラクター
@@ -162,6 +163,7 @@ void Play::RenderTimeLabel()
 	//タイマー ラベルの追加
 	int second = static_cast < int >(m_timer); // int 型 に キャスト する
 	auto timeLabel = Label::createWithSystemFont(StringUtils::toString(second), "Arial Felt", 16);
+	timeLabel->setColor(Color3B::BLACK);
 	timeLabel->setPosition(Vec2(size.width - TIME_LABEL_WIDTH, size.height - TIME_LABEL_HEIGHT));
 	timeLabel->setScale(SCALSE_SIZE);
 	this->setTimeLabel(timeLabel);
@@ -183,6 +185,7 @@ void Play::RendertextTimeLabel()
 
 	// タイマーヘッダーの追加
 	auto textTimeLabel = Label::createWithSystemFont(" TIME", "Arial Felt", 16);
+	textTimeLabel->setColor(Color3B::BLACK);
 	textTimeLabel->setPosition(Vec2(size.width - TEXT_TIME_LABEL_WIDTH, size.height - TEXT_TIME_LABEL_HEIGHT));
 	textTimeLabel->setScale(SCALSE_SIZE);
 	this->addChild(textTimeLabel);
@@ -202,6 +205,32 @@ void Play::UpadateTime()
 	// 残り 秒 数 の 表示 を 更新 する
 	int second = static_cast < int >(m_timer / RETURN_TIME); // int 型 に キャスト する
 	m_TimeLabel->setString(StringUtils::toString(second));
+}
+void Play::FormIwasHi()
+{
+	MoveTo*MoveByAction = MoveTo::create(3.0, Vec2(-1000, 340));
+	DelayTime*DelayTimeAction = DelayTime::create(3);
+	Sequence* SpawnAction = Sequence::create(DelayTimeAction, MoveByAction, nullptr);
+	CCRect rect = CCRectMake(0, 0, 150, 50);
+	iwashi = Sprite::create("Images\\PlaySeen.png");
+	iwashi->setTextureRect(rect);
+	iwashi->setPosition(1200, 340);
+	this->addChild(iwashi);
+	iwashi->runAction(SpawnAction);
+	m_flag = false;
+}
+void Play::DeletIwashi()
+{
+	//鰯の座標を確認する
+	float pos_x = iwashi->getPositionX();
+	float pos_y = iwashi->getPositionY();
+	//鰯の座標が0以下だったら
+	if (pos_x < 0)
+	{
+		iwashi->removeFromParent();//鰯を削除
+		iwashi = nullptr;
+		m_flag = true;
+	}
 }
 //----------------------------------------------------------------------
 //! @brief init
@@ -321,34 +350,34 @@ bool Play::init()
 	//　イワシは3秒に一回くらい
 	/* イワシ */
 	// イワシ生成
-	Sprite*iwashi = Sprite::create("PlaySeen.png");
+	
+	
+	//Rect rect(float(0.0f), float(0.0f), float(150.0f), float(50.0f));
 
-	this->addChild(iwashi);
-
+	//iwashi = Sprite::create("PlaySeen.png");
+	//this->addChild(iwashi);
 	/* アクション？ */
 	// イワシ行動
-	Sprite*iwashi = Sprite::create("PlaySeen.png");
-	Sprite->setPosition(Vec2(100.0f, 0.0f));
-	this->addChild(iwashi);
+	//Sprite*iwashi = Sprite::create("PlaySeen.png");
+	//iwashi->setPosition(Vec2(100.0f, 0.0f));
+	//this->addChild(iwashi);
 
 
 	/* アクション */
 	// イワシ行動
 
-	iwashi->setPosition(Vec2(iwashi->getContentSize))
+	//iwashi->setPosition(Vec2(iwashi->getContentSize));
 
-
-	auto iwashi = Sprite::create("PlaySeen.png");
-	iwashi->setPosition(Vec2(iwashi->getContentSize().width / 2, visibleSize.height / 2));
-	addChild(iwashi);
+	//iwashi = Sprite::create("PlaySeen.png");
+	//iwashi->setPosition(Vec2(iwashi->getContentSize().width / 2, visibleSize.height / 2));
+	/*addChild(iwashi);
 	MoveTo* action1 = MoveTo::create(1, Vec2(visibleSize.width - iwashi->getContentSize().width / 2, visibleSize.height / 2));
-	EaseBackInOut* action2 = EaseBackInOut::create(action);
+	EaseBackInOut* action2 = EaseBackInOut::create(action1);
 	Sequence*action3 = Sequence::create(action1, action2, action1, nullptr);
-	RepeayForever* action4 = RepeatForever::create(action3);
-
-	iwasi->runaction(action);
-
-	///////////////////////////////////////////
+	RepeatForever* action4 = RepeatForever::create(action3);
+*/
+	//iwashi->runAction(action4);
+		///////////////////////////////////////////
 	//残りタイムが0になったらリザルト画面に行く
 	///////////////////////////////////////////
 	//if (m_timer < 0)
@@ -367,6 +396,12 @@ bool Play::init()
 //----------------------------------------------------------------------
 void Play::update(float delta)
 {
+
+	if (m_flag)
+	{
+		FormIwasHi();//鰯の生成
+		DeletIwashi();//鰯が画面外に出たら破棄
+	}
 	// アニメーション更新
 	AnimationUpdate();
 
