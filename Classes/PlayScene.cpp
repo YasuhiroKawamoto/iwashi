@@ -191,20 +191,46 @@ void Play::Collision()
 	// どちらとものスプライトと当たったとき
 	if (isHit1 && isHit2)
 	{
+		// SE
+		AudioEngine::play2d("Sounds\\Splash.ogg");
+
+		// 作成したパーティクルのプロパティリストを読み込み
+		ParticleSystemQuad* particle = ParticleSystemQuad::create("Images\\kirakira.plist");
+		//パーティクルのメモリーリーク回避（★重要）
+		particle->setAutoRemoveOnFinish(true);
+		// パーティクルを開始
+		particle->resetSystem();
+		// パーティクルを表示する場所の設定
+		particle->setPosition(480, 500);
+		// パーティクルを配置
+		this->addChild(particle);
+
+
+		// パーティクルにアクション
+		DelayTime* delay2 = DelayTime::create(1.5f);
+		RemoveSelf* remove2 = RemoveSelf::create();
+		Sequence* sequence_particle = Sequence::create(delay2, remove2, nullptr);
+		particle->runAction(sequence_particle);
+
+		// 魚にアクション
+		iwashi->stopActionByTag(100);
+		MoveTo* move = MoveTo::create(0.25f, Vec2(480, 500));
+		ScaleTo* scale = ScaleTo::create(0.2f, 2.5f);
+		Spawn* spawn = Spawn::create(scale, move, nullptr);
+		DelayTime* delay = DelayTime::create(1.5f);
+		RemoveSelf* remove = RemoveSelf::create();
+		Sequence* sequence_iwahi = Sequence::create(spawn, delay, remove, nullptr);
+		iwashi->runAction(sequence_iwahi);
+
 		// スプライトの解放
-		iwashi->runAction(RemoveSelf::create());
-		m_wave[PLAYER_1]->runAction(RemoveSelf::create());
 		m_wave[PLAYER_1] = nullptr;
-		m_wave[PLAYER_2]->runAction(RemoveSelf::create());
 		m_wave[PLAYER_2] = nullptr;
 
 
 		// 発射状態のリセット
 		canShoot_1p = true;
 		canShoot_2p = true;
-	}
-
-	
+	}	
 }
 
 
@@ -273,8 +299,10 @@ void Play::FormIwasHi()
 	MoveTo*MoveByAction = MoveTo::create(10.0, Vec2(-1000, 340));
 	DelayTime*DelayTimeAction = DelayTime::create(3);
 	Sequence* SpawnAction = Sequence::create(DelayTimeAction, MoveByAction, nullptr);
+	SpawnAction->setTag(100);
 	iwashi = Sprite::create("Images\\PlaySeen.png");
 	iwashi->setTextureRect(Rect(0,0,150,50));
+	iwashi->setAnchorPoint(Vec2(0.5f, 0.5f));
 	iwashi->setPosition(1200, 340);
 	this->addChild(iwashi);
 	iwashi->runAction(SpawnAction);
@@ -402,6 +430,7 @@ bool Play::init()
 
 	// SEのプリロード
 	AudioEngine::preload("Sounds\\Sonic.ogg");
+	AudioEngine::preload("Sounds\\Splash.ogg");
 
 	// BGM再生
 	bgm_play = AudioEngine::play2d("Sounds\\SeenBGM.ogg", true);
