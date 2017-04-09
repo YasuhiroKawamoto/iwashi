@@ -1,7 +1,14 @@
 #include "PlayScene.h"
 #include "cocostudio/CocoStudio.h"
 #include "ui/CocosGUI.h"
+
+#include "ResultScene\\ResultScene.h"
+
+
+
+
 #include "ResultScene\ResultScene.h"
+
 #include "audio\include\AudioEngine.h"
 
 
@@ -208,7 +215,7 @@ void Play::UpadateTime()
 }
 void Play::FormIwasHi()
 {
-	MoveTo*MoveByAction = MoveTo::create(3.0, Vec2(-1000, 340));
+	MoveTo*MoveByAction = MoveTo::create(10.0, Vec2(-1000, 340));
 	DelayTime*DelayTimeAction = DelayTime::create(3);
 	Sequence* SpawnAction = Sequence::create(DelayTimeAction, MoveByAction, nullptr);
 	CCRect rect = CCRectMake(0, 0, 150, 50);
@@ -379,6 +386,9 @@ bool Play::init()
 */
 	//iwashi->runAction(action4);
 
+		///////////////////////////////////////////
+
+
     return true;
 }
 //----------------------------------------------------------------------
@@ -405,12 +415,23 @@ void Play::update(float delta)
 	//残り時間の更新
 	UpadateTime();
 
-	//残り時間が０になったらリザルト画面に行く
+
+	//残りタイムが0になったらリザルト画面に行く
+	///////////////////////////////////////////
 	if (m_timer <= 0)
 	{
-		Scene* nextScene = ResultScene::create();
-		_director->replaceScene(nextScene);
+		auto director = Director::getInstance();
+
+		// create a scene. it's an autorelease object
+		auto scene = ResultScene::createScene();
+
+		// run
+		director->runWithScene(scene);
+
+		// BGM停止
+		AudioEngine::stop(bgm_play);
 	}
+
 }
 //----------------------------------------------------------------------
 //! @brief onTouchBegan
