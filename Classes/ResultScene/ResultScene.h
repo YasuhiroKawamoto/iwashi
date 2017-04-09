@@ -31,5 +31,7 @@ private:
 
 	bool onTouchBegan(cocos2d::Touch * touch, cocos2d::Event * pEvent);
 
+	//BGM
+	int ResultBGM;
 };
 //#endif // __

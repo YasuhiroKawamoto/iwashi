@@ -42,7 +42,7 @@ bool ResultLayer::init()
 		score->ScoreIndicate(i);
 	}
 	//今回のスコアの設定
-	score->ScoreIndicate(ScoreNumber);
+	score->ScoreIndicate(5);
 	
 
 	////毎フレームアップデート関数を呼びだす

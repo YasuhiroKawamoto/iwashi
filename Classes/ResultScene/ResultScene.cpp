@@ -12,6 +12,7 @@
 #include "EventListenerGesture.h"
 #include "ResultScene\Score.h"
 #include "audio\include\AudioEngine.h"
+#include "TitleScene\TitleScene.h"
 USING_NS_CC;
 using namespace cocos2d::experimental;
 
@@ -61,6 +62,10 @@ bool ResultScene::init()
 	listener->onTouchBegan = CC_CALLBACK_2(ResultScene::onTouchBegan, this);
 	_director->getEventDispatcher()->addEventListenerWithSceneGraphPriority(listener, this);
 
+	//音楽ファイルを予めロードしておく
+	AudioEngine::preload("Sounds\\TapSE.ogg");
+	//効果音
+	ResultBGM = AudioEngine::play2d("Sounds\\ResultBGM.ogg");
 
 	return true;
 }
@@ -73,16 +78,22 @@ bool ResultScene::init()
 // タッチ開始時コールバック
 bool ResultScene::onTouchBegan(Touch* touch, Event* pEvent)
 {
-	// 次のシーンを作成する
-	//Scene* nextScene = TitleScene::create();
+	
 	////フェードトランジション
 	//nextScene = TransitionOriginal::create(1.0f, nextScene);
 	if (Score::SceneFlag == true)
 	{
+	
+		//BGM終了
+		AudioEngine::stop(ResultBGM);
+		// 次のシーンを作成する
+		Scene* nextScene = TitleScene::create();
+		// 次のシーンに移行
+		_director->replaceScene(nextScene);
 	}
-	//// 次のシーンに移行
-	//_director->replaceScene(nextScene);
-	//int id = AudioEngine::play2d("Sonic.ogg");
+	//効果音
+	int id = AudioEngine::play2d("Sounds\\TapSE.ogg");
+
 
 	return true;
 
