@@ -49,11 +49,12 @@ void PlayScene::ScoreIndicate(int Score)
 			//レクトを設定する
 			s_Number->setTextureRect(Rect(ScoreNumber * 64, 0, 64, 64));
 			
+			if(この関数が呼ばれたのが一回目か)
+			{
 			//座標
 			s_Number->setPosition(Vec2(一番大きい桁の座標 +  64 * j , Y座標));
-
-			
 			this->addChild(s_Number);
+			}
 			//スコアから求めた値を引く
 			Score2 -= Score * Digit;
 			//次はDigit-1桁を見る
