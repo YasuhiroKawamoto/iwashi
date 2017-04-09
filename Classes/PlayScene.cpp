@@ -321,12 +321,32 @@ bool Play::init()
 	//　イワシは3秒に一回くらい
 	/* イワシ */
 	// イワシ生成
-//	Sprite*iwashi = Sprite::create("");
+	Sprite*iwashi = Sprite::create("PlaySeen.png");
 
-//	this->addChild(iwashi);
+	this->addChild(iwashi);
 
 	/* アクション？ */
 	// イワシ行動
+	Sprite*iwashi = Sprite::create("PlaySeen.png");
+	Sprite->setPosition(Vec2(100.0f, 0.0f));
+	this->addChild(iwashi);
+
+
+	/* アクション */
+	// イワシ行動
+
+	iwashi->setPosition(Vec2(iwashi->getContentSize))
+
+
+	auto iwashi = Sprite::create("PlaySeen.png");
+	iwashi->setPosition(Vec2(iwashi->getContentSize().width / 2, visibleSize.height / 2));
+	addChild(iwashi);
+	MoveTo* action1 = MoveTo::create(1, Vec2(visibleSize.width - iwashi->getContentSize().width / 2, visibleSize.height / 2));
+	EaseBackInOut* action2 = EaseBackInOut::create(action);
+	Sequence*action3 = Sequence::create(action1, action2, action1, nullptr);
+	RepeayForever* action4 = RepeatForever::create(action3);
+
+	iwasi->runaction(action);
 
 	///////////////////////////////////////////
 	//残りタイムが0になったらリザルト画面に行く
