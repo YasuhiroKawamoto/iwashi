@@ -44,7 +44,8 @@ public:
 	// アニメーション更新
 	void AnimationUpdate();
 
-
+	// 当たり判定
+	void Collision();
 
 	// 背景
 	cocos2d::Sprite* m_bg;
@@ -59,6 +60,8 @@ public:
 	int se_wave;
 	int bgm_play;
 	int m_animation_cnt;
+
+	// 鰯
 	bool m_flag;//鰯を生成させるフラグ
 
 

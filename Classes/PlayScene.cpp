@@ -156,6 +156,58 @@ void Play::AnimationUpdate()
 }
 
 
+// ===========================================
+// @>概　要:（暫定的）当たり判定
+//
+// @>引　数:なし
+//
+// @>戻り値:なし
+// ===========================================
+void Play::Collision()
+{
+	// 鰯スプライトのバウンディングボックスを取得
+	Rect r_iwashi = iwashi->getBoundingBox();
+
+	// 1P音波のバウンディングボックスを取得
+	Rect r_wave1;
+	bool isHit1 = false;
+	if (m_wave[PLAYER_1] != nullptr)
+	{
+		r_wave1 = m_wave[PLAYER_1]->getBoundingBox();
+	}
+
+	// 1P音波のバウンディングボックスを取得
+	Rect r_wave2;
+	bool isHit2 = false;
+	if (m_wave[PLAYER_2] != nullptr)
+	{
+		r_wave2 = m_wave[PLAYER_2]->getBoundingBox();
+	}
+
+	// 矩形同士で当たり判定を取得
+	isHit1 = r_iwashi.intersectsRect(r_wave1);
+	isHit2 = r_iwashi.intersectsRect(r_wave2);
+
+	// どちらとものスプライトと当たったとき
+	if (isHit1 && isHit2)
+	{
+		// スプライトの解放
+		iwashi->runAction(RemoveSelf::create());
+		m_wave[PLAYER_1]->runAction(RemoveSelf::create());
+		m_wave[PLAYER_1] = nullptr;
+		m_wave[PLAYER_2]->runAction(RemoveSelf::create());
+		m_wave[PLAYER_2] = nullptr;
+
+
+		// 発射状態のリセット
+		canShoot_1p = true;
+		canShoot_2p = true;
+	}
+
+	
+}
+
+
 //----------------------------------------------------------------------
 //! @brief RenderTimeLabel
 //!
@@ -284,7 +336,7 @@ bool Play::init()
     // add a label shows "Hello World"
     // create and initialize a label
     
-    auto label = Label::createWithTTF("Hello World", "fonts/Marker Felt.ttf", 24);
+    auto label = Label::createWithTTF(4"Hello World", "fonts/Marker Felt.ttf", 24);
     
     // position the label on the center of the screen
     label->setPosition(Vec2(origin.x + visibleSize.width/2,
@@ -311,19 +363,19 @@ bool Play::init()
     }
 
     
-	// 変数初期化
+	// 変数初期化==============================
 	m_animation_cnt = 0;
 
 	canShoot_1p = true;
 	canShoot_2p = true;
 
+	// 音波
 	for (int i = 0; i < 2; i++)
 	{
 		m_wave[i] = nullptr;
 	}
 
-
-	// 背景
+	// 背景===================================
 	m_bg = Sprite::create("Images\\BG.png");
 	m_bg->setAnchorPoint(Vec2(0, 0));
 	this->addChild(m_bg);
@@ -350,7 +402,7 @@ bool Play::init()
 	AudioEngine::preload("Sounds\\Sonic.ogg");
 
 	// BGM再生
-	se_wave = AudioEngine::play2d("Sounds\\SeenBGM.ogg", true);
+	bgm_play = AudioEngine::play2d("Sounds\\SeenBGM.ogg", true);
 
 	_eventDispatcher->addEventListenerWithSceneGraphPriority(listener, this);
 
@@ -412,6 +464,10 @@ void Play::update(float delta)
 	// 画面外に出たら発射状態を回復
 	Reload();
 
+	// !!!======!!! 暫定的 !!!======!!! //
+	// 当たり判定()
+	Collision();
+
 	//残り時間の更新
 	UpadateTime();
 
@@ -420,6 +476,11 @@ void Play::update(float delta)
 	///////////////////////////////////////////
 	if (m_timer <= 0)
 	{
+		// BGM停止
+		AudioEngine::stop(bgm_play);
+		AudioEngine::uncache("Sounds\\SeenBGM.ogg");
+
+
 		auto director = Director::getInstance();
 
 		// create a scene. it's an autorelease object
@@ -428,8 +489,6 @@ void Play::update(float delta)
 		// run
 		director->runWithScene(scene);
 
-		// BGM停止
-		AudioEngine::stop(bgm_play);
 	}
 
 }
