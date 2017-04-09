@@ -27,9 +27,6 @@ bool HelloWorld::init()
 
 	std::string str = "hello";
 
-
-	int a;
-
     /**  you can create scene with following comment code instead of using csb file.
     // 1. super init first
     if ( !Layer::init() )

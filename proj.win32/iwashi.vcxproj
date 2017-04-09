@@ -148,12 +148,27 @@ xcopy /Y /Q "$(COCOS_X_ROOT)\cocos2d-x-3.10\prebuilt\win32\*.*" "$(OutDir)"
   <ItemGroup>
     <ClCompile Include="..\Classes\AppDelegate.cpp" />
     <ClCompile Include="..\Classes\HelloWorldScene.cpp" />
+    <ClCompile Include="..\Classes\PlayScene.cpp" />
+    <ClCompile Include="..\Classes\ResultScene\BackGround.cpp" />
+    <ClCompile Include="..\Classes\ResultScene\ResultLayer.cpp" />
+    <ClCompile Include="..\Classes\ResultScene\ResultScene.cpp" />
+    <ClCompile Include="..\Classes\ResultScene\Score.cpp" />
+    <ClCompile Include="..\Classes\TitleScene\TitleBackGround.cpp" />
+    <ClCompile Include="..\Classes\TitleScene\TitleLayer.cpp" />
+    <ClCompile Include="..\Classes\TitleScene\TitleScene.cpp" />
     <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Classes\AppDelegate.h" />
-    <ClInclude Include="..\Classes\GameObject.h" />
     <ClInclude Include="..\Classes\HelloWorldScene.h" />
+    <ClInclude Include="..\Classes\PlayScene.h" />
+    <ClInclude Include="..\Classes\ResultScene\BackGround.h" />
+    <ClInclude Include="..\Classes\ResultScene\ResultLayer.h" />
+    <ClInclude Include="..\Classes\ResultScene\ResultScene.h" />
+    <ClInclude Include="..\Classes\ResultScene\Score.h" />
+    <ClInclude Include="..\Classes\TitleScene\TitleBackGround.h" />
+    <ClInclude Include="..\Classes\TitleScene\TitleLayer.h" />
+    <ClInclude Include="..\Classes\TitleScene\TitleScene.h" />
     <ClInclude Include="main.h" />
   </ItemGroup>
   <ItemGroup>
