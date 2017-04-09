@@ -13,5 +13,6 @@ bool TitleLayer::init()
 	TitleBackGround* title_back_ground = TitleBackGround::create();
 	this->addChild(title_back_ground);
 
+	return true;
 
 }

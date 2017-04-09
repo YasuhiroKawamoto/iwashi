@@ -7,6 +7,7 @@
 ****************************************************************************/
 /* ---- ライブラリのインクルード ---------- */
 #include "BackGround.h"
+#include "Score.h"
 USING_NS_CC;
 
 bool BackGround::init()
@@ -32,5 +33,26 @@ bool BackGround::init()
 	particle->setPosition(480, -100);
 	// パーティクルを配置
 	this->addChild(particle);
+	////毎フレームアップデート関数を呼びだす
+	this->scheduleUpdate();
+
+
+	//タッチ
+	s_touch = Sprite::create("Images\\TouchImage.png");
+	s_touch->setPosition(Vec2(480.0f,100.f));
+	s_touch->setVisible(false);
+//	s_touch->setScale
+	this->addChild(s_touch);
+	Opacity = 0;
 	return true;
+}
+
+void BackGround::update(float data)
+{
+	if (Score::SceneFlag == true)
+	{
+		s_touch->setVisible(true);
+		Opacity += 2;
+		s_touch->setOpacity(Opacity);
+	}
 }

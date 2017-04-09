@@ -8,4 +8,8 @@ public:
 	CREATE_FUNC(TitleBackGround);
 
 private:
+	void update(float date)override;
+	cocos2d::Sprite* s_touch;//タッチスプライト
+	float Opacity;//透明度
+
 };
