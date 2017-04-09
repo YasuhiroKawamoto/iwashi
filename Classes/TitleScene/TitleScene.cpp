@@ -70,7 +70,7 @@ bool TitleScene::init()
 	_director->getEventDispatcher()->addEventListenerWithSceneGraphPriority(listener, this);
 
 
-
+	return true;
 }
 
 bool TitleScene::onTouchBegan(cocos2d::Touch * touch, cocos2d::Event * pEvent)
