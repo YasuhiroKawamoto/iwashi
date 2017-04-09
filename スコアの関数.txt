@@ -1,0 +1,63 @@
+void PlayScene::ScoreIndicate(int Score)
+{
+
+		//桁数を初期化する
+		Digit = 1;
+		//対象のスコアを保存する
+		Score2 = Score;
+
+		//スコアが何桁あるのか求める
+		//整数がなくなるまで10で除法する
+		
+		//スコアが0じゃないとき
+		if ((Score - Score2  != Score))
+		{
+			while (Score2   - Score != Score2)
+			{
+				Score2  /= 10;
+				//何回ループしたかカウントする
+				Digit *= 10;
+			
+			}
+			//小数になるまでかけたが、桁数を知りたいので10で割る
+			Digit /= 10;
+		}
+
+
+		
+
+		//対象のスコアを保存する
+		Score2 = Score;
+
+		j = 0;
+		while (Digit != 0)
+		{
+			//残りの値が0になる時、「Digit桁の値を求める」でエラーになる
+			//残りの値が0になる時、桁数分の0を表示して
+			if (Score2 <= 0)
+			{
+				//Digit桁の値を求める
+				Score = 0;
+			}
+			else
+			{
+				//Digit桁の値を求める
+				Score /= Digit;
+			}
+			//数字のスプライトを作成する
+			s_Number = Sprite::create("Images\\Number.png");
+			//レクトを設定する
+			s_Number->setTextureRect(Rect(ScoreNumber * 64, 0, 64, 64));
+			
+			//座標
+			s_Number->setPosition(Vec2(一番大きい桁の座標 +  64 * j , Y座標));
+
+			
+			this->addChild(s_Number);
+			//スコアから求めた値を引く
+			Score2 -= Score * Digit;
+			//次はDigit-1桁を見る
+			Digit /= 10;
+			j++;
+	}
+}
