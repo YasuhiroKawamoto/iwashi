@@ -1,13 +1,17 @@
 /***************************************************************************
 *|
 *|	概要　スコアクラスの定義
-*|　作成者　GF3 17 中田湧介
+*|　作成者　GS2 16 中田湧介
 *|　作成日　2017/4/07
 *|___________________________________________________________________________
 ****************************************************************************/
 /* ---- ライブラリのインクルード ---------- */
 #include "Score.h"
+#include "audio\include\AudioEngine.h"
+
 USING_NS_CC;
+using namespace cocos2d::experimental;
+
 
 bool  Score::SceneFlag = false;
 
@@ -19,9 +23,15 @@ bool Score::init()
 		return false;
 	}
 
+	//初期化
+	Score::SceneFlag = false;
+
+	//音楽ファイルを予めロードしておく
+	AudioEngine::preload("Sounds\\SlideSE.ogg");
 
 	
 	userDefault = cocos2d::UserDefault::getInstance();
+
 
 	//基盤ノードを作成する
 	for (int i = 0; i < MAX_SCORE + 1; i++)
@@ -160,7 +170,7 @@ void Score::ScoreIndicate(int Ranking)
 				ScoreNumber /= Digit;
 			}
 			//数字のスプライトを作成する
-			s_Number = Sprite::create("Number.png");
+			s_Number = Sprite::create("Images\\Number.png");
 			//レクトを設定する
 			s_Number->setTextureRect(Rect(ScoreNumber * 64, 0, 64, 64));
 			if ( Ranking == 5)
@@ -193,10 +203,19 @@ void Score::ScoreIndicate(int Ranking)
 void Score::ScoreAction(int Ranking)
 {
 	//今回のスコアでないか
-	if (Ranking != 5)
+	if ((Ranking > First)&&(Ranking < score))
 	{
 		MoveBy* action = MoveBy::create(1.0f, Vec2(-1 * SCREEN_SIZE_WIDTH, 0.0f));
 		m_NodeNumber[Ranking]->runAction(action);
+	}
+	//最後のランキングか
+	else if (Ranking == First)
+	{
+		MoveBy* action = MoveBy::create(1.0f, Vec2(-1 * SCREEN_SIZE_WIDTH, 0.0f));
+		CallFunc* action2 = CallFunc::create(CC_CALLBACK_0(Score::SceneFlagChenge,this));
+		Sequence* action3 = Sequence::create(action, action2, nullptr);
+		m_NodeNumber[Ranking]->runAction(action3);
+
 	}
 	else
 	{
@@ -204,7 +223,18 @@ void Score::ScoreAction(int Ranking)
 		m_NodeNumber[Ranking]->runAction(action);
 	}
 
-	
+	int id = AudioEngine::play2d("Sounds\\SlideSE.ogg");
+
+}
+
+/***************************************************************************
+*|	概要　　シーン切り替えしてもいいか変更する
+*|	引数　　無し
+*|　戻り値　無し
+****************************************************************************/
+void Score::SceneFlagChenge()
+{
+	SceneFlag = true;
 }
 
 

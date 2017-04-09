@@ -10,7 +10,7 @@ bool TitleBackGround::init()
 	return true;
 
 	// 作成したパーティクルのプロパティリストを読み込み
-	ParticleSystemQuad* particle = ParticleSystemQuad::create("particle_texture.plist");
+	ParticleSystemQuad* particle = ParticleSystemQuad::create("Images\\particle_texture.plist");
 	//パーティクルのメモリーリーク回避（★重要）
 	particle->setAutoRemoveOnFinish(true);
 	// パーティクルを開始

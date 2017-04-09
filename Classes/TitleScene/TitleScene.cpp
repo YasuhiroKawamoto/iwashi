@@ -11,6 +11,8 @@
 #include "TitleLayer.h"
 #include "EventListenerGesture.h"
 #include "audio\include\AudioEngine.h"
+#include "PlayScene.h"
+#include "ResultScene\ResultScene.h"
 USING_NS_CC;
 using namespace cocos2d::experimental;
 
@@ -54,17 +56,33 @@ bool TitleScene::init()
 	// キャラクター関連のレイヤ
 	this->addChild(title_layer);
 
+	//// BGMのプリロード
+	AudioEngine::preload("Sounds\\TitleBGM.ogg");
 	//BGM
-	int Bgm = AudioEngine::play2d("TapSE.ogg");
-
+	 BGM = AudioEngine::play2d("Sounds\\TitleBGM.ogg");
 	//BGMループ再生
-	AudioEngine::setLoop(Bgm, true);
+	AudioEngine::setLoop(BGM, true);
+	
+
+	// タッチイベントリスナーを作成
+	EventListenerTouchOneByOne* listener = EventListenerTouchOneByOne::create();
+	listener->onTouchBegan = CC_CALLBACK_2(TitleScene::onTouchBegan, this);
+	_director->getEventDispatcher()->addEventListenerWithSceneGraphPriority(listener, this);
+
+
 
 }
 
 bool TitleScene::onTouchBegan(cocos2d::Touch * touch, cocos2d::Event * pEvent)
 {
+	//BGMを終了させる
+	AudioEngine::stop(BGM);
 	//効果音
-	int id = AudioEngine::play2d("TapSE.ogg");
+	int id = AudioEngine::play2d("Sounds\\TapSE.ogg");
+	// 次のシーンを作成する
+	Scene* nextScene = Play::create();
+	// 次のシーンに移行
+	_director->replaceScene(nextScene);
+
 	return false;
 }

@@ -1,9 +1,13 @@
 #include "PlayScene.h"
 #include "cocostudio/CocoStudio.h"
 #include "ui/CocosGUI.h"
+
 #include "ResultScene\\ResultScene.h"
 
 
+
+
+#include "ResultScene\ResultScene.h"
 
 #include "audio\include\AudioEngine.h"
 
@@ -13,7 +17,7 @@ USING_NS_CC;
 using namespace cocos2d::experimental;
 using namespace cocostudio::timeline;
 
-const float TIME_LIMIT_SECOND = 1800;//残り時間（６０秒）
+const float TIME_LIMIT_SECOND = 300;//残り時間（６０秒）
 const float DECREASE_TIME = 0.5;//減っていく時間
 const int RETURN_TIME = 30;//fpsを分単位に戻す
 const float SCALSE_SIZE = 5.0;//文字を大きくするサイズ
@@ -301,7 +305,7 @@ bool Play::init()
     
     //////////////////////////////
     // 1. super init first
-    if ( !Layer::init() )
+    if ( !Scene::init() )
     {
         return false;
     }
@@ -350,6 +354,7 @@ bool Play::init()
 
 	_eventDispatcher->addEventListenerWithSceneGraphPriority(listener, this);
 
+
 	//　イワシは3秒に一回くらい
 	/* イワシ */
 	// イワシ生成
@@ -380,8 +385,9 @@ bool Play::init()
 	RepeatForever* action4 = RepeatForever::create(action3);
 */
 	//iwashi->runAction(action4);
+
 		///////////////////////////////////////////
-	
+
 
     return true;
 }
@@ -409,6 +415,7 @@ void Play::update(float delta)
 	//残り時間の更新
 	UpadateTime();
 
+
 	//残りタイムが0になったらリザルト画面に行く
 	///////////////////////////////////////////
 	if (m_timer <= 0)
@@ -420,6 +427,9 @@ void Play::update(float delta)
 
 		// run
 		director->runWithScene(scene);
+
+		// BGM停止
+		AudioEngine::stop(bgm_play);
 	}
 
 }

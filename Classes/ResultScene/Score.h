@@ -9,15 +9,7 @@
 /* ---- ライブラリのインクルード ---------- */
 #include "cocos2d.h"
 
-enum ScoreNumber
-{
-	First,
-	Scound,
-	Third,
-	Fourth,
-	Fifth,
-	ScoreNumber
-};
+
 //ランキング数
 const int MAX_SCORE = 5;
 
@@ -52,7 +44,6 @@ public:
 	//今回のスコア
 	int m_Score;
 
-
 	//ランキングスコア
 	int RankingScore[MAX_SCORE];
 
@@ -64,6 +55,18 @@ private:
 	const float SCREEN_SIZE_LENGTH = 640.0f; //画面の長さ
 	int ScoreNumber; //桁数を求める際に代入して使用して使う変数
 	int ScoreNumber2;
-	Node* m_NodeNumber[MAX_SCORE + 1];
+	Node* m_NodeNumber[MAX_SCORE + 1];//スプライトをスコアごとにこの基盤ノードぶら下げる
+	void SceneFlagChenge();		//シーン切り替えしてもいいか変更する
+
+	enum ScoreNumber
+	{
+		First,
+		Scound,
+		Third,
+		Fourth,
+		Fifth,
+		score
+	};
+
 };
 

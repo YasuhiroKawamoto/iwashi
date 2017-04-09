@@ -13,5 +13,6 @@ public:
 	virtual bool init();
 	//タッチ時に呼び出される関数
 	bool onTouchBegan(cocos2d::Touch * touch, cocos2d::Event * pEvent);
-
+private:
+	int BGM;
 };

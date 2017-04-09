@@ -3,7 +3,7 @@
 
 #include "cocos2d.h"
 
-class Play : public cocos2d::Layer
+class Play : public cocos2d::Scene
 {
 public:
 	Play();
