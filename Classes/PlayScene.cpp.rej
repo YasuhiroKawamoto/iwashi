@@ -1,0 +1,9 @@
+diff a/Classes/PlayScene.cpp b/Classes/PlayScene.cpp	(rejected hunks)
+@@ -321,7 +321,6 @@
+ 	//�@�C���V��3�b�Ɉ�񂭂炢
+ 	/* �C���V */
+ 	// �C���V����
+-//	Sprite*iwashi = Sprite::create("");
+ 	Sprite*iwashi = Sprite::create("PlaySeen.png");
+ 
+ 	this->addChild(iwashi);
