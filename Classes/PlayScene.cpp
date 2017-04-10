@@ -17,7 +17,7 @@ USING_NS_CC;
 using namespace cocos2d::experimental;
 using namespace cocostudio::timeline;
 
-const float TIME_LIMIT_SECOND = 900;//残り時間（６０秒）
+const float TIME_LIMIT_SECOND = 450;//残り時間（６０秒）
 const float DECREASE_TIME = 0.5;//減っていく時間
 const int RETURN_TIME = 30;//fpsを分単位に戻す
 const float SCALSE_SIZE = 5.0;//文字を大きくするサイズ
@@ -46,6 +46,13 @@ Play::Play()
 	:m_timer(TIME_LIMIT_SECOND)
 	, m_TimeLabel(NULL)
 	,m_flag(true)
+	, m_FirstScore(0)
+	, m_SeconScore(0)
+	, m_ThirdScore(0)
+	, m_BonusScore(0)
+	,m_BatScore(0)
+	,m_TotalScore(100)
+	,m_CountFlag(true)
 {
 }
 //デストラクター
@@ -232,7 +239,19 @@ void Play::Collision()
 		canShoot_2p = true;
 	}	
 }
+// ===========================================
+// @>概　要:スコアの計算
+//
+// @>引　数:各種スコア（３段階の鰯、ごみのスコア、ボーナススコア）
+//
+// @>戻り値:合計のスコア
+// ===========================================
 
+int Play::SumScore(int score)
+{
+
+	return m_TotalScore += score;
+}
 
 //----------------------------------------------------------------------
 //! @brief RenderTimeLabel
@@ -249,7 +268,7 @@ void Play::RenderTimeLabel()
 	int second = static_cast < int >(m_timer); // int 型 に キャスト する
 	auto timeLabel = Label::createWithSystemFont(StringUtils::toString(second), "Default Font", 16);
 	timeLabel->setColor(Color3B::BLACK);
-	timeLabel->setPosition(Vec2(size.width - TIME_LABEL_WIDTH, size.height - TIME_LABEL_HEIGHT));
+	timeLabel->setPosition(Vec2(300,570));
 	timeLabel->setScale(SCALSE_SIZE);
 	this->setTimeLabel(timeLabel);
 	this->addChild(m_TimeLabel);
@@ -271,7 +290,7 @@ void Play::RendertextTimeLabel()
 	// タイマーヘッダーの追加
 	auto textTimeLabel = Label::createWithSystemFont(" TIME", "Default Font", 16);
 	textTimeLabel->setColor(Color3B::BLACK);
-	textTimeLabel->setPosition(Vec2(size.width - TEXT_TIME_LABEL_WIDTH, size.height - TEXT_TIME_LABEL_HEIGHT));
+	textTimeLabel->setPosition(Vec2(150, 570));
 	textTimeLabel->setScale(SCALSE_SIZE);
 	this->addChild(textTimeLabel);
 }
@@ -286,7 +305,6 @@ void Play::RendertextTimeLabel()
 void Play::UpadateTime()
 {
 	
-
 	// 残り 秒 数 を 減らす
 	m_timer -= DECREASE_TIME;
 	// 残り 秒 数 の 表示 を 更新 する
@@ -302,19 +320,24 @@ void Play::FormIwasHi()
 	SpawnAction->setTag(100);
 	iwashi = Sprite::create("Images\\PlaySeen.png");
 	iwashi->setTextureRect(Rect(0,0,150,50));
-	iwashi->setAnchorPoint(Vec2(0.5f, 0.5f));
+	//iwashi->setAnchorPoint(Vec2(0.5f, 0.5f));
 	iwashi->setPosition(1200, 340);
 	this->addChild(iwashi);
 	iwashi->runAction(SpawnAction);
+	//鰯の座標が0以下だったら
+	if (iwashi->getPositionX() <= 0)
+	{
+		iwashi->removeFromParent();//鰯を削除
+								   //iwashi = nullptr;
+		m_flag = true;
+	}
+	
 	m_flag = false;
 }
 void Play::DeletIwashi()
 {
-	//鰯の座標を確認する
-	float pos_x = iwashi->getPositionX();
-	float pos_y = iwashi->getPositionY();
 	//鰯の座標が0以下だったら
-	if (pos_x < 0)
+	if (iwashi->getPositionX() <= 0)
 	{
 		iwashi->removeFromParent();//鰯を削除
 		iwashi = nullptr;
@@ -332,59 +355,6 @@ void Play::DeletIwashi()
 // on "init" you need to initialize your instance
 bool Play::init()
 {
-    /**  you can create scene with following comment code instead of using csb file.
-    // 1. super init first
-    if ( !Layer::init() )
-    {
-        return false;
-    }
-    
-    Size visibleSize = Director::getInstance()->getVisibleSize();
-    Vec2 origin = Director::getInstance()->getVisibleOrigin();
-
-    /////////////////////////////
-    // 2. add a menu item with "X" image, which is clicked to quit the program
-    //    you may modify it.
-
-    // add a "close" icon to exit the progress. it's an autorelease object
-    auto closeItem = MenuItemImage::create(
-                                           "CloseNormal.png",
-                                           "CloseSelected.png",
-                                           CC_CALLBACK_1(HelloWorld::menuCloseCallback, this));
-    
-	closeItem->setPosition(Vec2(origin.x + visibleSize.width - closeItem->getContentSize().width/2 ,
-                                origin.y + closeItem->getContentSize().height/2));
-
-    // create menu, it's an autorelease object
-    auto menu = Menu::create(closeItem, NULL);
-    menu->setPosition(Vec2::ZERO);
-    this->addChild(menu, 1);
-
-    /////////////////////////////
-    // 3. add your codes below...
-
-    // add a label shows "Hello World"
-    // create and initialize a label
-    
-    auto label = Label::createWithTTF(4"Hello World", "fonts/Marker Felt.ttf", 24);
-    
-    // position the label on the center of the screen
-    label->setPosition(Vec2(origin.x + visibleSize.width/2,
-                            origin.y + visibleSize.height - label->getContentSize().height));
-
-    // add the label as a child to this layer
-    this->addChild(label, 1);
-
-    // add "HelloWorld" splash screen"
-    auto sprite = Sprite::create("HelloWorld.png");
-
-    // position the sprite on the center of the screen
-    sprite->setPosition(Vec2(visibleSize.width/2 + origin.x, visibleSize.height/2 + origin.y));
-
-    // add the sprite as a child to this layer
-    this->addChild(sprite, 0);
-    **/
-    
     //////////////////////////////
     // 1. super init first
     if ( !Scene::init() )
@@ -485,10 +455,10 @@ void Play::update(float delta)
 	
 
 
-	if (m_flag)
+	if (m_flag==true)
 	{
-		FormIwasHi();//鰯の生成
-		DeletIwashi();//鰯が画面外に出たら破棄
+		FormIwasHi();
+		DeletIwashi();
 	}
 	// アニメーション更新
 	AnimationUpdate();
@@ -503,6 +473,8 @@ void Play::update(float delta)
 	//残り時間の更新
 	UpadateTime();
 
+	//スコアの描画
+	ScoreIndicate(m_TotalScore);
 
 	//残りタイムが0になったらリザルト画面に行く
 	///////////////////////////////////////////
@@ -590,4 +562,70 @@ bool Play::onTouchBegan(cocos2d::Touch* touch, cocos2d::Event* unused_event)
 		}
 	}
 	return false;
+}
+void Play::ScoreIndicate(int Score)
+{
+	int j;
+
+	//桁数を初期化する
+	Digit = 1;
+	//対象のスコアを保存する
+	Score2 = Score;
+
+	//スコアが何桁あるのか求める
+	//整数がなくなるまで10で除法する
+
+	//スコアが0じゃないとき
+	if ((Score - Score2 != Score))
+	{
+		while (Score - Score2 != Score)
+		{
+			Score2 /= 10;
+			//何回ループしたかカウントする
+			Digit *= 10;
+
+		}
+		//小数になるまでかけたが、桁数を知りたいので10で割る
+		Digit /= 10;
+	}
+
+
+
+
+	//対象のスコアを保存する
+	Score2 = Score;
+
+	j = 0;
+	while (Digit != 0)
+	{
+		//残りの値が0になる時、「Digit桁の値を求める」でエラーになる
+		//残りの値が0になる時、桁数分の0を表示して
+		if (Score2 <= 0)
+		{
+			//Digit桁の値を求める
+			Score = 0;
+		}
+		else
+		{
+			//Digit桁の値を求める
+			Score /= Digit;
+		}
+		//数字のスプライトを作成する
+		s_Number = Sprite::create("Images\\Number.png");
+		//レクトを設定する
+		s_Number->setTextureRect(Rect(Score * 64, 0, 64, 64));
+
+		if (m_CountFlag==true)
+		{
+			//座標
+			s_Number->setPosition(Vec2(100 + 64 * j, 500));
+			this->addChild(s_Number);
+		}
+		//スコアから求めた値を引く
+		Score2 -= Score * Digit;
+		//次はDigit-1桁を見る
+		Digit /= 10;
+		j++;
+	}
+	m_CountFlag = false;
 }

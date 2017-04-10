@@ -5,6 +5,14 @@
 
 class Play : public cocos2d::Scene
 {
+private:
+	//スコア
+	int m_FirstScore;
+	int m_SeconScore;
+	int m_ThirdScore;
+	int m_BonusScore;
+	int m_BatScore;
+	int m_TotalScore;
 public:
 	Play();
 	~Play();
@@ -47,12 +55,18 @@ public:
 	// 当たり判定
 	void Collision();
 
+	//スコアの描画
+	void Play::ScoreIndicate(int Score);
+	//数字
+	cocos2d::Sprite* s_Number;
+
 	// 背景
 	cocos2d::Sprite* m_bg;
 
 	// 音波	
 	cocos2d::Sprite* m_wave[2];		// 音波のスプライト
 
+	int SumScore(int score);
 	// それぞれのプレイヤが音波を発射出来るか
 	bool canShoot_1p;
 	bool canShoot_2p;
@@ -60,13 +74,14 @@ public:
 	int se_wave;
 	int bgm_play;
 	int m_animation_cnt;
-
+	//桁数
+	int Digit;
+	//現在のスコアを保存する
+	int Score2;
 	// 鰯
 	bool m_flag;//鰯を生成させるフラグ
-
-
-
-
+	float m_posX;
+	bool m_CountFlag;
 	CC_SYNTHESIZE(float, m_timer, Second);//残り秒数をfloatに変換する
 	CC_SYNTHESIZE_RETAIN(cocos2d::Label*, m_TimeLabel, TimeLabel);//ラベルを新しくセットする関数をつくる
 

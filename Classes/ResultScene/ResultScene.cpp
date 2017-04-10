@@ -61,12 +61,12 @@ bool ResultScene::init()
 	EventListenerTouchOneByOne* listener = EventListenerTouchOneByOne::create();
 	listener->onTouchBegan = CC_CALLBACK_2(ResultScene::onTouchBegan, this);
 	_director->getEventDispatcher()->addEventListenerWithSceneGraphPriority(listener, this);
-
 	//音楽ファイルを予めロードしておく
 	AudioEngine::preload("Sounds\\TapSE.ogg");
 	//効果音
 	ResultBGM = AudioEngine::play2d("Sounds\\ResultBGM.ogg");
-
+	bubble = AudioEngine::play2d("Sounds\\bubble.mp3");
+	AudioEngine::setLoop(bubble, true);
 	return true;
 }
 
