@@ -47,7 +47,7 @@ Play::Play()
 	,m_TimeLabel(NULL)
 	,m_flag(true)
 	,m_CountFlag(true)
-	,m_TotalScore(321)
+	,m_TotalScore(0)
 	, m_TimeCnt(0)
 	, m_Number_Cnt(0)
 	, SpriteCnt(0)
@@ -466,7 +466,7 @@ bool Play::init()
 //----------------------------------------------------------------------
 void Play::update(float delta)
 {
-
+	m_TotalScore++;
 	//if (m_flag==true)
 	{
 
@@ -520,7 +520,7 @@ void Play::update(float delta)
 	///////////////////////////////////////////
 
 	
-	if (TIME_LIMIT_SECOND <= 25)
+	if (TIME_LIMIT_SECOND <= 0)
 
 	{
 		m_endSe = AudioEngine::play2d("Sounds/EndSE.mp3");
@@ -659,7 +659,10 @@ void Play::ScoreIndicate(int Score, bool flag)
 			Score /= Digit;
 		}
 
-
+		if (TIME_LIMIT_SECOND < 10)
+		{
+			s_Number[1]->removeFromParent();
+		}
 
 		if (m_CountFlag == true)
 		{
@@ -680,10 +683,30 @@ void Play::ScoreIndicate(int Score, bool flag)
 
 			}
 			this->addChild(s_Number[SpriteCnt]);
+			SpriteCnt2 = SpriteCnt;
 			RenderTimeLabel();
 		}
 		else
 		{
+			if (SpriteCnt2 < SpriteCnt)
+			{
+				//数字のスプライトを作成する
+				s_Number[SpriteCnt] = Sprite::create("Images\\Number.png");
+
+				if (flag == true)
+				{
+					s_Number[SpriteCnt]->setPosition(Vec2(800 + 64 * j, 580));
+
+				}
+				else
+				{
+					s_Number[SpriteCnt]->setPosition(Vec2(200 + 64 * j, 580));
+
+				}
+				this->addChild(s_Number[SpriteCnt]);
+				SpriteCnt2 = SpriteCnt;
+			}
+	
 			//レクトを設定する
 			s_Number[SpriteCnt]->setTextureRect(Rect(Score * 64, 0, 64, 64));
 
@@ -691,6 +714,7 @@ void Play::ScoreIndicate(int Score, bool flag)
 
 
 		m_Number_Cnt++;
+
 		//スコアから求めた値を引く
 		Score2 -= Score * Digit;
 		Score = Score2;

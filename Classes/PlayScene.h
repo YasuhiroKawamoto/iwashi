@@ -18,7 +18,7 @@ private:
 	// ”wŒi
 	cocos2d::Sprite* m_bg;
 	//”š
-	cocos2d::Sprite* s_Number[6];
+	cocos2d::Sprite* s_Number[100];
 	// ‰¹”g	
 	cocos2d::Sprite* m_wave[2];		// ‰¹”g‚ÌƒXƒvƒ‰ƒCƒg
 
@@ -38,7 +38,7 @@ private:
 	int m_Number_Cnt;
 	//•`‰æŠÖ”‚ÌƒJƒEƒ“ƒg
 	int SpriteCnt;
-
+	int SpriteCnt2;
 	cocos2d::Sprite* m_cloud[2];
 	float CloudPosx[2];
 public:
