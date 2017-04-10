@@ -340,7 +340,7 @@ void Play::FormIwasHi()
 		iwashies[i] = Iwashi::GenerateIwashi();
 
 		// イワシのスプライトをシーンに追加
-		this->addChild(iwashies[i]->GetSprite());
+	//	this->addChild(iwashies[i]->GetSprite());
 		break;
 	}
 

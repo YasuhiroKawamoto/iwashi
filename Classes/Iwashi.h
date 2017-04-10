@@ -25,7 +25,10 @@ private:
 public:
 	cocos2d::Sprite* GetSprite()
 	{
-		return m_sprIwashi;
+		if (m_sprIwashi != nullptr)
+		{
+			return m_sprIwashi;
+		}
 	}
 	Iwashi();
 	static Iwashi* GenerateIwashi();
