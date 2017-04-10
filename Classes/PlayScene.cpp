@@ -316,10 +316,11 @@ void Play::UpadateTime()
 	m_TimeLabel->setString(StringUtils::toString(second));
 
 }
+
 void Play::FormIwasHi()
 {
-	MoveTo*MoveByAction = MoveTo::create(10.0, Vec2(-1000, 340));
-	DelayTime*DelayTimeAction = DelayTime::create(3);
+	MoveTo* MoveByAction = MoveTo::create(10.0, Vec2(-1000, 340));
+	DelayTime* DelayTimeAction = DelayTime::create(0);
 	Sequence* SpawnAction = Sequence::create(DelayTimeAction, MoveByAction, nullptr);
 	SpawnAction->setTag(100);
 	iwashi = Sprite::create("Images\\PlaySeen.png");
@@ -425,6 +426,7 @@ bool Play::init()
 	{
 		m_wave[i] = nullptr;
 	}
+	iwashi = nullptr;
 
 	// 背景===================================
 	m_bg = Sprite::create("Images\\BG.png");
@@ -488,6 +490,8 @@ bool Play::init()
 */
 	//iwashi->runAction(action4);
 
+	FormIwasHi();//鰯の生成
+
 		//////////////////////////////////////////
 	
     return true;
@@ -504,7 +508,6 @@ void Play::update(float delta)
 
 	if (m_flag)
 	{
-		FormIwasHi();//鰯の生成
 		DeletIwashi();//鰯が画面外に出たら破棄
 	}
 	// アニメーション更新
@@ -527,20 +530,26 @@ void Play::update(float delta)
 
 	//残りタイムが0になったらリザルト画面に行く
 	///////////////////////////////////////////
-	if (m_timer <= 25*30)
+
+	if (m_timer <= 25.0f * 30)
 	{
 		// BGM停止
 		AudioEngine::stop(bgm_play);
 		AudioEngine::uncache("Sounds\\SeenBGM.ogg");
 
 
-		auto director = Director::getInstance();
+		//auto director = Director::getInstance();
 
-		// create a scene. it's an autorelease object
-		auto scene = ResultScene::createScene();
+		//// create a scene. it's an autorelease object
+		//auto scene = ResultScene::createScene();
 
-		// run
-		director->runWithScene(scene);
+		//// run
+		//director->runWithScene(scene);
+		// 次のシーンを作成する
+		Scene* nextScene = ResultScene::create();
+		// 次のシーンに移行
+		_director->replaceScene(nextScene);
+
 
 	}
 

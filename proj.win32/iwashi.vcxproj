@@ -148,6 +148,7 @@ xcopy /Y /Q "$(COCOS_X_ROOT)\cocos2d-x-3.10\prebuilt\win32\*.*" "$(OutDir)"
   <ItemGroup>
     <ClCompile Include="..\Classes\AppDelegate.cpp" />
     <ClCompile Include="..\Classes\HelloWorldScene.cpp" />
+    <ClCompile Include="..\Classes\Iwashi.cpp" />
     <ClCompile Include="..\Classes\PlayScene.cpp" />
     <ClCompile Include="..\Classes\ResultScene\BackGround.cpp" />
     <ClCompile Include="..\Classes\ResultScene\ResultLayer.cpp" />
@@ -161,6 +162,7 @@ xcopy /Y /Q "$(COCOS_X_ROOT)\cocos2d-x-3.10\prebuilt\win32\*.*" "$(OutDir)"
   <ItemGroup>
     <ClInclude Include="..\Classes\AppDelegate.h" />
     <ClInclude Include="..\Classes\HelloWorldScene.h" />
+    <ClInclude Include="..\Classes\Iwashi.h" />
     <ClInclude Include="..\Classes\PlayScene.h" />
     <ClInclude Include="..\Classes\ResultScene\BackGround.h" />
     <ClInclude Include="..\Classes\ResultScene\ResultLayer.h" />
