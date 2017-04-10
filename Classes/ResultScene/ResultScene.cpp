@@ -62,11 +62,12 @@ bool ResultScene::init()
 	listener->onTouchBegan = CC_CALLBACK_2(ResultScene::onTouchBegan, this);
 	_director->getEventDispatcher()->addEventListenerWithSceneGraphPriority(listener, this);
 	//音楽ファイルを予めロードしておく
-	AudioEngine::preload("Sounds\\TapSE.ogg");
+	AudioEngine::preload("Sounds/TapSE.ogg");
 	//効果音
-	ResultBGM = AudioEngine::play2d("Sounds\\ResultBGM.ogg");
-	bubble = AudioEngine::play2d("Sounds\\bubble.mp3");
+	ResultBGM = AudioEngine::play2d("Sounds/ResultBGM.ogg");
+	bubble = AudioEngine::play2d("Sounds/bubble.mp3");
 	AudioEngine::setLoop(bubble, true);
+
 	return true;
 }
 
@@ -86,13 +87,15 @@ bool ResultScene::onTouchBegan(Touch* touch, Event* pEvent)
 		Score::SceneFlag = false;
 		//BGM終了
 		AudioEngine::stop(ResultBGM);
+		AudioEngine::stop(bubble);
+
 		// 次のシーンを作成する
 		Scene* nextScene = TitleScene::create();
 		// 次のシーンに移行
 		_director->replaceScene(nextScene);
 	}
 	//効果音
-	int id = AudioEngine::play2d("Sounds\\TapSE.ogg");
+	int id = AudioEngine::play2d("Sounds/TapSE.ogg");
 
 
 	return true;

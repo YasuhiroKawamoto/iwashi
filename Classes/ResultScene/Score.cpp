@@ -23,7 +23,9 @@ bool Score::init()
 
 		return false;
 	}
-	m_Score = rand()%100;
+
+	m_Score = rand()%999;
+
 	////初期化
 	//Score::SceneFlag = false;
 	//ScoreActionSpd = 1.0f;
@@ -68,22 +70,28 @@ void Score::RankingSort()
 {
 	//今回のスコアがランキングのどこに位置するか求める
 	int i = Fifth;
-	while ((RankingScore[i] < m_Score)&&(i > 0))
-	{
-		i--;
-	}
 
-	//今回のスコアがランキングに入っているならば
-	if (i != score)
+	if (RankingScore[Fifth] < m_Score)
 	{
-		//ランキングを入れ替える
-		for (int j = 2; i <= j; j--)
+
+		while ((RankingScore[i] < m_Score) && (i >= 0))
 		{
-			RankingScore[j + 1] = RankingScore[j];
+			i--;
 		}
+		i++;
 
-		//今回のスコアをランキングに入れる
-		RankingScore[i] = m_Score;
+		//今回のスコアがランキングに入っているならば
+		if (i != score)
+		{
+			//ランキングを入れ替える
+			for (int j = 3; i <= j; j--)
+			{
+				RankingScore[j + 1] = RankingScore[j];
+			}
+
+			//今回のスコアをランキングに入れる
+			RankingScore[i] = m_Score;
+		}
 	}
 
 	

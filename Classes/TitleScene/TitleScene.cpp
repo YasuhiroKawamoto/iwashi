@@ -61,11 +61,9 @@ bool TitleScene::init()
 	// キャラクター関連のレイヤ
 	this->addChild(title_layer);
 
-	// プレイシーンBGMのプリロード
-	AudioEngine::preload("Sounds\\SeenBGM.ogg");
 
 	//BGM
-	 BGM = AudioEngine::play2d("Sounds\\TitleBGM.mp3");
+	BGM = AudioEngine::play2d("Sounds/TitleBGM.mp3");
 	//BGMループ再生
 	AudioEngine::setLoop(BGM, true);
 
@@ -84,7 +82,7 @@ bool TitleScene::onTouchBegan(cocos2d::Touch * touch, cocos2d::Event * pEvent)
 	//BGMを終了させる
 	AudioEngine::stop(BGM);
 	//効果音
-	int id = AudioEngine::play2d("Sounds\\TapSE.ogg");
+	int id = AudioEngine::play2d("Sounds/TapSE.ogg");
 	// 次のシーンを作成する
 	Scene* nextScene = Play::create();
 	// 次のシーンに移行
