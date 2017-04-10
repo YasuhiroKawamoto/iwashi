@@ -206,6 +206,9 @@ bool Play::Collision(Iwashi* iwashi)
 			{
 				isHit1 = false;
 				isHit2 = false;
+				r_wave1 = Rect(0, 0, 0, 0);
+
+				r_wave2 = Rect(0, 0, 0, 0);
 				return true;
 			}
 		}
@@ -217,6 +220,9 @@ void Play::GetIwashi(Iwashi* iwashi)
 {
 	// SE
 	AudioEngine::play2d("Sounds/Splash.ogg");
+
+	// スコア加算
+	SumScore(iwashi->GetScore()) ;
 
 	// 作成したパーティクルのプロパティリストを読み込み
 	ParticleSystemQuad* particle = ParticleSystemQuad::create("Images/kirakira.plist");
@@ -361,7 +367,7 @@ void Play::DeletIwashi(Iwashi* iwashi)
 	if (sprite != nullptr)
 	{
 		//鰯の座標が画面外だったら
-		if (sprite->getPositionX() <= -50 || sprite->getPositionX() > 1001)
+		if (sprite->getPositionX() <= -50 || sprite->getPositionX() > 1100)
 		{
 			sprite->removeFromParent();//鰯を削除
 			sprite = nullptr;
@@ -481,16 +487,8 @@ bool Play::init()
 //----------------------------------------------------------------------
 void Play::update(float delta)
 {
-	if (m_TotalScore < 999)
-	{
-		m_TotalScore++;
-
-	}
 	//if (m_flag==true)
 	{
-
-		FormIwasHi();
-
 		for (int i = 0; i < 10; i++)
 		{
 			if (iwashies[i]->GetUsingFlag())
@@ -745,7 +743,7 @@ void Play::ScoreIndicate(int Score, bool flag)
 				this->addChild(s_Number[SpriteCnt]);
 				SpriteCnt2 = SpriteCnt;
 			}
-	
+
 			//レクトを設定する
 			s_Number[SpriteCnt]->setTextureRect(Rect(Score * 64, 0, 64, 64));
 
@@ -769,12 +767,12 @@ void Play::IwashiDelete()
 {
 	for (int i = 0; i < 10; i++)
 	{
-		if (iwashies[i]->GetUsingFlag())
+		if (iwashies[i]->GetFisshed())
 		{
 			// スプライトの解放
 			iwashies[i]->DeleteSprite();
 
-			iwashies[i]->SetFisshed(false);
+			iwashies[i]->SetUsingFlag(false);
 		}
 	}
 }

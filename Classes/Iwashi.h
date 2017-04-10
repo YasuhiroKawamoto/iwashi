@@ -41,6 +41,11 @@ public:
 		m_sprIwashi = nullptr;
 	}
 
+	int GetScore()
+	{
+		return m_score;
+	}
+
 	// デフォルトコンストラクタ 
 	Iwashi();
 

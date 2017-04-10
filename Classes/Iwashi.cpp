@@ -37,12 +37,12 @@ Iwashi* Iwashi::GenerateIwashi()
 	if (lr == LEFT)
 	{
 		appear_pos = Vec2(-40, rand() % 300 + 100);		// 100à»è„300à»â∫ÇÃçÇÇ≥
-		move = MoveBy::create(6.0f - puttern, Vec2(1100, 0));
+		move = MoveBy::create(7.0f - puttern, Vec2(1300, 0));
 	}
 	else if (lr == RIGHT)
 	{
 		appear_pos = Vec2(1000, rand() % 300 + 100);	// 100à»è„300à»â∫ÇÃçÇÇ≥
-		move = MoveBy::create(6.0f - puttern, Vec2(-1100, 0));
+		move = MoveBy::create(7.0f - puttern, Vec2(-1300, 0));
 	}
 
 	Iwashi* iwashi = new Iwashi(puttern, appear_pos);
