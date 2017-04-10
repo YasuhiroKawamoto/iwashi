@@ -51,7 +51,7 @@ bool TitleScene::init()
 		return false;
 	}
 	//タイトルのスプライトの作成
-	m_TotleBG = Sprite::create("Images\\TITLE.png");
+	m_TotleBG = Sprite::create("Images/TITLE.png");
 	//アンカーポイントの設定
 	m_TotleBG->setAnchorPoint(Vec2(0, 0));
 	//タイトルの描画

@@ -2,7 +2,7 @@
 #include "cocostudio/CocoStudio.h"
 #include "ui/CocosGUI.h"
 
-#include "ResultScene\\ResultScene.h"
+#include "ResultScene/ResultScene.h"
 
 
 
@@ -393,7 +393,6 @@ bool Play::init()
         return false;
     }
 
-    
 	// 変数初期化==============================
 	m_animation_cnt = 0;
 
@@ -427,7 +426,7 @@ bool Play::init()
 	//雲
 	for (int i = 0; i < 2; i++)
 	{
-		m_cloud[i] = Sprite::create("Images\\cloud3.png");
+		m_cloud[i] = Sprite::create("Images/cloud3.png");
 		m_cloud[i]->setAnchorPoint(Vec2(0, 1.0));
 		this->addChild(m_cloud[i]);
 		CloudPosx[i] = 1920 * i;
@@ -436,7 +435,7 @@ bool Play::init()
 	RenderTimeLabel();
 
 
-	m_ScoreImage = Sprite::create("Images\\Score.png");
+	m_ScoreImage = Sprite::create("Images/Score.png");
 	m_ScoreImage->setPosition(Vec2(680, 580));
 	this->addChild(m_ScoreImage);
 
@@ -557,12 +556,14 @@ void Play::update(float delta)
 	///////////////////////////////////////////
 
 	
-	if (TIME_LIMIT_SECOND <= 0)
+	if (TIME_LIMIT_SECOND <= 25)
 
 	{
 		m_endSe = AudioEngine::play2d("Sounds/EndSE.mp3");
 		// BGM停止
+		AudioEngine::setLoop(bgm_play, false);
 		AudioEngine::stop(bgm_play);
+		AudioEngine::uncache("Sounds/PlayBGM.mp3");
 		DelayTime* action = DelayTime::create(3);
 	
 		// 次のシーンを作成する
@@ -704,7 +705,7 @@ void Play::ScoreIndicate(int Score, bool flag)
 		if (m_CountFlag == true)
 		{
 			//数字のスプライトを作成する
-			s_Number[SpriteCnt] = Sprite::create("Images\\Number.png");
+			s_Number[SpriteCnt] = Sprite::create("Images/Number.png");
 			//レクトを設定する
 			s_Number[SpriteCnt]->setTextureRect(Rect(Score * 64, 0, 64, 64));
 			//座標
@@ -728,7 +729,7 @@ void Play::ScoreIndicate(int Score, bool flag)
 			if (SpriteCnt2 < SpriteCnt)
 			{
 				//数字のスプライトを作成する
-				s_Number[SpriteCnt] = Sprite::create("Images\\Number.png");
+				s_Number[SpriteCnt] = Sprite::create("Images/Number.png");
 
 				if (flag == true)
 				{

@@ -64,7 +64,7 @@ bool ResultScene::init()
 	//音楽ファイルを予めロードしておく
 	AudioEngine::preload("Sounds/TapSE.ogg");
 	//効果音
-	ResultBGM = AudioEngine::play2d("Sounds/ResultBGM.ogg");
+	ResultBGM = AudioEngine::play2d("Sounds/ResultBGM.mp3", true);
 	bubble = AudioEngine::play2d("Sounds/bubble.mp3");
 	AudioEngine::setLoop(bubble, true);
 
@@ -88,6 +88,7 @@ bool ResultScene::onTouchBegan(Touch* touch, Event* pEvent)
 		//BGM終了
 		AudioEngine::stop(ResultBGM);
 		AudioEngine::stop(bubble);
+		AudioEngine::uncache("Sounds/ResultBGM.mp3");
 
 		// 次のシーンを作成する
 		Scene* nextScene = TitleScene::create();
