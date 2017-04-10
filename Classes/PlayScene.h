@@ -45,7 +45,10 @@ public:
 	void AnimationUpdate();
 
 	// “–‚½‚è”»’è
-	void Collision();
+	bool Collision();
+
+	// ˆñ‚ðƒQƒbƒg
+	void GetIwashi();
 
 	// ”wŒi
 	cocos2d::Sprite* m_bg;

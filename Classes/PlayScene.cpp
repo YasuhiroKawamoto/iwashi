@@ -161,76 +161,97 @@ void Play::AnimationUpdate()
 //
 // @>引　数:なし
 //
-// @>戻り値:なし
+// @>戻り値:bool(true:当たった)
 // ===========================================
-void Play::Collision()
+bool Play::Collision()
 {
-	// 鰯スプライトのバウンディングボックスを取得
-	Rect r_iwashi = iwashi->getBoundingBox();
+	Rect r_iwashi;
+	if (iwashi != nullptr)
+	{
+		// 鰯スプライトのバウンディングボックスを取得
+		r_iwashi = iwashi->getBoundingBox();
 
-	// 1P音波のバウンディングボックスを取得
-	Rect r_wave1;
-	bool isHit1 = false;
+
+		// 1P音波のバウンディングボックスを取得
+		Rect r_wave1;
+		bool isHit1 = false;
+		if (m_wave[PLAYER_1] != nullptr)
+		{
+			r_wave1 = m_wave[PLAYER_1]->getBoundingBox();
+		}
+
+		// 1P音波のバウンディングボックスを取得
+		Rect r_wave2;
+		bool isHit2 = false;
+		if (m_wave[PLAYER_2] != nullptr)
+		{
+			r_wave2 = m_wave[PLAYER_2]->getBoundingBox();
+		}
+
+		// 矩形同士で当たり判定を取得
+		isHit1 = r_iwashi.intersectsRect(r_wave1);
+		isHit2 = r_iwashi.intersectsRect(r_wave2);
+
+		// どちらとものスプライトと当たったとき
+		if (isHit1 && isHit2)
+		{
+			isHit1 = false;//要らない？
+			isHit2 = false;//
+			return true;
+		}
+	}
+	return false;
+}
+
+void Play::GetIwashi()
+{
+	// SE
+	AudioEngine::play2d("Sounds\\Splash.ogg");
+
+	// 作成したパーティクルのプロパティリストを読み込み
+	ParticleSystemQuad* particle = ParticleSystemQuad::create("Images\\kirakira.plist");
+	//パーティクルのメモリーリーク回避（★重要）
+	particle->setAutoRemoveOnFinish(true);
+	// パーティクルを開始
+	particle->resetSystem();
+	// パーティクルを表示する場所の設定
+	particle->setPosition(480, 500);
+	// パーティクルを配置
+	this->addChild(particle);
+
+
+	// パーティクルにアクション
+	DelayTime* delay2 = DelayTime::create(1.5f);
+	RemoveSelf* remove2 = RemoveSelf::create();
+	Sequence* sequence_particle = Sequence::create(delay2, remove2, nullptr);
+	particle->runAction(sequence_particle);
+	particle = nullptr;
+
+	// 魚にアクション
+	iwashi->stopActionByTag(100);
+	MoveTo* move = MoveTo::create(0.25f, Vec2(480, 500));
+	ScaleTo* scale = ScaleTo::create(0.2f, 2.5f);
+	Spawn* spawn = Spawn::create(scale, move, nullptr);
+	DelayTime* delay = DelayTime::create(1.5f);
+	RemoveSelf* remove = RemoveSelf::create();
+	Sequence* sequence_iwahi = Sequence::create(spawn, delay, remove, nullptr);
+	iwashi->runAction(sequence_iwahi);
+
+	// スプライトの解放
 	if (m_wave[PLAYER_1] != nullptr)
 	{
-		r_wave1 = m_wave[PLAYER_1]->getBoundingBox();
+		m_wave[PLAYER_1]->runAction(RemoveSelf::create());
+		m_wave[PLAYER_1] = nullptr;
 	}
-
-	// 1P音波のバウンディングボックスを取得
-	Rect r_wave2;
-	bool isHit2 = false;
 	if (m_wave[PLAYER_2] != nullptr)
 	{
-		r_wave2 = m_wave[PLAYER_2]->getBoundingBox();
+		m_wave[PLAYER_2]->runAction(RemoveSelf::create());
+		m_wave[PLAYER_2] = nullptr;
 	}
 
-	// 矩形同士で当たり判定を取得
-	isHit1 = r_iwashi.intersectsRect(r_wave1);
-	isHit2 = r_iwashi.intersectsRect(r_wave2);
-
-	// どちらとものスプライトと当たったとき
-	if (isHit1 && isHit2)
-	{
-		// SE
-		AudioEngine::play2d("Sounds\\Splash.ogg");
-
-		// 作成したパーティクルのプロパティリストを読み込み
-		ParticleSystemQuad* particle = ParticleSystemQuad::create("Images\\kirakira.plist");
-		//パーティクルのメモリーリーク回避（★重要）
-		particle->setAutoRemoveOnFinish(true);
-		// パーティクルを開始
-		particle->resetSystem();
-		// パーティクルを表示する場所の設定
-		particle->setPosition(480, 500);
-		// パーティクルを配置
-		this->addChild(particle);
-
-
-		// パーティクルにアクション
-		DelayTime* delay2 = DelayTime::create(1.5f);
-		RemoveSelf* remove2 = RemoveSelf::create();
-		Sequence* sequence_particle = Sequence::create(delay2, remove2, nullptr);
-		particle->runAction(sequence_particle);
-
-		// 魚にアクション
-		iwashi->stopActionByTag(100);
-		MoveTo* move = MoveTo::create(0.25f, Vec2(480, 500));
-		ScaleTo* scale = ScaleTo::create(0.2f, 2.5f);
-		Spawn* spawn = Spawn::create(scale, move, nullptr);
-		DelayTime* delay = DelayTime::create(1.5f);
-		RemoveSelf* remove = RemoveSelf::create();
-		Sequence* sequence_iwahi = Sequence::create(spawn, delay, remove, nullptr);
-		iwashi->runAction(sequence_iwahi);
-
-		// スプライトの解放
-		m_wave[PLAYER_1] = nullptr;
-		m_wave[PLAYER_2] = nullptr;
-
-
-		// 発射状態のリセット
-		canShoot_1p = true;
-		canShoot_2p = true;
-	}	
+	// 発射状態のリセット
+	canShoot_1p = true;
+	canShoot_2p = true;
 }
 
 
@@ -482,8 +503,6 @@ bool Play::init()
 //----------------------------------------------------------------------
 void Play::update(float delta)
 {
-	
-
 
 	if (m_flag)
 	{
@@ -498,7 +517,11 @@ void Play::update(float delta)
 
 	// !!!======!!! 暫定的 !!!======!!! //
 	// 当たり判定()
-	Collision();
+	if (Collision())
+	{
+		// 鰯ゲット
+		GetIwashi();
+	}
 
 	//残り時間の更新
 	UpadateTime();
