@@ -17,8 +17,8 @@ USING_NS_CC;
 using namespace cocos2d::experimental;
 using namespace cocostudio::timeline;
 
-const float TIME_LIMIT_SECOND = 900;//残り時間（６０秒）
-const float DECREASE_TIME = 0.5;//減っていく時間
+
+//const float DECREASE_TIME = 0.5;//減っていく時間
 const int RETURN_TIME = 30;//fpsを分単位に戻す
 const float SCALSE_SIZE = 5.0;//文字を大きくするサイズ
 //ラベルの高さと幅
@@ -48,8 +48,12 @@ Play::Play()
 	,m_flag(true)
 	,m_CountFlag(true)
 	,m_TotalScore(321)
+	, m_TimeCnt(0)
+	, m_Number_Cnt(0)
+	, SpriteCnt(0)
 {
 }
+
 //デストラクター
 Play::~Play()
 {
@@ -290,6 +294,7 @@ void Play::RenderTimeLabel()
 	timeLabel->setScale(SCALSE_SIZE);
 	this->setTimeLabel(timeLabel);
 	this->addChild(m_TimeLabel);
+
 }
 
 //----------------------------------------------------------------------
@@ -302,15 +307,15 @@ void Play::RenderTimeLabel()
 
 void Play::RendertextTimeLabel()
 {
-	//中心座標
-	auto size = Director::getInstance()->getWinSize();
+	////中心座標
+	//auto size = Director::getInstance()->getWinSize();
 
-	// タイマーヘッダーの追加
-	auto textTimeLabel = Label::createWithSystemFont(" TIME", "Default Font", 16);
-	textTimeLabel->setColor(Color3B::BLACK);
-	textTimeLabel->setPosition(Vec2(150, 570));
-	textTimeLabel->setScale(SCALSE_SIZE);
-	this->addChild(textTimeLabel);
+	//// タイマーヘッダーの追加
+	//auto textTimeLabel = Label::createWithSystemFont(" TIME", "Default Font", 16);
+	//textTimeLabel->setColor(Color3B::BLACK);
+	//textTimeLabel->setPosition(Vec2(150, 570));
+	//textTimeLabel->setScale(SCALSE_SIZE);
+	//this->addChild(textTimeLabel);
 }
 //----------------------------------------------------------------------
 //! @brief UpadateTime
@@ -323,12 +328,13 @@ void Play::RendertextTimeLabel()
 void Play::UpadateTime()
 {
 	
-	// 残り 秒 数 を 減らす
-	m_timer -= DECREASE_TIME;
-	// 残り 秒 数 の 表示 を 更新 する
-	int second = static_cast < int >(m_timer / RETURN_TIME); // int 型 に キャスト する
-	m_TimeLabel->setString(StringUtils::toString(second));
 
+	m_TimeCnt++;
+	if (m_TimeCnt == 60)
+	{
+		m_TimeCnt = 0;
+		TIME_LIMIT_SECOND--;
+	}
 }
 
 void Play::FormIwasHi()
@@ -473,16 +479,18 @@ void Play::update(float delta)
 		GetIwashi();
 	}
 
-	//残り時間の更新
+	////残り時間の更新
 	UpadateTime();
-
+	ScoreIndicate(TIME_LIMIT_SECOND,false);
 	//スコアの描画
-	ScoreIndicate(m_TotalScore);
+	ScoreIndicate(m_TotalScore,true);
+	//これ以降数字のスプライトを生成しない
+	m_CountFlag = false;
 
 	//残りタイムが0になったらリザルト画面に行く
 	///////////////////////////////////////////
 
-	if (m_timer <= 25*30)
+	if (TIME_LIMIT_SECOND <= 15)
 	{
 		// BGM停止
 		AudioEngine::stop(bgm_play);
@@ -571,9 +579,14 @@ bool Play::onTouchBegan(cocos2d::Touch* touch, cocos2d::Event* unused_event)
 	return false;
 }
 
-void Play::ScoreIndicate(int Score)
+void Play::ScoreIndicate(int Score, bool flag)
 {
 	int j;
+
+	if ((m_CountFlag == false)&&(flag == false))
+	{
+		SpriteCnt = 0;
+	}
 
 	//桁数を初期化する
 	Digit = 1;
@@ -618,25 +631,49 @@ void Play::ScoreIndicate(int Score)
 			//Digit桁の値を求める
 			Score /= Digit;
 		}
-		//数字のスプライトを作成する
-		s_Number = Sprite::create("Images\\Number.png");
-		//レクトを設定する
-		s_Number->setTextureRect(Rect(Score * 64, 0, 64, 64));
 
-		if (m_CountFlag==true)
+		if (m_CountFlag == true)
 		{
+			//数字のスプライトを作成する
+			s_Number[SpriteCnt] = Sprite::create("Images\\Number.png");
+			//レクトを設定する
+			s_Number[SpriteCnt]->setTextureRect(Rect(Score * 64, 0, 64, 64));
 			//座標
-			s_Number->setPosition(Vec2(100 + 64 * j, 500));
-			this->addChild(s_Number);
+			if (flag == true)
+			{
+				s_Number[SpriteCnt]->setPosition(Vec2(100 + 64 * j, 500));
+
+			}
+			else
+			{
+				s_Number[SpriteCnt]->setPosition(Vec2(100 + 64 * j, 600));
+
+			}
+			this->addChild(s_Number[SpriteCnt]);
 		}
-		//スコアから求めた値を引く
-		Score2 -= Score * Digit;
-		Score = Score2 ;
-		//次はDigit-1桁を見る
-		Digit /= 10;
-		j++;
-	}
-	m_CountFlag = false;
+		else
+		{
+			//レクトを設定する
+			s_Number[SpriteCnt]->setTextureRect(Rect(Score * 64, 0, 64, 64));
+
+		}
+
+
+
+			m_Number_Cnt++;
+		
+
+			//スコアから求めた値を引く
+			Score2 -= Score * Digit;
+			Score = Score2;
+			//次はDigit-1桁を見る
+			Digit /= 10;
+			j++;
+			SpriteCnt++;
+		}
+	
+
+
 }
 
 //鰯を捕獲したら削除する関数

@@ -23,7 +23,7 @@ bool Score::init()
 
 		return false;
 	}
-	m_Score = 1111;
+	m_Score = rand()%999;
 	////‰Šú‰»
 	//Score::SceneFlag = false;
 	//ScoreActionSpd = 1.0f;

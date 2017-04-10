@@ -18,9 +18,10 @@ private:
 	// 背景
 	cocos2d::Sprite* m_bg;
 	//数字
-	cocos2d::Sprite* s_Number;
+	cocos2d::Sprite* s_Number[6];
 	// 音波	
 	cocos2d::Sprite* m_wave[2];		// 音波のスプライト
+
 
 	// それぞれのプレイヤが音波を発射出来るか
 	bool canShoot_1p;
@@ -34,7 +35,9 @@ private:
 	Iwashi* iwashies[10];
 
 	bool m_flag;//鰯を生成させるフラグ
-
+	int m_Number_Cnt;
+	//描画関数のカウント
+	int SpriteCnt;
 public:
 	Play();
 	~Play();
@@ -84,7 +87,8 @@ public:
 
 
 	//スコアの描画
-	void ScoreIndicate(int Score);
+	void ScoreIndicate(int Score, bool flag);
+
 	
 
 	int SumScore(int score);
@@ -95,7 +99,9 @@ public:
 	int Digit;
 	//現在のスコアを保存する
 	int Score2;
-
+	int TIME_LIMIT_SECOND = 30;//残り時間(30秒）
+	//時間カウンター
+	int m_TimeCnt;
 	float m_posX;
 	bool m_CountFlag;
 	//鰯を捕獲したら削除する関数
