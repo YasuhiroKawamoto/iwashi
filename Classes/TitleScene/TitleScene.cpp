@@ -56,11 +56,9 @@ bool TitleScene::init()
 	// キャラクター関連のレイヤ
 	this->addChild(title_layer);
 
-	// プレイシーンBGMのプリロード
-	AudioEngine::preload("Sounds/PlayBGM.ogg");
 
 	//BGM
-	 BGM = AudioEngine::play2d("Sounds/TitleBGM.mp3");
+	BGM = AudioEngine::play2d("Sounds/TitleBGM.mp3");
 	//BGMループ再生
 	AudioEngine::setLoop(BGM, true);
 	

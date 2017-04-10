@@ -342,22 +342,20 @@ void Play::FormIwasHi()
 
 			// イワシのスプライトをシーンに追加
 			this->addChild(iwashies[i]->GetSprite());
+
+			break;
 		}
-		break;
 	}
 
 	MoveTo* MoveByAction = MoveTo::create(10.0, Vec2(-1000, 340));
-	DelayTime* DelayTimeAction = DelayTime::create(0);
-	Sequence* SpawnAction = Sequence::create(DelayTimeAction, MoveByAction, nullptr);
-	SpawnAction->setTag(100);
+
+	MoveByAction->setTag(100);
 	iwashi = Sprite::create("Images/PlaySeen.png");
 	iwashi->setTextureRect(Rect(0,0,150,50));
 	iwashi->setPosition(1200, 340);
 	this->addChild(iwashi);
-	iwashi->runAction(SpawnAction);
+	iwashi->runAction(MoveByAction);
 	m_flag = false;
-
-
 }
 void Play::DeletIwashi()
 {
@@ -428,14 +426,14 @@ bool Play::init()
 	
 	_eventDispatcher->addEventListenerWithSceneGraphPriority(listener, this);
 
-	
+
 	// SEのプリロード
-	AudioEngine::preload("Sounds/Sonic.mp3");
+	AudioEngine::preload("Sounds/SonicSE.mp3");
 	AudioEngine::preload("Sounds/Splash.ogg");
 
 	// BGM再生
-	bgm_play = AudioEngine::play2d("Sounds/PlayBGM.mp3", true);
-
+	bgm_play = AudioEngine::play2d("Sounds/PlayBGM.mp3");
+	AudioEngine::setLoop(bgm_play, true);
 	FormIwasHi();//鰯の生成
 
 		//////////////////////////////////////////
@@ -538,7 +536,7 @@ bool Play::onTouchBegan(cocos2d::Touch* touch, cocos2d::Event* unused_event)
 			m_wave[PLAYER_1]->runAction(MoveBy::create(4.0f, Vec3(SCREEN_WIDTH + SCREEN_WIDTH, 0, 0)));
 
 			// SE再生
-			se_wave = AudioEngine::play2d("Sounds/Sonic.mp3");
+			se_wave = AudioEngine::play2d("Sounds/SonicSE.mp3");
 
 			return true;
 		}
@@ -561,7 +559,7 @@ bool Play::onTouchBegan(cocos2d::Touch* touch, cocos2d::Event* unused_event)
 			m_wave[PLAYER_2]->runAction(MoveBy::create(4.0f, Vec3(-(SCREEN_WIDTH + SCREEN_WIDTH), 0, 0)));
 
 			// SE再生
-			se_wave = AudioEngine::play2d("Sounds/Sonic.mp3");
+			se_wave = AudioEngine::play2d("Sounds/SonicSE.mp3");
 
 			return true;
 		}

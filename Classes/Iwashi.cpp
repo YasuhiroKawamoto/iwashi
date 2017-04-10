@@ -23,7 +23,7 @@ USING_NS_CC;
 // ===========================================
 Iwashi* Iwashi::GenerateIwashi()
 {
-	Iwashi* iwashi = new Iwashi(1, Vec2(0, 0));
+	Iwashi* iwashi = new Iwashi(1, Vec2(1000, 400));
 	return iwashi;
 }
 
