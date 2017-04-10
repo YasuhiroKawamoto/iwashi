@@ -48,19 +48,28 @@ Iwashi::Iwashi(int putturn, cocos2d::Vec2 pos)
 	{
 		// ˆê”Ô‚¢¬‚³‚¢ˆñ
 	case 0:
-		m_sprIwashi->setTextureRect(Rect(0, 0, 150, 42));
-		m_score = 1;
+		if (m_sprIwashi != nullptr)
+		{
+			m_sprIwashi->setTextureRect(Rect(0, 0, 150, 42));
+			m_score = 1;
+		}
 		break;
 		// ’†‚­‚ç‚¢‚Ìˆñ
 	case 1:
-		m_sprIwashi->setTextureRect(Rect(0, 42, 150, 83));
-		m_score = 3;
+		if (m_sprIwashi != nullptr)
+		{
+			m_sprIwashi->setTextureRect(Rect(0, 42, 150, 83));
+			m_score = 3;
+		}
 
 		break;
 		// ˆê”Ô‘å‚«‚¢ˆñ
 	case 2:
-		m_sprIwashi->setTextureRect(Rect(0, 155, 150, 85));
-		m_score = 5;
+		if (m_sprIwashi != nullptr)
+		{
+			m_sprIwashi->setTextureRect(Rect(0, 155, 150, 85));
+			m_score = 5;
+		}
 		break;
 	}
 }

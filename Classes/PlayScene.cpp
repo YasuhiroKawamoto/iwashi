@@ -17,7 +17,7 @@ USING_NS_CC;
 using namespace cocos2d::experimental;
 using namespace cocostudio::timeline;
 
-const float TIME_LIMIT_SECOND = 450;//残り時間（６０秒）
+const float TIME_LIMIT_SECOND = 900;//残り時間（６０秒）
 const float DECREASE_TIME = 0.5;//減っていく時間
 const int RETURN_TIME = 30;//fpsを分単位に戻す
 const float SCALSE_SIZE = 5.0;//文字を大きくするサイズ
@@ -44,9 +44,10 @@ enum PLAYER
 //コンストラクタ
 Play::Play()
 	:m_timer(TIME_LIMIT_SECOND)
-	, m_TimeLabel(NULL)
+	,m_TimeLabel(NULL)
 	,m_flag(true)
 	,m_CountFlag(true)
+	, m_TotalScore(321)
 {
 }
 //デストラクター
@@ -333,35 +334,29 @@ void Play::UpadateTime()
 void Play::FormIwasHi()
 {
 
-	//MoveTo* MoveByAction = MoveTo::create(10.0, Vec2(-1000, 340));
-	//DelayTime* DelayTimeAction = DelayTime::create(0);
-	//Sequence* SpawnAction = Sequence::create(DelayTimeAction, MoveByAction, nullptr);
-	//SpawnAction->setTag(100);
-	//iwashi = Sprite::create("Images\\PlaySeen.png");
-	//iwashi->setTextureRect(Rect(0,0,150,50));
-	//iwashi->setPosition(1200, 340);
-	//this->addChild(iwashi);
-	//iwashi->runAction(SpawnAction);
-	//m_flag = false;
-	for (int i = 0; i < 10; i++)
-	{
-		if(iwashies[i] == nullptr)
-		iwashies[i] = Iwashi::GenerateIwashi();
-
-		// イワシのスプライトをシーンに追加
-		this->addChild(iwashies[i]->GetSprite());
-		break;
-	}
-
-
 	MoveTo* MoveByAction = MoveTo::create(10.0, Vec2(-1000, 340));
 	DelayTime* DelayTimeAction = DelayTime::create(0);
 	Sequence* SpawnAction = Sequence::create(DelayTimeAction, MoveByAction, nullptr);
 	SpawnAction->setTag(100);
 	iwashi = Sprite::create("Images\\PlaySeen.png");
 	iwashi->setTextureRect(Rect(0,0,150,50));
-	iwashi->setAnchorPoint(Vec2(0.5f, 0.5f));
+	iwashi->setPosition(1200, 340);
+	this->addChild(iwashi);
+	iwashi->runAction(SpawnAction);
 	m_flag = false;
+	for (int i = 0; i < 10; i++)
+	{
+		if (iwashies[i] != nullptr)
+		{
+			iwashies[i] = Iwashi::GenerateIwashi();
+
+			// イワシのスプライトをシーンに追加
+
+			this->addChild(iwashies[i]->GetSprite());
+		}
+		break;
+	}
+
 
 }
 void Play::DeletIwashi()
@@ -487,7 +482,7 @@ void Play::update(float delta)
 	//残りタイムが0になったらリザルト画面に行く
 	///////////////////////////////////////////
 
-	if (m_timer <= 25.0f * 30)
+	if (m_timer <= 0)
 	{
 		// BGM停止
 		AudioEngine::stop(bgm_play);
