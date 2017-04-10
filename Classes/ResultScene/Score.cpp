@@ -14,6 +14,7 @@ using namespace cocos2d::experimental;
 
 
 bool  Score::SceneFlag = false;
+float Score::ScoreActionSpd = 1.0f;		//スコアのアクションの速度
 
 
 bool Score::init()
@@ -23,9 +24,9 @@ bool Score::init()
 		return false;
 	}
 
-	//初期化
-	Score::SceneFlag = false;
-
+	////初期化
+	//Score::SceneFlag = false;
+	//ScoreActionSpd = 1.0f;
 	//音楽ファイルを予めロードしておく
 	AudioEngine::preload("Sounds\\SlideSE.ogg");
 
@@ -66,14 +67,14 @@ void Score::ScoreAcquisition()
 void Score::RankingSort()
 {
 	//今回のスコアがランキングのどこに位置するか求める
-	int i = 4;
+	int i = Fifth;
 	while ((RankingScore[i] < m_Score)&&(i > 0))
 	{
 		i--;
 	}
 
 	//今回のスコアがランキングに入っているならば
-	if (i != 5)
+	if (i != score)
 	{
 		//ランキングを入れ替える
 		for (int j = 2; i <= j; j--)
@@ -170,8 +171,29 @@ void Score::ScoreIndicate(int Ranking)
 				//Digit桁の値を求める
 				ScoreNumber /= Digit;
 			}
-			//数字のスプライトを作成する
-			s_Number = Sprite::create("Images\\Number.png");
+
+			//ランキングによって画像を変える
+			switch (Ranking)
+			{
+			//case First:
+			//	//数字のスプライトを作成する
+			//	s_Number = Sprite::create("Images\\.png");
+			//	break;
+			//case Scound:
+			//	//数字のスプライトを作成する
+			//	s_Number = Sprite::create("Images\\.png");
+			//	break;
+			//case Third:
+			//	//数字のスプライトを作成する
+			//	s_Number = Sprite::create("Images\\.png");
+			//	break;
+			default:
+				//数字のスプライトを作成する
+				s_Number = Sprite::create("Images\\Number.png");
+				break;
+			}
+
+		
 			//レクトを設定する
 			s_Number->setTextureRect(Rect(ScoreNumber * 64, 0, 64, 64));
 			if ( Ranking == 5)
@@ -206,13 +228,13 @@ void Score::ScoreAction(int Ranking)
 	//今回のスコアでないか
 	if ((Ranking > First)&&(Ranking < score))
 	{
-		MoveBy* action = MoveBy::create(1.0f, Vec2(-1 * SCREEN_SIZE_WIDTH, 0.0f));
+		MoveBy* action = MoveBy::create(ScoreActionSpd, Vec2(-1 * SCREEN_SIZE_WIDTH, 0.0f));
 		m_NodeNumber[Ranking]->runAction(action);
 	}
 	//最後のランキングか
 	else if (Ranking == First)
 	{
-		MoveBy* action = MoveBy::create(1.0f, Vec2(-1 * SCREEN_SIZE_WIDTH, 0.0f));
+		MoveBy* action = MoveBy::create(ScoreActionSpd, Vec2(-1 * SCREEN_SIZE_WIDTH, 0.0f));
 		CallFunc* action2 = CallFunc::create(CC_CALLBACK_0(Score::SceneFlagChenge,this));
 		Sequence* action3 = Sequence::create(action, action2, nullptr);
 		m_NodeNumber[Ranking]->runAction(action3);
@@ -220,7 +242,7 @@ void Score::ScoreAction(int Ranking)
 	}
 	else
 	{
-		MoveBy* action = MoveBy::create(1.0f, Vec2(SCREEN_SIZE_WIDTH, 0.0f));
+		MoveBy* action = MoveBy::create(ScoreActionSpd, Vec2(SCREEN_SIZE_WIDTH, 0.0f));
 		m_NodeNumber[Ranking]->runAction(action);
 	}
 

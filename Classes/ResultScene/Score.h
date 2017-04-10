@@ -48,6 +48,7 @@ public:
 	int RankingScore[MAX_SCORE];
 
 	bool static SceneFlag;	//シーン切り替えしてもいいか
+	float static ScoreActionSpd;		//スコアのアクションの速度
 
 private:
 	cocos2d::UserDefault* userDefault;
@@ -57,7 +58,6 @@ private:
 	int ScoreNumber2;
 	Node* m_NodeNumber[MAX_SCORE + 1];//スプライトをスコアごとにこの基盤ノードぶら下げる
 	void SceneFlagChenge();		//シーン切り替えしてもいいか変更する
-
 	enum ScoreNumber
 	{
 		First,
