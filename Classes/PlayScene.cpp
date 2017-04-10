@@ -48,6 +48,9 @@ Play::Play()
 	,m_flag(true)
 	,m_CountFlag(true)
 	,m_TotalScore(321)
+	, m_TimeCnt(0)
+	, m_Number_Cnt(0)
+	, SpriteCnt(0)
 {
 }
 //デストラクター
@@ -292,26 +295,7 @@ void Play::RenderTimeLabel()
 	this->addChild(m_TimeLabel);
 }
 
-//----------------------------------------------------------------------
-//! @brief RendertextTimeLabel
-//!
-//! @param[in] なし
-//!
-//! @return なし
-//----------------------------------------------------------------------
 
-void Play::RendertextTimeLabel()
-{
-	//中心座標
-	auto size = Director::getInstance()->getWinSize();
-
-	// タイマーヘッダーの追加
-	auto textTimeLabel = Label::createWithSystemFont(" TIME", "Default Font", 16);
-	textTimeLabel->setColor(Color3B::BLACK);
-	textTimeLabel->setPosition(Vec2(150, 570));
-	textTimeLabel->setScale(SCALSE_SIZE);
-	this->addChild(textTimeLabel);
-}
 //----------------------------------------------------------------------
 //! @brief UpadateTime
 //!
@@ -323,11 +307,12 @@ void Play::RendertextTimeLabel()
 void Play::UpadateTime()
 {
 	
-	// 残り 秒 数 を 減らす
-	m_timer -= DECREASE_TIME;
-	// 残り 秒 数 の 表示 を 更新 する
-	int second = static_cast < int >(m_timer / RETURN_TIME); // int 型 に キャスト する
-	m_TimeLabel->setString(StringUtils::toString(second));
+	m_TimeCnt++;
+	if (m_TimeCnt == 60)
+	{
+		m_TimeCnt = 0;
+		TIME_LIMIT_SECOND--;
+	}
 
 }
 
@@ -411,9 +396,13 @@ bool Play::init()
 	m_bg->setAnchorPoint(Vec2(0, 0));
 	this->addChild(m_bg);
 
+	m_ScoreImage = Sprite::create("Images\\Score.png");
+	m_ScoreImage->setPosition(Vec2(680, 580));
+	this->addChild(m_ScoreImage);
+
+
 	// TIME描画
 	RenderTimeLabel();
-	RendertextTimeLabel();
 
 	// updateを呼び出す設定
 	this->scheduleUpdate();
@@ -471,11 +460,14 @@ void Play::update(float delta)
 		GetIwashi();
 	}
 
-	//残り時間の更新
+	////残り時間の更新
 	UpadateTime();
-
+	ScoreIndicate(TIME_LIMIT_SECOND, false);
 	//スコアの描画
-	ScoreIndicate(m_TotalScore);
+	ScoreIndicate(m_TotalScore, true);
+	//これ以降数字のスプライトを生成しない
+	m_CountFlag = false;
+
 
 	//残りタイムが0になったらリザルト画面に行く
 	///////////////////////////////////////////
@@ -567,9 +559,15 @@ bool Play::onTouchBegan(cocos2d::Touch* touch, cocos2d::Event* unused_event)
 	return false;
 }
 
-void Play::ScoreIndicate(int Score)
+//スコア・タイムの設定、描画
+void Play::ScoreIndicate(int Score, bool flag)
 {
 	int j;
+
+	if ((m_CountFlag == false) && (flag == false))
+	{
+		SpriteCnt = 0;
+	}
 
 	//桁数を初期化する
 	Digit = 1;
@@ -614,25 +612,47 @@ void Play::ScoreIndicate(int Score)
 			//Digit桁の値を求める
 			Score /= Digit;
 		}
-		//数字のスプライトを作成する
-		s_Number = Sprite::create("Images/Number.png");
-		//レクトを設定する
-		s_Number->setTextureRect(Rect(Score * 64, 0, 64, 64));
 
-		if (m_CountFlag==true)
+
+
+		if (m_CountFlag == true)
 		{
+			//数字のスプライトを作成する
+			s_Number[SpriteCnt] = Sprite::create("Images\\Number.png");
+			//レクトを設定する
+			s_Number[SpriteCnt]->setTextureRect(Rect(Score * 64, 0, 64, 64));
 			//座標
-			s_Number->setPosition(Vec2(100 + 64 * j, 500));
-			this->addChild(s_Number);
+
+			if (flag == true)
+			{
+				s_Number[SpriteCnt]->setPosition(Vec2(800 + 64 * j, 580));
+
+			}
+			else
+			{
+				s_Number[SpriteCnt]->setPosition(Vec2(200 + 64 * j, 580));
+
+			}
+			this->addChild(s_Number[SpriteCnt]);
+
 		}
+		else
+		{
+			//レクトを設定する
+			s_Number[SpriteCnt]->setTextureRect(Rect(Score * 64, 0, 64, 64));
+
+		}
+
+
+		m_Number_Cnt++;
 		//スコアから求めた値を引く
 		Score2 -= Score * Digit;
-		Score = Score2 ;
+		Score = Score2;
 		//次はDigit-1桁を見る
 		Digit /= 10;
 		j++;
+		SpriteCnt++;
 	}
-	m_CountFlag = false;
 }
 
 //鰯を捕獲したら削除する関数
