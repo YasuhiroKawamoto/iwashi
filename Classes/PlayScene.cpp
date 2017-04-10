@@ -472,7 +472,7 @@ void Play::update(float delta)
 	//残りタイムが0になったらリザルト画面に行く
 	///////////////////////////////////////////
 
-	if (m_timer <= 25*30)
+	if (TIME_LIMIT_SECOND <= 25)
 	{
 		// BGM停止
 		AudioEngine::stop(bgm_play);
