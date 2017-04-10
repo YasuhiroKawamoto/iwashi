@@ -28,7 +28,7 @@ bool Score::init()
 	//Score::SceneFlag = false;
 	//ScoreActionSpd = 1.0f;
 	//音楽ファイルを予めロードしておく
-	AudioEngine::preload("Sounds\\SlideSE.ogg");
+	AudioEngine::preload("Sounds/SlideSE.ogg");
 
 	
 	userDefault = cocos2d::UserDefault::getInstance();
@@ -177,19 +177,19 @@ void Score::ScoreIndicate(int Ranking)
 			{
 			case First:
 				//数字のスプライトを作成する
-				s_Number = Sprite::create("Images\\Number1.png");
+				s_Number = Sprite::create("Images/Number1.png");
 				break;
 			case Scound:
 				//数字のスプライトを作成する
-				s_Number = Sprite::create("Images\\Number2.png");
+				s_Number = Sprite::create("Images/Number2.png");
 				break;
 			case Third:
 				//数字のスプライトを作成する
-				s_Number = Sprite::create("Images\\Number3.png");
+				s_Number = Sprite::create("Images/Number3.png");
 				break;
 			default:
 				//数字のスプライトを作成する
-				s_Number = Sprite::create("Images\\Number.png");
+				s_Number = Sprite::create("Images/Number.png");
 				break;
 			}
 
@@ -248,7 +248,7 @@ void Score::ScoreAction(int Ranking)
 		m_NodeNumber[Ranking]->runAction(action);
 	}
 
-	int id = AudioEngine::play2d("Sounds\\SlideSE.ogg");
+	int id = AudioEngine::play2d("Sounds/SlideSE.ogg");
 
 }
 

@@ -1,4 +1,4 @@
-#include "PlayScene.h"
+ï»¿#include "PlayScene.h"
 #include "cocostudio/CocoStudio.h"
 #include "ui/CocosGUI.h"
 
@@ -17,11 +17,11 @@ USING_NS_CC;
 using namespace cocos2d::experimental;
 using namespace cocostudio::timeline;
 
-const float TIME_LIMIT_SECOND = 900;//c‚èŠÔi‚U‚O•bj
-const float DECREASE_TIME = 0.5;//Œ¸‚Á‚Ä‚¢‚­ŠÔ
-const int RETURN_TIME = 30;//fps‚ğ•ª’PˆÊ‚É–ß‚·
-const float SCALSE_SIZE = 5.0;//•¶š‚ğ‘å‚«‚­‚·‚éƒTƒCƒY
-//ƒ‰ƒxƒ‹‚Ì‚‚³‚Æ•
+const float TIME_LIMIT_SECOND = 900;//æ®‹ã‚Šæ™‚é–“ï¼ˆï¼–ï¼ç§’ï¼‰
+const float DECREASE_TIME = 0.5;//æ¸›ã£ã¦ã„ãæ™‚é–“
+const int RETURN_TIME = 30;//fpsã‚’åˆ†å˜ä½ã«æˆ»ã™
+const float SCALSE_SIZE = 5.0;//æ–‡å­—ã‚’å¤§ããã™ã‚‹ã‚µã‚¤ã‚º
+//ãƒ©ãƒ™ãƒ«ã®é«˜ã•ã¨å¹…
 const int TIME_LABEL_WIDTH = 350;
 const int TIME_LABEL_HEIGHT = 70;
 const int TEXT_TIME_LABEL_WIDTH = 550;
@@ -31,8 +31,8 @@ const int SPRIITE_SIZE = 256;
 const int SCREEN_WIDTH = 960;
 
 
-const int ANIMETIONQPUTTURNS = 3;
-const int ANIMETIONQFRAME = 30;
+const int ANIMETION_PUTTURNS = 3;
+const int ANIMETION_FRAME = 30;
 
 
 enum PLAYER
@@ -41,7 +41,7 @@ enum PLAYER
 	PLAYER_2
 };
 
-//ƒRƒ“ƒXƒgƒ‰ƒNƒ^
+//ã‚³ãƒ³ã‚¹ãƒˆãƒ©ã‚¯ã‚¿
 Play::Play()
 	:m_timer(TIME_LIMIT_SECOND)
 	,m_TimeLabel(NULL)
@@ -50,15 +50,15 @@ Play::Play()
 	,m_TotalScore(321)
 {
 }
-//ƒfƒXƒgƒ‰ƒNƒ^[
+//ãƒ‡ã‚¹ãƒˆãƒ©ã‚¯ã‚¿ãƒ¼
 Play::~Play()
 {
-	CC_SAFE_RELEASE_NULL(m_TimeLabel);//m_TimeLabel‚ğ”jŠü
+	CC_SAFE_RELEASE_NULL(m_TimeLabel);//m_TimeLabelã‚’ç ´æ£„
 }
 //----------------------------------------------------------------------
 //! @brief createScene
 //!
-//! @param[in] ‚È‚µ
+//! @param[in] ãªã—
 //!
 //! @return  scene
 //----------------------------------------------------------------------
@@ -78,43 +78,43 @@ Scene* Play::createScene()
     return scene;
 }
 // ===========================================
-// @>ŠT@—v:ƒ^ƒbƒ`À•W‚É‰¹”g‚ğ¶¬
+// @>æ¦‚ã€€è¦:ã‚¿ãƒƒãƒåº§æ¨™ã«éŸ³æ³¢ã‚’ç”Ÿæˆ
 //
-// @>ˆø@”:ƒ^ƒbƒ`À•W(Vec2), ‚Ç‚Á‚¿‚ÌƒvƒŒƒCƒ„[‚ª‚¤‚Á‚½‚©(int)
+// @>å¼•ã€€æ•°:ã‚¿ãƒƒãƒåº§æ¨™(Vec2), ã©ã£ã¡ã®ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ãŒã†ã£ãŸã‹(int)
 //
-// @>–ß‚è’l:‚È‚µ
+// @>æˆ»ã‚Šå€¤:ãªã—
 // ===========================================
 void  Play::CreateWave(Vec2 pos, int player)
 {
 
-	// ‰æ‘œƒtƒ@ƒCƒ‹‚Ì“Ç‚İ‚İ
-	m_wave[player] = Sprite::create("Images\\wave_anm.png");
+	// ç”»åƒãƒ•ã‚¡ã‚¤ãƒ«ã®èª­ã¿è¾¼ã¿
+	m_wave[player] = Sprite::create("Images/wave_anm.png");
 
-	// Å‰‚Ìƒpƒ^[ƒ“‰æ‘œ‚ğØ‚è”²‚«
+	// æœ€åˆã®ãƒ‘ã‚¿ãƒ¼ãƒ³ç”»åƒã‚’åˆ‡ã‚ŠæŠœã
 	m_wave[player]->setTextureRect(Rect(0, 0, SPRIITE_SIZE, SPRIITE_SIZE));
 
-	// À•W‚ğƒ^ƒbƒ`À•W‚É•ÏX
+	// åº§æ¨™ã‚’ã‚¿ãƒƒãƒåº§æ¨™ã«å¤‰æ›´
 	m_wave[player]->setPosition(Vec2(pos.x, pos.y));
 
-	// ƒTƒCƒY‚ğ‚¢‚¢Š´‚¶‚É’²®
+	// ã‚µã‚¤ã‚ºã‚’ã„ã„æ„Ÿã˜ã«èª¿æ•´
 	m_wave[player]->setScale(0.4f);
 
 
-	// ƒV[ƒ“‚É’Ç‰Á
+	// ã‚·ãƒ¼ãƒ³ã«è¿½åŠ 
 	this->addChild(m_wave[player]);
 }
 
 
 // ===========================================
-// @>ŠT@—v:‰¹”g‚ª‰æ–ÊŠO‚Éo‚½‚çÄ”­Ë‰Â”\‚É‚·‚é
+// @>æ¦‚ã€€è¦:éŸ³æ³¢ãŒç”»é¢å¤–ã«å‡ºãŸã‚‰å†ç™ºå°„å¯èƒ½ã«ã™ã‚‹
 //
-// @>ˆø@”:‚È‚µ
+// @>å¼•ã€€æ•°:ãªã—
 //
-// @>–ß‚è’l:‚È‚µ
+// @>æˆ»ã‚Šå€¤:ãªã—
 // ===========================================
 void Play::Reload()
 {
-	// ‰æ–ÊŠO‚Éo‚½‚ç”­Ëó‘Ô‚ğ‰ñ•œ
+	// ç”»é¢å¤–ã«å‡ºãŸã‚‰ç™ºå°„çŠ¶æ…‹ã‚’å›å¾©
 	if (m_wave[PLAYER_1] != nullptr)
 	{
 		if (m_wave[PLAYER_1]->getPosition().x > SCREEN_WIDTH)
@@ -133,21 +133,21 @@ void Play::Reload()
 }
 
 // ===========================================
-// @>ŠT@—v:ƒAƒjƒ[ƒVƒ‡ƒ“‚ÌXV
+// @>æ¦‚ã€€è¦:ã‚¢ãƒ‹ãƒ¡ãƒ¼ã‚·ãƒ§ãƒ³ã®æ›´æ–°
 //
-// @>ˆø@”:‚È‚µ
+// @>å¼•ã€€æ•°:ãªã—
 //
-// @>–ß‚è’l:‚È‚µ
+// @>æˆ»ã‚Šå€¤:ãªã—
 // ===========================================
 void Play::AnimationUpdate()
 {
-	// ƒAƒjƒ\ƒVƒ‡ƒ“ƒJƒEƒ“ƒg‚Ì‘‰Á
+	// ã‚¢ãƒ‹ãƒ¡â€•ã‚·ãƒ§ãƒ³ã‚«ã‚¦ãƒ³ãƒˆã®å¢—åŠ 
 	m_animation_cnt++;
 
-	// Å‘å90ƒtƒŒ[ƒ€İ’è
+	// æœ€å¤§90ãƒ•ãƒ¬ãƒ¼ãƒ è¨­å®š
 	m_animation_cnt %= 90;
 
-	// 2‚Â‚Ì‰¹”g‚ÌƒXƒvƒ‰ƒCƒg‚ğ‚»‚ê‚¼‚êØ‚è‘Ö‚¦‚é
+	// 2ã¤ã®éŸ³æ³¢ã®ã‚¹ãƒ—ãƒ©ã‚¤ãƒˆã‚’ãã‚Œãã‚Œåˆ‡ã‚Šæ›¿ãˆã‚‹
 	for (int i = 0; i < 2; i++)
 	{
 		if (m_wave[i] != nullptr)
@@ -159,22 +159,22 @@ void Play::AnimationUpdate()
 
 
 // ===========================================
-// @>ŠT@—v:ib’è“Ij“–‚½‚è”»’è
+// @>æ¦‚ã€€è¦:ï¼ˆæš«å®šçš„ï¼‰å½“ãŸã‚Šåˆ¤å®š
 //
-// @>ˆø@”:‚È‚µ
+// @>å¼•ã€€æ•°:ãªã—
 //
-// @>–ß‚è’l:bool(true:“–‚½‚Á‚½)
+// @>æˆ»ã‚Šå€¤:bool(true:å½“ãŸã£ãŸ)
 // ===========================================
 bool Play::Collision()
 {
 	
 	if (iwashi != nullptr)
 	{
-		// ˆñƒXƒvƒ‰ƒCƒg‚ÌƒoƒEƒ“ƒfƒBƒ“ƒOƒ{ƒbƒNƒX‚ğæ“¾
+		// é°¯ã‚¹ãƒ—ãƒ©ã‚¤ãƒˆã®ãƒã‚¦ãƒ³ãƒ‡ã‚£ãƒ³ã‚°ãƒœãƒƒã‚¯ã‚¹ã‚’å–å¾—
 		r_iwashi = iwashi->getBoundingBox();
 
 
-		// 1P‰¹”g‚ÌƒoƒEƒ“ƒfƒBƒ“ƒOƒ{ƒbƒNƒX‚ğæ“¾
+		// 1PéŸ³æ³¢ã®ãƒã‚¦ãƒ³ãƒ‡ã‚£ãƒ³ã‚°ãƒœãƒƒã‚¯ã‚¹ã‚’å–å¾—
 		
 		isHit1 = false;
 		if (m_wave[PLAYER_1] != nullptr)
@@ -182,7 +182,7 @@ bool Play::Collision()
 			r_wave1 = m_wave[PLAYER_1]->getBoundingBox();
 		}
 
-		// 1P‰¹”g‚ÌƒoƒEƒ“ƒfƒBƒ“ƒOƒ{ƒbƒNƒX‚ğæ“¾
+		// 1PéŸ³æ³¢ã®ãƒã‚¦ãƒ³ãƒ‡ã‚£ãƒ³ã‚°ãƒœãƒƒã‚¯ã‚¹ã‚’å–å¾—
 	
 		isHit2 = false;
 		if (m_wave[PLAYER_2] != nullptr)
@@ -190,11 +190,11 @@ bool Play::Collision()
 			r_wave2 = m_wave[PLAYER_2]->getBoundingBox();
 		}
 
-		// ‹éŒ`“¯m‚Å“–‚½‚è”»’è‚ğæ“¾
+		// çŸ©å½¢åŒå£«ã§å½“ãŸã‚Šåˆ¤å®šã‚’å–å¾—
 		isHit1 = r_iwashi.intersectsRect(r_wave1);
 		isHit2 = r_iwashi.intersectsRect(r_wave2);
 
-		// ‚Ç‚¿‚ç‚Æ‚à‚ÌƒXƒvƒ‰ƒCƒg‚Æ“–‚½‚Á‚½‚Æ‚«
+		// ã©ã¡ã‚‰ã¨ã‚‚ã®ã‚¹ãƒ—ãƒ©ã‚¤ãƒˆã¨å½“ãŸã£ãŸã¨ã
 		if (isHit1 && isHit2)
 		{
 			isHit1 = false;
@@ -208,31 +208,31 @@ bool Play::Collision()
 void Play::GetIwashi()
 {
 	// SE
-	AudioEngine::play2d("Sounds\\Splash.ogg");
+	AudioEngine::play2d("Sounds/Splash.ogg");
 
-	// ì¬‚µ‚½ƒp[ƒeƒBƒNƒ‹‚ÌƒvƒƒpƒeƒBƒŠƒXƒg‚ğ“Ç‚İ‚İ
-	ParticleSystemQuad* particle = ParticleSystemQuad::create("Images\\kirakira.plist");
-	//ƒp[ƒeƒBƒNƒ‹‚Ìƒƒ‚ƒŠ[ƒŠ[ƒN‰ñ”ğišd—vj
+	// ä½œæˆã—ãŸãƒ‘ãƒ¼ãƒ†ã‚£ã‚¯ãƒ«ã®ãƒ—ãƒ­ãƒ‘ãƒ†ã‚£ãƒªã‚¹ãƒˆã‚’èª­ã¿è¾¼ã¿
+	ParticleSystemQuad* particle = ParticleSystemQuad::create("Images/kirakira.plist");
+	//ãƒ‘ãƒ¼ãƒ†ã‚£ã‚¯ãƒ«ã®ãƒ¡ãƒ¢ãƒªãƒ¼ãƒªãƒ¼ã‚¯å›é¿ï¼ˆâ˜…é‡è¦ï¼‰
 	particle->setAutoRemoveOnFinish(true);
-	// ƒp[ƒeƒBƒNƒ‹‚ğŠJn
+	// ãƒ‘ãƒ¼ãƒ†ã‚£ã‚¯ãƒ«ã‚’é–‹å§‹
 	particle->resetSystem();
-	// ƒp[ƒeƒBƒNƒ‹‚ğ•\¦‚·‚éêŠ‚Ìİ’è
+	// ãƒ‘ãƒ¼ãƒ†ã‚£ã‚¯ãƒ«ã‚’è¡¨ç¤ºã™ã‚‹å ´æ‰€ã®è¨­å®š
 	particle->setPosition(480, 500);
-	// ƒp[ƒeƒBƒNƒ‹‚ğ”z’u
+	// ãƒ‘ãƒ¼ãƒ†ã‚£ã‚¯ãƒ«ã‚’é…ç½®
 	this->addChild(particle);
 
 
-	// ƒp[ƒeƒBƒNƒ‹‚ÉƒAƒNƒVƒ‡ƒ“
+	// ãƒ‘ãƒ¼ãƒ†ã‚£ã‚¯ãƒ«ã«ã‚¢ã‚¯ã‚·ãƒ§ãƒ³
 	DelayTime* delay2 = DelayTime::create(1.5f);
 	RemoveSelf* remove2 = RemoveSelf::create();
 	Sequence* sequence_particle = Sequence::create(delay2, remove2, nullptr);
 	particle->runAction(sequence_particle);
 	particle = nullptr;
 
-	// ‹›‚ÉƒAƒNƒVƒ‡ƒ“
+	// é­šã«ã‚¢ã‚¯ã‚·ãƒ§ãƒ³
 	iwashi->stopActionByTag(100);
 	iwashi->setAnchorPoint(Vec2(0.5f, 0.5f));
-	MoveTo* move = MoveTo::create(0.25f, Vec2(480, 50));		// ƒoƒO‚Á‚Ä‚é
+	MoveTo* move = MoveTo::create(0.25f, Vec2(480, 50));		// ãƒã‚°ã£ã¦ã‚‹
 	ScaleTo* scale = ScaleTo::create(0.2f, 2.5f);
 	Spawn* spawn = Spawn::create(scale, move, nullptr);
 	DelayTime* delay = DelayTime::create(1.5f);
@@ -241,7 +241,7 @@ void Play::GetIwashi()
 	Sequence* sequence_iwahi = Sequence::create(spawn, delay, remove, call, nullptr);
 	iwashi->runAction(sequence_iwahi);
 	
-	// ƒXƒvƒ‰ƒCƒg‚Ì‰ğ•ú
+	// ã‚¹ãƒ—ãƒ©ã‚¤ãƒˆã®è§£æ”¾
 	if (m_wave[PLAYER_1] != nullptr)
 	{
 		m_wave[PLAYER_1]->runAction(RemoveSelf::create());
@@ -253,16 +253,16 @@ void Play::GetIwashi()
 		m_wave[PLAYER_2] = nullptr;
 	}
 
-	// ”­Ëó‘Ô‚ÌƒŠƒZƒbƒg
+	// ç™ºå°„çŠ¶æ…‹ã®ãƒªã‚»ãƒƒãƒˆ
 	canShoot_1p = true;
 	canShoot_2p = true;
 }
 // ===========================================
-// @>ŠT@—v:ƒXƒRƒA‚ÌŒvZ
+// @>æ¦‚ã€€è¦:ã‚¹ã‚³ã‚¢ã®è¨ˆç®—
 //
-// @>ˆø@”:ŠeíƒXƒRƒAi‚R’iŠK‚ÌˆñA‚²‚İ‚ÌƒXƒRƒAAƒ{[ƒiƒXƒXƒRƒAj
+// @>å¼•ã€€æ•°:å„ç¨®ã‚¹ã‚³ã‚¢ï¼ˆï¼“æ®µéšã®é°¯ã€ã”ã¿ã®ã‚¹ã‚³ã‚¢ã€ãƒœãƒ¼ãƒŠã‚¹ã‚¹ã‚³ã‚¢ï¼‰
 //
-// @>–ß‚è’l:‡Œv‚ÌƒXƒRƒA
+// @>æˆ»ã‚Šå€¤:åˆè¨ˆã®ã‚¹ã‚³ã‚¢
 // ===========================================
 
 int Play::SumScore(int score)
@@ -274,16 +274,16 @@ int Play::SumScore(int score)
 //----------------------------------------------------------------------
 //! @brief RenderTimeLabel
 //!
-//! @param[in] ‚È‚µ
+//! @param[in] ãªã—
 //!
-//! @return ‚È‚µ
+//! @return ãªã—
 //----------------------------------------------------------------------
 void Play::RenderTimeLabel()
 {
-	//’†SÀ•W
+	//ä¸­å¿ƒåº§æ¨™
 	auto size = Director::getInstance()->getWinSize();
-	//ƒ^ƒCƒ}[ ƒ‰ƒxƒ‹‚Ì’Ç‰Á
-	int second = static_cast < int >(m_timer); // int Œ^ ‚É ƒLƒƒƒXƒg ‚·‚é
+	//ã‚¿ã‚¤ãƒãƒ¼ ãƒ©ãƒ™ãƒ«ã®è¿½åŠ 
+	int second = static_cast < int >(m_timer); // int å‹ ã« ã‚­ãƒ£ã‚¹ãƒˆ ã™ã‚‹
 	auto timeLabel = Label::createWithSystemFont(StringUtils::toString(second), "Default Font", 16);
 	timeLabel->setColor(Color3B::BLACK);
 	timeLabel->setPosition(Vec2(300,570));
@@ -295,17 +295,17 @@ void Play::RenderTimeLabel()
 //----------------------------------------------------------------------
 //! @brief RendertextTimeLabel
 //!
-//! @param[in] ‚È‚µ
+//! @param[in] ãªã—
 //!
-//! @return ‚È‚µ
+//! @return ãªã—
 //----------------------------------------------------------------------
 
 void Play::RendertextTimeLabel()
 {
-	//’†SÀ•W
+	//ä¸­å¿ƒåº§æ¨™
 	auto size = Director::getInstance()->getWinSize();
 
-	// ƒ^ƒCƒ}[ƒwƒbƒ_[‚Ì’Ç‰Á
+	// ã‚¿ã‚¤ãƒãƒ¼ãƒ˜ãƒƒãƒ€ãƒ¼ã®è¿½åŠ 
 	auto textTimeLabel = Label::createWithSystemFont(" TIME", "Default Font", 16);
 	textTimeLabel->setColor(Color3B::BLACK);
 	textTimeLabel->setPosition(Vec2(150, 570));
@@ -315,18 +315,18 @@ void Play::RendertextTimeLabel()
 //----------------------------------------------------------------------
 //! @brief UpadateTime
 //!
-//! @param[in] ‚È‚µ
+//! @param[in] ãªã—
 //!
-//! @return ‚È‚µ
+//! @return ãªã—
 //----------------------------------------------------------------------
 
 void Play::UpadateTime()
 {
 	
-	// c‚è •b ” ‚ğ Œ¸‚ç‚·
+	// æ®‹ã‚Š ç§’ æ•° ã‚’ æ¸›ã‚‰ã™
 	m_timer -= DECREASE_TIME;
-	// c‚è •b ” ‚Ì •\¦ ‚ğ XV ‚·‚é
-	int second = static_cast < int >(m_timer / RETURN_TIME); // int Œ^ ‚É ƒLƒƒƒXƒg ‚·‚é
+	// æ®‹ã‚Š ç§’ æ•° ã® è¡¨ç¤º ã‚’ æ›´æ–° ã™ã‚‹
+	int second = static_cast < int >(m_timer / RETURN_TIME); // int å‹ ã« ã‚­ãƒ£ã‚¹ãƒˆ ã™ã‚‹
 	m_TimeLabel->setString(StringUtils::toString(second));
 
 }
@@ -340,7 +340,7 @@ void Play::FormIwasHi()
 		{
 			iwashies[i] = Iwashi::GenerateIwashi();
 
-			// ƒCƒƒV‚ÌƒXƒvƒ‰ƒCƒg‚ğƒV[ƒ“‚É’Ç‰Á
+			// ã‚¤ãƒ¯ã‚·ã®ã‚¹ãƒ—ãƒ©ã‚¤ãƒˆã‚’ã‚·ãƒ¼ãƒ³ã«è¿½åŠ 
 			this->addChild(iwashies[i]->GetSprite());
 		}
 		break;
@@ -350,7 +350,7 @@ void Play::FormIwasHi()
 	DelayTime* DelayTimeAction = DelayTime::create(0);
 	Sequence* SpawnAction = Sequence::create(DelayTimeAction, MoveByAction, nullptr);
 	SpawnAction->setTag(100);
-	iwashi = Sprite::create("Images\\PlaySeen.png");
+	iwashi = Sprite::create("Images/PlaySeen.png");
 	iwashi->setTextureRect(Rect(0,0,150,50));
 	iwashi->setPosition(1200, 340);
 	this->addChild(iwashi);
@@ -361,10 +361,10 @@ void Play::FormIwasHi()
 }
 void Play::DeletIwashi()
 {
-	//ˆñ‚ÌÀ•W‚ª0ˆÈ‰º‚¾‚Á‚½‚ç
+	//é°¯ã®åº§æ¨™ãŒ0ä»¥ä¸‹ã ã£ãŸã‚‰
 	if (iwashi->getPositionX() <= 0)
 	{
-		iwashi->removeFromParent();//ˆñ‚ğíœ
+		iwashi->removeFromParent();//é°¯ã‚’å‰Šé™¤
 		iwashi = nullptr;
 		m_flag = true;
 	}
@@ -372,7 +372,7 @@ void Play::DeletIwashi()
 //----------------------------------------------------------------------
 //! @brief init
 //!
-//! @param[in] ‚È‚µ
+//! @param[in] ãªã—
 //!
 //! @return true or false
 //----------------------------------------------------------------------
@@ -388,19 +388,19 @@ bool Play::init()
     }
 
     
-	// •Ï”‰Šú‰»==============================
+	// å¤‰æ•°åˆæœŸåŒ–==============================
 	m_animation_cnt = 0;
 
 	canShoot_1p = true;
 	canShoot_2p = true;
 
-	// ‰¹”g
+	// éŸ³æ³¢
 	for (int i = 0; i < 2; i++)
 	{
 		m_wave[i] = nullptr;
 	}
 
-	// ƒCƒƒV
+	// ã‚¤ãƒ¯ã‚·
 	for (int i = 0; i < 10; i++)
 	{
 		iwashies[i] = nullptr;
@@ -408,44 +408,44 @@ bool Play::init()
 
 	iwashi = nullptr;
 
-	// ”wŒi===================================
-	m_bg = Sprite::create("Images\\BG.png");
+	// èƒŒæ™¯===================================
+	m_bg = Sprite::create("Images/BG.png");
 	m_bg->setAnchorPoint(Vec2(0, 0));
 	this->addChild(m_bg);
 
-	// TIME•`‰æ
+	// TIMEæç”»
 	RenderTimeLabel();
 	RendertextTimeLabel();
 
-	// update‚ğŒÄ‚Ño‚·İ’è
+	// updateã‚’å‘¼ã³å‡ºã™è¨­å®š
 	this->scheduleUpdate();
 
-	// ƒCƒxƒ“ƒgƒŠƒXƒi[‚ğì¬
+	// ã‚¤ãƒ™ãƒ³ãƒˆãƒªã‚¹ãƒŠãƒ¼ã‚’ä½œæˆ
 	EventListenerTouchOneByOne* listener = EventListenerTouchOneByOne::create();
 
-	// ƒCƒxƒ“ƒgƒŠƒXƒi[‚ÉŠeƒR[ƒ‹ƒoƒbƒNŠÖ”‚ğƒZƒbƒg‚·‚é
+	// ã‚¤ãƒ™ãƒ³ãƒˆãƒªã‚¹ãƒŠãƒ¼ã«å„ã‚³ãƒ¼ãƒ«ãƒãƒƒã‚¯é–¢æ•°ã‚’ã‚»ãƒƒãƒˆã™ã‚‹
 	listener->onTouchBegan = CC_CALLBACK_2(Play::onTouchBegan, this);
 	
 	_eventDispatcher->addEventListenerWithSceneGraphPriority(listener, this);
 
 	
-	// SE‚ÌƒvƒŠƒ[ƒh
-	AudioEngine::preload("Sounds\\Sonic.ogg");
-	AudioEngine::preload("Sounds\\Splash.ogg");
+	// SEã®ãƒ—ãƒªãƒ­ãƒ¼ãƒ‰
+	AudioEngine::preload("Sounds/Sonic.mp3");
+	AudioEngine::preload("Sounds/Splash.ogg");
 
-	// BGMÄ¶
-	bgm_play = AudioEngine::play2d("Sounds\\SeenBGM.ogg", true);
+	// BGMå†ç”Ÿ
+	bgm_play = AudioEngine::play2d("Sounds/PlayBGM.mp3", true);
 
-	FormIwasHi();//ˆñ‚Ì¶¬
+	FormIwasHi();//é°¯ã®ç”Ÿæˆ
 
 		//////////////////////////////////////////
 	
     return true;
 }
 //----------------------------------------------------------------------
-//! @brief update(–ˆƒtƒŒ[ƒ€ŒÄ‚Ño‚³‚ê‚éupdateŠÖ”)
+//! @brief update(æ¯ãƒ•ãƒ¬ãƒ¼ãƒ å‘¼ã³å‡ºã•ã‚Œã‚‹updateé–¢æ•°)
 //!
-//! @param[in] ‚È‚µ
+//! @param[in] ãªã—
 //!
 //! @return 
 //----------------------------------------------------------------------
@@ -457,37 +457,35 @@ void Play::update(float delta)
 
 		FormIwasHi();
 
-		DeletIwashi();//ˆñ‚ª‰æ–ÊŠO‚Éo‚½‚ç”jŠü
+		DeletIwashi();//é°¯ãŒç”»é¢å¤–ã«å‡ºãŸã‚‰ç ´æ£„
 	}
-	// ƒAƒjƒ[ƒVƒ‡ƒ“XV
+	// ã‚¢ãƒ‹ãƒ¡ãƒ¼ã‚·ãƒ§ãƒ³æ›´æ–°
 	AnimationUpdate();
 
-	// ‰æ–ÊŠO‚Éo‚½‚ç”­Ëó‘Ô‚ğ‰ñ•œ
+	// ç”»é¢å¤–ã«å‡ºãŸã‚‰ç™ºå°„çŠ¶æ…‹ã‚’å›å¾©
 	Reload();
 
-	// !!!======!!! b’è“I !!!======!!! //
-	// “–‚½‚è”»’è()
+	// !!!======!!! æš«å®šçš„ !!!======!!! //
+	// å½“ãŸã‚Šåˆ¤å®š()
 	if (Collision())
 	{
-		// ˆñƒQƒbƒg
+		// é°¯ã‚²ãƒƒãƒˆ
 		GetIwashi();
 	}
 
-	//c‚èŠÔ‚ÌXV
+	//æ®‹ã‚Šæ™‚é–“ã®æ›´æ–°
 	UpadateTime();
 
-	//ƒXƒRƒA‚Ì•`‰æ
+	//ã‚¹ã‚³ã‚¢ã®æç”»
 	ScoreIndicate(m_TotalScore);
 
-	//c‚èƒ^ƒCƒ€‚ª0‚É‚È‚Á‚½‚çƒŠƒUƒ‹ƒg‰æ–Ê‚És‚­
+	//æ®‹ã‚Šã‚¿ã‚¤ãƒ ãŒ0ã«ãªã£ãŸã‚‰ãƒªã‚¶ãƒ«ãƒˆç”»é¢ã«è¡Œã
 	///////////////////////////////////////////
 
 	if (m_timer <= 25*30)
 	{
-		// BGM’â~
+		// BGMåœæ­¢
 		AudioEngine::stop(bgm_play);
-		AudioEngine::uncache("Sounds\\SeenBGM.ogg");
-
 
 		//auto director = Director::getInstance();
 
@@ -496,9 +494,9 @@ void Play::update(float delta)
 
 		//// run
 		//director->runWithScene(scene);
-		// Ÿ‚ÌƒV[ƒ“‚ğì¬‚·‚é
+		// æ¬¡ã®ã‚·ãƒ¼ãƒ³ã‚’ä½œæˆã™ã‚‹
 		Scene* nextScene = ResultScene::create();
-		// Ÿ‚ÌƒV[ƒ“‚ÉˆÚs
+		// æ¬¡ã®ã‚·ãƒ¼ãƒ³ã«ç§»è¡Œ
 		_director->replaceScene(nextScene);
 	}
 
@@ -512,58 +510,58 @@ void Play::update(float delta)
 //----------------------------------------------------------------------
 bool Play::onTouchBegan(cocos2d::Touch* touch, cocos2d::Event* unused_event)
 {
-	// ƒ^ƒbƒ`À•W‚ğæ“¾
+	// ã‚¿ãƒƒãƒåº§æ¨™ã‚’å–å¾—
 	Vec2 touch_pos = touch->getLocation();
 
-	// yÀ•W‚É§ŒÀ‚ğ•t‚¯‚é
+	// yåº§æ¨™ã«åˆ¶é™ã‚’ä»˜ã‘ã‚‹
 	if (touch_pos.y > 400)
 	{
 		touch_pos.y = 400;
 	}
 
-	// ‰æ–Ê”¼•”‚æ‚è¶‚ªƒ^ƒbƒv‚³‚ê‚½‚Æ‚«‚Ìˆ—
+	// ç”»é¢åŠéƒ¨ã‚ˆã‚Šå·¦ãŒã‚¿ãƒƒãƒ—ã•ã‚ŒãŸã¨ãã®å‡¦ç†
 	if (touch_pos.x < (SCREEN_WIDTH / 2))
 	{
-		// ”­Ë‰Â”\ó‘Ô‚Ì
+		// ç™ºå°„å¯èƒ½çŠ¶æ…‹ã®æ™‚
 		if (canShoot_1p)
 		{
 			Play::CreateWave(Vec2(0, touch_pos.y), PLAYER_1);
 			m_wave[0]->setFlippedX(true);
 
-			// ƒAƒjƒ[ƒVƒ‡ƒ“ƒŠƒZƒbƒg
+			// ã‚¢ãƒ‹ãƒ¡ãƒ¼ã‚·ãƒ§ãƒ³ãƒªã‚»ãƒƒãƒˆ
 			m_animation_cnt = 0;
 
-			// ”­Ë‚ğ•s‰Â‚É
+			// ç™ºå°„ã‚’ä¸å¯ã«
 			canShoot_1p = false;
 
-			// ‰æ–ÊŠO‚Ü‚Å‰¹”gˆÚ“®
+			// ç”»é¢å¤–ã¾ã§éŸ³æ³¢ç§»å‹•
 			m_wave[PLAYER_1]->runAction(MoveBy::create(4.0f, Vec3(SCREEN_WIDTH + SCREEN_WIDTH, 0, 0)));
 
-			// SEÄ¶
-			se_wave = AudioEngine::play2d("Sounds\\Sonic.ogg");
+			// SEå†ç”Ÿ
+			se_wave = AudioEngine::play2d("Sounds/Sonic.mp3");
 
 			return true;
 		}
 	}
 
-	else // ‰æ–Ê”¼•”‚æ‚è‰E‚ªƒ^ƒbƒv‚³‚ê‚½‚Æ‚«‚Ìˆ—
+	else // ç”»é¢åŠéƒ¨ã‚ˆã‚Šå³ãŒã‚¿ãƒƒãƒ—ã•ã‚ŒãŸã¨ãã®å‡¦ç†
 	{
-		// ”­Ë‰Â”\ó‘Ô‚Ì
+		// ç™ºå°„å¯èƒ½çŠ¶æ…‹ã®æ™‚
 		if (canShoot_2p)
 		{
 			Play::CreateWave(Vec2(SCREEN_WIDTH, touch_pos.y), PLAYER_2);
 
-			// ƒAƒjƒ[ƒVƒ‡ƒ“ƒŠƒZƒbƒg
+			// ã‚¢ãƒ‹ãƒ¡ãƒ¼ã‚·ãƒ§ãƒ³ãƒªã‚»ãƒƒãƒˆ
 			m_animation_cnt = 0;
 
-			// ”­Ë‚ğ•s‰Â‚É
+			// ç™ºå°„ã‚’ä¸å¯ã«
 			canShoot_2p = false;
 
-			// ‰æ–ÊŠO‚Ü‚Å‰¹”gˆÚ“®
+			// ç”»é¢å¤–ã¾ã§éŸ³æ³¢ç§»å‹•
 			m_wave[PLAYER_2]->runAction(MoveBy::create(4.0f, Vec3(-(SCREEN_WIDTH + SCREEN_WIDTH), 0, 0)));
 
-			// SEÄ¶
-			se_wave = AudioEngine::play2d("Sounds\\Sonic.ogg");
+			// SEå†ç”Ÿ
+			se_wave = AudioEngine::play2d("Sounds/Sonic.mp3");
 
 			return true;
 		}
@@ -575,71 +573,71 @@ void Play::ScoreIndicate(int Score)
 {
 	int j;
 
-	//Œ…”‚ğ‰Šú‰»‚·‚é
+	//æ¡æ•°ã‚’åˆæœŸåŒ–ã™ã‚‹
 	Digit = 1;
-	//‘ÎÛ‚ÌƒXƒRƒA‚ğ•Û‘¶‚·‚é
+	//å¯¾è±¡ã®ã‚¹ã‚³ã‚¢ã‚’ä¿å­˜ã™ã‚‹
 	Score2 = Score;
 
-	//ƒXƒRƒA‚ª‰½Œ…‚ ‚é‚Ì‚©‹‚ß‚é
-	//®”‚ª‚È‚­‚È‚é‚Ü‚Å10‚Åœ–@‚·‚é
+	//ã‚¹ã‚³ã‚¢ãŒä½•æ¡ã‚ã‚‹ã®ã‹æ±‚ã‚ã‚‹
+	//æ•´æ•°ãŒãªããªã‚‹ã¾ã§10ã§é™¤æ³•ã™ã‚‹
 
-	//ƒXƒRƒA‚ª0‚¶‚á‚È‚¢‚Æ‚«
+	//ã‚¹ã‚³ã‚¢ãŒ0ã˜ã‚ƒãªã„ã¨ã
 	if ((Score - Score2 != Score))
 	{
 		while (Score - Score2 != Score)
 		{
 			Score2 /= 10;
-			//‰½‰ñƒ‹[ƒv‚µ‚½‚©ƒJƒEƒ“ƒg‚·‚é
+			//ä½•å›ãƒ«ãƒ¼ãƒ—ã—ãŸã‹ã‚«ã‚¦ãƒ³ãƒˆã™ã‚‹
 			Digit *= 10;
 
 		}
-		//¬”‚É‚È‚é‚Ü‚Å‚©‚¯‚½‚ªAŒ…”‚ğ’m‚è‚½‚¢‚Ì‚Å10‚ÅŠ„‚é
+		//å°æ•°ã«ãªã‚‹ã¾ã§ã‹ã‘ãŸãŒã€æ¡æ•°ã‚’çŸ¥ã‚ŠãŸã„ã®ã§10ã§å‰²ã‚‹
 		Digit /= 10;
 	}
 
 
 
 
-	//‘ÎÛ‚ÌƒXƒRƒA‚ğ•Û‘¶‚·‚é
+	//å¯¾è±¡ã®ã‚¹ã‚³ã‚¢ã‚’ä¿å­˜ã™ã‚‹
 	Score2 = Score;
 
 	j = 0;
 	while (Digit != 0)
 	{
-		//c‚è‚Ì’l‚ª0‚É‚È‚éAuDigitŒ…‚Ì’l‚ğ‹‚ß‚év‚ÅƒGƒ‰[‚É‚È‚é
-		//c‚è‚Ì’l‚ª0‚É‚È‚éAŒ…”•ª‚Ì0‚ğ•\¦‚µ‚Ä
+		//æ®‹ã‚Šã®å€¤ãŒ0ã«ãªã‚‹æ™‚ã€ã€ŒDigitæ¡ã®å€¤ã‚’æ±‚ã‚ã‚‹ã€ã§ã‚¨ãƒ©ãƒ¼ã«ãªã‚‹
+		//æ®‹ã‚Šã®å€¤ãŒ0ã«ãªã‚‹æ™‚ã€æ¡æ•°åˆ†ã®0ã‚’è¡¨ç¤ºã—ã¦
 		if (Score2 <= 0)
 		{
-			//DigitŒ…‚Ì’l‚ğ‹‚ß‚é
+			//Digitæ¡ã®å€¤ã‚’æ±‚ã‚ã‚‹
 			Score = 0;
 		}
 		else
 		{
-			//DigitŒ…‚Ì’l‚ğ‹‚ß‚é
+			//Digitæ¡ã®å€¤ã‚’æ±‚ã‚ã‚‹
 			Score /= Digit;
 		}
-		//”š‚ÌƒXƒvƒ‰ƒCƒg‚ğì¬‚·‚é
-		s_Number = Sprite::create("Images\\Number.png");
-		//ƒŒƒNƒg‚ğİ’è‚·‚é
+		//æ•°å­—ã®ã‚¹ãƒ—ãƒ©ã‚¤ãƒˆã‚’ä½œæˆã™ã‚‹
+		s_Number = Sprite::create("Images/Number.png");
+		//ãƒ¬ã‚¯ãƒˆã‚’è¨­å®šã™ã‚‹
 		s_Number->setTextureRect(Rect(Score * 64, 0, 64, 64));
 
 		if (m_CountFlag==true)
 		{
-			//À•W
+			//åº§æ¨™
 			s_Number->setPosition(Vec2(100 + 64 * j, 500));
 			this->addChild(s_Number);
 		}
-		//ƒXƒRƒA‚©‚ç‹‚ß‚½’l‚ğˆø‚­
+		//ã‚¹ã‚³ã‚¢ã‹ã‚‰æ±‚ã‚ãŸå€¤ã‚’å¼•ã
 		Score2 -= Score * Digit;
 		Score = Score2 ;
-		//Ÿ‚ÍDigit-1Œ…‚ğŒ©‚é
+		//æ¬¡ã¯Digit-1æ¡ã‚’è¦‹ã‚‹
 		Digit /= 10;
 		j++;
 	}
 	m_CountFlag = false;
 }
 
-//ˆñ‚ğ•ßŠl‚µ‚½‚çíœ‚·‚éŠÖ”
+//é°¯ã‚’æ•ç²ã—ãŸã‚‰å‰Šé™¤ã™ã‚‹é–¢æ•°
 void Play::IwashiDelete()
 {
 	iwashi = nullptr;
