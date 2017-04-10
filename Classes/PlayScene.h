@@ -71,8 +71,6 @@ public:
 
 	//残り時間の描画関数
 	void RenderTimeLabel();
-	//TIMEの描画関数
-	void RendertextTimeLabel();
 	//残り時間の更新関数
 	void UpadateTime();
 	//鰯の生成関数
@@ -82,7 +80,8 @@ public:
 
 	// プレイヤー1
 	cocos2d::Sprite* m_player1;
-
+	//SCOREのスプライト
+	cocos2d::Sprite* m_ScoreImage;
 
 
 

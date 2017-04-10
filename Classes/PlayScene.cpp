@@ -290,33 +290,13 @@ void Play::RenderTimeLabel()
 	int second = static_cast < int >(m_timer); // int 型 に キャスト する
 	auto timeLabel = Label::createWithSystemFont(StringUtils::toString(second), "Default Font", 16);
 	timeLabel->setColor(Color3B::BLACK);
-	timeLabel->setPosition(Vec2(300,570));
+	timeLabel->setPosition(Vec2(700,570));
 	timeLabel->setScale(SCALSE_SIZE);
 	this->setTimeLabel(timeLabel);
 	this->addChild(m_TimeLabel);
 
 }
 
-//----------------------------------------------------------------------
-//! @brief RendertextTimeLabel
-//!
-//! @param[in] なし
-//!
-//! @return なし
-//----------------------------------------------------------------------
-
-void Play::RendertextTimeLabel()
-{
-	////中心座標
-	//auto size = Director::getInstance()->getWinSize();
-
-	//// タイマーヘッダーの追加
-	//auto textTimeLabel = Label::createWithSystemFont(" TIME", "Default Font", 16);
-	//textTimeLabel->setColor(Color3B::BLACK);
-	//textTimeLabel->setPosition(Vec2(150, 570));
-	//textTimeLabel->setScale(SCALSE_SIZE);
-	//this->addChild(textTimeLabel);
-}
 //----------------------------------------------------------------------
 //! @brief UpadateTime
 //!
@@ -419,9 +399,14 @@ bool Play::init()
 	m_bg->setAnchorPoint(Vec2(0, 0));
 	this->addChild(m_bg);
 
+	//SCOREのスプライトの作成
+	m_ScoreImage = Sprite::create("Images\\Score.png");
+	m_ScoreImage->setPosition(Vec2(680, 580));
+	this->addChild(m_ScoreImage);
+
+
 	// TIME描画
 	RenderTimeLabel();
-	RendertextTimeLabel();
 
 	// updateを呼び出す設定
 	this->scheduleUpdate();
@@ -579,6 +564,8 @@ bool Play::onTouchBegan(cocos2d::Touch* touch, cocos2d::Event* unused_event)
 	return false;
 }
 
+
+//スコア・タイムの設定、描画
 void Play::ScoreIndicate(int Score, bool flag)
 {
 	int j;
@@ -632,6 +619,8 @@ void Play::ScoreIndicate(int Score, bool flag)
 			Score /= Digit;
 		}
 
+		
+
 		if (m_CountFlag == true)
 		{
 			//数字のスプライトを作成する
@@ -639,17 +628,19 @@ void Play::ScoreIndicate(int Score, bool flag)
 			//レクトを設定する
 			s_Number[SpriteCnt]->setTextureRect(Rect(Score * 64, 0, 64, 64));
 			//座標
+
 			if (flag == true)
 			{
-				s_Number[SpriteCnt]->setPosition(Vec2(100 + 64 * j, 500));
+				s_Number[SpriteCnt]->setPosition(Vec2(800 + 64 * j, 580));
 
 			}
 			else
 			{
-				s_Number[SpriteCnt]->setPosition(Vec2(100 + 64 * j, 600));
+				s_Number[SpriteCnt]->setPosition(Vec2(200 + 64 * j, 580));
 
 			}
 			this->addChild(s_Number[SpriteCnt]);
+
 		}
 		else
 		{
@@ -659,10 +650,7 @@ void Play::ScoreIndicate(int Score, bool flag)
 		}
 
 
-
 			m_Number_Cnt++;
-		
-
 			//スコアから求めた値を引く
 			Score2 -= Score * Digit;
 			Score = Score2;
