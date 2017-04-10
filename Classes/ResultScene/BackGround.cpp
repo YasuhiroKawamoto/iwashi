@@ -18,13 +18,13 @@ bool BackGround::init()
 	}
 
 	//背景
-	s_BackGround = Sprite::create("Images/ResultTexture.png");
+	s_BackGround = Sprite::create("Images\\ResultTexture.png");
 	s_BackGround->setPosition(Vec2(480.0f, 320.0f));
 	s_BackGround->setScale(1.5f, 1.5f);
 	this->addChild(s_BackGround);
 
 	// 作成したパーティクルのプロパティリストを読み込み
-	ParticleSystemQuad* particle = ParticleSystemQuad::create("Images/particle_texture.plist");
+	ParticleSystemQuad* particle = ParticleSystemQuad::create("Images\\particle_texture.plist");
 	//パーティクルのメモリーリーク回避（★重要）
 	particle->setAutoRemoveOnFinish(true);
 	// パーティクルを開始
@@ -38,7 +38,7 @@ bool BackGround::init()
 
 
 	//タッチ
-	s_touch = Sprite::create("Images/TouchImage.png");
+	s_touch = Sprite::create("Images\\TouchImage.png");
 	s_touch->setPosition(Vec2(480.0f,100.f));
 	s_touch->setVisible(false);
 //	s_touch->setScale

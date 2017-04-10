@@ -23,12 +23,14 @@ bool Score::init()
 
 		return false;
 	}
-	m_Score = 1111;
+
+	m_Score = rand()%999;
+
 	////初期化
 	//Score::SceneFlag = false;
 	//ScoreActionSpd = 1.0f;
 	//音楽ファイルを予めロードしておく
-	AudioEngine::preload("Sounds/SlideSE.ogg");
+	AudioEngine::preload("Sounds\\SlideSE.ogg");
 
 	
 	userDefault = cocos2d::UserDefault::getInstance();
@@ -68,12 +70,11 @@ void Score::RankingSort()
 {
 	//今回のスコアがランキングのどこに位置するか求める
 	int i = Fifth;
-	while ((RankingScore[i] < m_Score)&&(i >= 0))
+	while ((RankingScore[i] < m_Score)&&(i > 0))
 	{
 		i--;
 	}
 
-	i++;
 	//今回のスコアがランキングに入っているならば
 	if (i != score)
 	{
@@ -178,19 +179,19 @@ void Score::ScoreIndicate(int Ranking)
 			{
 			case First:
 				//数字のスプライトを作成する
-				s_Number = Sprite::create("Images/Number1.png");
+				s_Number = Sprite::create("Images\\Number1.png");
 				break;
 			case Scound:
 				//数字のスプライトを作成する
-				s_Number = Sprite::create("Images/Number2.png");
+				s_Number = Sprite::create("Images\\Number2.png");
 				break;
 			case Third:
 				//数字のスプライトを作成する
-				s_Number = Sprite::create("Images/Number3.png");
+				s_Number = Sprite::create("Images\\Number3.png");
 				break;
 			default:
 				//数字のスプライトを作成する
-				s_Number = Sprite::create("Images/Number.png");
+				s_Number = Sprite::create("Images\\Number.png");
 				break;
 			}
 
@@ -249,7 +250,7 @@ void Score::ScoreAction(int Ranking)
 		m_NodeNumber[Ranking]->runAction(action);
 	}
 
-	int id = AudioEngine::play2d("Sounds/SlideSE.ogg");
+	int id = AudioEngine::play2d("Sounds\\SlideSE.ogg");
 
 }
 
