@@ -18,7 +18,8 @@ private:
 	cocos2d::Sprite* m_sprIwashi;				// スプライト
 	bool isFisshed;								// 釣ったかどうか
 	cocos2d::Rect m_bounding_box;
-	int m_pattern;
+	int m_pattern;								// イワシのパターン
+	int m_score;								// イワシの点数
 
 	Iwashi(int putturn, cocos2d::Vec2 pos);		// 非公開コンストラクタ
 public:
@@ -28,5 +29,6 @@ public:
 	}
 	Iwashi();
 	static Iwashi* GenerateIwashi();
+	void Update();
 	
 };

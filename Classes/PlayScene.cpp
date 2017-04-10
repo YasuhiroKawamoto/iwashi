@@ -229,8 +229,8 @@ void Play::GetIwashi()
 
 	// 魚にアクション
 	iwashi->stopActionByTag(100);
-	iwashi->setAnchorPoint(Vec2(0, 0));
-	MoveTo* move = MoveTo::create(0.25f, Vec2(480, 500));
+	iwashi->setAnchorPoint(Vec2(0.5f, 0.5f));
+	MoveTo* move = MoveTo::create(0.25f, Vec2(480, 50));		// バグってる
 	ScaleTo* scale = ScaleTo::create(0.2f, 2.5f);
 	Spawn* spawn = Spawn::create(scale, move, nullptr);
 	DelayTime* delay = DelayTime::create(1.5f);
@@ -320,16 +320,26 @@ void Play::UpadateTime()
 
 void Play::FormIwasHi()
 {
-	MoveTo* MoveByAction = MoveTo::create(10.0, Vec2(-1000, 340));
-	DelayTime* DelayTimeAction = DelayTime::create(0);
-	Sequence* SpawnAction = Sequence::create(DelayTimeAction, MoveByAction, nullptr);
-	SpawnAction->setTag(100);
-	iwashi = Sprite::create("Images\\PlaySeen.png");
-	iwashi->setTextureRect(Rect(0,0,150,50));
-	iwashi->setPosition(1200, 340);
-	this->addChild(iwashi);
-	iwashi->runAction(SpawnAction);
-	m_flag = false;
+	//MoveTo* MoveByAction = MoveTo::create(10.0, Vec2(-1000, 340));
+	//DelayTime* DelayTimeAction = DelayTime::create(0);
+	//Sequence* SpawnAction = Sequence::create(DelayTimeAction, MoveByAction, nullptr);
+	//SpawnAction->setTag(100);
+	//iwashi = Sprite::create("Images\\PlaySeen.png");
+	//iwashi->setTextureRect(Rect(0,0,150,50));
+	//iwashi->setPosition(1200, 340);
+	//this->addChild(iwashi);
+	//iwashi->runAction(SpawnAction);
+	//m_flag = false;
+	for (int i = 0; i < 10; i++)
+	{
+		if(iwashies[i] == nullptr)
+		iwashies[i] = Iwashi::GenerateIwashi();
+
+		// イワシのスプライトをシーンに追加
+		this->addChild(iwashies[i]->GetSprite());
+		break;
+	}
+
 }
 void Play::DeletIwashi()
 {
@@ -427,6 +437,13 @@ bool Play::init()
 	{
 		m_wave[i] = nullptr;
 	}
+
+	// イワシ
+	for (int i = 0; i < 10; i++)
+	{
+		iwashies[i] = nullptr;
+	}
+
 	iwashi = nullptr;
 
 	// 背景===================================
@@ -516,8 +533,6 @@ void Play::update(float delta)
 		Scene* nextScene = ResultScene::create();
 		// 次のシーンに移行
 		_director->replaceScene(nextScene);
-
-
 	}
 
 }

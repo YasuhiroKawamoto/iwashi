@@ -27,6 +27,11 @@ Iwashi* Iwashi::GenerateIwashi()
 	return iwashi;
 }
 
+void Iwashi::Update()
+{
+
+}
+
 // ===========================================
 // @>概　要:イワシのコンストラクタ
 //
@@ -34,8 +39,30 @@ Iwashi* Iwashi::GenerateIwashi()
 // ===========================================
 Iwashi::Iwashi(int putturn, cocos2d::Vec2 pos)
 {
+	// 引数からをデータに代入
 	m_pattern = putturn;
+	m_sprIwashi = Sprite::create("Images\\PlayScene");
 
+
+	switch (m_pattern)
+	{
+		// 一番い小さい鰯
+	case 0:
+		m_sprIwashi->setTextureRect(Rect(0, 0, 150, 42));
+		m_score = 1;
+		break;
+		// 中くらいの鰯
+	case 1:
+		m_sprIwashi->setTextureRect(Rect(0, 42, 150, 83));
+		m_score = 3;
+
+		break;
+		// 一番大きい鰯
+	case 2:
+		m_sprIwashi->setTextureRect(Rect(0, 155, 150, 85));
+		m_score = 5;
+		break;
+	}
 }
 
 Iwashi::Iwashi()

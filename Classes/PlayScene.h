@@ -7,7 +7,6 @@
 class Play : public cocos2d::Scene
 {	
 private:
-
 	cocos2d::Sprite* iwashi;
 	cocos2d::Rect r_iwashi;
 	cocos2d::Rect r_wave1;
@@ -21,7 +20,7 @@ private:
 	// 音波	
 	cocos2d::Sprite* m_wave[2];		// 音波のスプライト
 
-									// それぞれのプレイヤが音波を発射出来るか
+	// それぞれのプレイヤが音波を発射出来るか
 	bool canShoot_1p;
 	bool canShoot_2p;
 
@@ -30,7 +29,7 @@ private:
 	int m_animation_cnt;
 
 	// 鰯オブジェクトの配列
-	Iwashi iwahies[10];
+	Iwashi* iwashies[10];
 
 	bool m_flag;//鰯を生成させるフラグ
 
