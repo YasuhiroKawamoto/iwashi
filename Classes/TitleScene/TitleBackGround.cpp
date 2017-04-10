@@ -7,7 +7,7 @@ bool TitleBackGround::init()
 	{
 		return false;
 	}
-	return true;
+
 
 	// 作成したパーティクルのプロパティリストを読み込み
 	ParticleSystemQuad* particle = ParticleSystemQuad::create("Images\\particle_texture.plist");
@@ -19,4 +19,21 @@ bool TitleBackGround::init()
 	particle->setPosition(480, -100);
 	// パーティクルを配置
 	this->addChild(particle);
+
+	//タッチ
+	s_touch = Sprite::create("Images\\TouchImage.png");
+	s_touch->setPosition(Vec2(480.0f, 100.0f));
+	this->addChild(s_touch);
+	Opacity = 0;
+	this->scheduleUpdate();
+
+	return true;
+}
+
+void TitleBackGround::update(float data)
+{
+
+		Opacity += 2;
+		s_touch->setOpacity(Opacity);
+	
 }

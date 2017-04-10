@@ -27,5 +27,7 @@ public:
 
 
 private:
-
+	cocos2d::Sprite* s_touch;//タッチスプライト
+	void update(float data)override;
+	float Opacity;//透明度
 };
