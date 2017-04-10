@@ -2,8 +2,10 @@
 #define __HELLOWORLD_SCENE_H__
 
 #include "cocos2d.h"
+#include "Iwashi.h"
 
 class Play : public cocos2d::Scene
+<<<<<<< HEAD
 {
 private:
 	//スコア
@@ -13,6 +15,33 @@ private:
 	int m_BonusScore;
 	int m_BatScore;
 	int m_TotalScore;
+
+	cocos2d::Sprite* iwashi;
+	cocos2d::Rect r_iwashi;
+	cocos2d::Rect r_wave1;
+	cocos2d::Rect r_wave2;
+	bool isHit1;
+	bool isHit2;
+
+	// 背景
+	cocos2d::Sprite* m_bg;
+
+	// 音波	
+	cocos2d::Sprite* m_wave[2];		// 音波のスプライト
+
+									// それぞれのプレイヤが音波を発射出来るか
+	bool canShoot_1p;
+	bool canShoot_2p;
+
+	int se_wave;
+	int bgm_play;
+	int m_animation_cnt;
+
+	// 鰯オブジェクトの配列
+	Iwashi iwahies[10];
+
+	bool m_flag;//鰯を生成させるフラグ
+
 public:
 	Play();
 	~Play();
@@ -32,6 +61,14 @@ public:
 	// 音波生成関数
 	void CreateWave(cocos2d::Vec2 pos, int player);
 
+	// アニメーション更新
+	void AnimationUpdate();
+
+	// 当たり判定
+	bool Collision();
+
+	// 鰯をゲット
+	void GetIwashi();
 
 	// 音波が画面外に出たら再発射可能にする
 	void Reload();
@@ -46,6 +83,7 @@ public:
 	void FormIwasHi();
 	//鰯が画面外に出たら削除する関数
 	void DeletIwashi();
+
 	// プレイヤー1
 	cocos2d::Sprite* m_player1;
 
@@ -82,12 +120,14 @@ public:
 	bool m_flag;//鰯を生成させるフラグ
 	float m_posX;
 	bool m_CountFlag;
+	//鰯を捕獲したら削除する関数
+	void IwashiDelete();
+
 	CC_SYNTHESIZE(float, m_timer, Second);//残り秒数をfloatに変換する
 	CC_SYNTHESIZE_RETAIN(cocos2d::Label*, m_TimeLabel, TimeLabel);//ラベルを新しくセットする関数をつくる
 
     // implement the "static create()" method manually
     CREATE_FUNC(Play);
-	cocos2d::Sprite* iwashi;
 
 };
 

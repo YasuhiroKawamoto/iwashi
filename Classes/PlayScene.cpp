@@ -168,76 +168,99 @@ void Play::AnimationUpdate()
 //
 // @>引　数:なし
 //
-// @>戻り値:なし
+// @>戻り値:bool(true:当たった)
 // ===========================================
-void Play::Collision()
+bool Play::Collision()
 {
-	// 鰯スプライトのバウンディングボックスを取得
-	Rect r_iwashi = iwashi->getBoundingBox();
+	
+	if (iwashi != nullptr)
+	{
+		// 鰯スプライトのバウンディングボックスを取得
+		r_iwashi = iwashi->getBoundingBox();
 
-	// 1P音波のバウンディングボックスを取得
-	Rect r_wave1;
-	bool isHit1 = false;
+
+		// 1P音波のバウンディングボックスを取得
+		
+		isHit1 = false;
+		if (m_wave[PLAYER_1] != nullptr)
+		{
+			r_wave1 = m_wave[PLAYER_1]->getBoundingBox();
+		}
+
+		// 1P音波のバウンディングボックスを取得
+	
+		isHit2 = false;
+		if (m_wave[PLAYER_2] != nullptr)
+		{
+			r_wave2 = m_wave[PLAYER_2]->getBoundingBox();
+		}
+
+		// 矩形同士で当たり判定を取得
+		isHit1 = r_iwashi.intersectsRect(r_wave1);
+		isHit2 = r_iwashi.intersectsRect(r_wave2);
+
+		// どちらとものスプライトと当たったとき
+		if (isHit1 && isHit2)
+		{
+			isHit1 = false;
+			isHit2 = false;
+			return true;
+		}
+	}
+	return false;
+}
+
+void Play::GetIwashi()
+{
+	// SE
+	AudioEngine::play2d("Sounds\\Splash.ogg");
+
+	// 作成したパーティクルのプロパティリストを読み込み
+	ParticleSystemQuad* particle = ParticleSystemQuad::create("Images\\kirakira.plist");
+	//パーティクルのメモリーリーク回避（★重要）
+	particle->setAutoRemoveOnFinish(true);
+	// パーティクルを開始
+	particle->resetSystem();
+	// パーティクルを表示する場所の設定
+	particle->setPosition(480, 500);
+	// パーティクルを配置
+	this->addChild(particle);
+
+
+	// パーティクルにアクション
+	DelayTime* delay2 = DelayTime::create(1.5f);
+	RemoveSelf* remove2 = RemoveSelf::create();
+	Sequence* sequence_particle = Sequence::create(delay2, remove2, nullptr);
+	particle->runAction(sequence_particle);
+	particle = nullptr;
+
+	// 魚にアクション
+	iwashi->stopActionByTag(100);
+	iwashi->setAnchorPoint(Vec2(0, 0));
+	MoveTo* move = MoveTo::create(0.25f, Vec2(480, 500));
+	ScaleTo* scale = ScaleTo::create(0.2f, 2.5f);
+	Spawn* spawn = Spawn::create(scale, move, nullptr);
+	DelayTime* delay = DelayTime::create(1.5f);
+	RemoveSelf* remove = RemoveSelf::create();
+	CallFunc* call = CallFunc::create(CC_CALLBACK_0(Play::IwashiDelete,this));
+	Sequence* sequence_iwahi = Sequence::create(spawn, delay, remove, call, nullptr);
+	iwashi->runAction(sequence_iwahi);
+	
+	// スプライトの解放
 	if (m_wave[PLAYER_1] != nullptr)
 	{
-		r_wave1 = m_wave[PLAYER_1]->getBoundingBox();
+		m_wave[PLAYER_1]->runAction(RemoveSelf::create());
+		m_wave[PLAYER_1] = nullptr;
 	}
-
-	// 1P音波のバウンディングボックスを取得
-	Rect r_wave2;
-	bool isHit2 = false;
 	if (m_wave[PLAYER_2] != nullptr)
 	{
-		r_wave2 = m_wave[PLAYER_2]->getBoundingBox();
+		m_wave[PLAYER_2]->runAction(RemoveSelf::create());
+		m_wave[PLAYER_2] = nullptr;
 	}
 
-	// 矩形同士で当たり判定を取得
-	isHit1 = r_iwashi.intersectsRect(r_wave1);
-	isHit2 = r_iwashi.intersectsRect(r_wave2);
-
-	// どちらとものスプライトと当たったとき
-	if (isHit1 && isHit2)
-	{
-		// SE
-		AudioEngine::play2d("Sounds\\Splash.ogg");
-
-		// 作成したパーティクルのプロパティリストを読み込み
-		ParticleSystemQuad* particle = ParticleSystemQuad::create("Images\\kirakira.plist");
-		//パーティクルのメモリーリーク回避（★重要）
-		particle->setAutoRemoveOnFinish(true);
-		// パーティクルを開始
-		particle->resetSystem();
-		// パーティクルを表示する場所の設定
-		particle->setPosition(480, 500);
-		// パーティクルを配置
-		this->addChild(particle);
-
-
-		// パーティクルにアクション
-		DelayTime* delay2 = DelayTime::create(1.5f);
-		RemoveSelf* remove2 = RemoveSelf::create();
-		Sequence* sequence_particle = Sequence::create(delay2, remove2, nullptr);
-		particle->runAction(sequence_particle);
-
-		// 魚にアクション
-		iwashi->stopActionByTag(100);
-		MoveTo* move = MoveTo::create(0.25f, Vec2(480, 500));
-		ScaleTo* scale = ScaleTo::create(0.2f, 2.5f);
-		Spawn* spawn = Spawn::create(scale, move, nullptr);
-		DelayTime* delay = DelayTime::create(1.5f);
-		RemoveSelf* remove = RemoveSelf::create();
-		Sequence* sequence_iwahi = Sequence::create(spawn, delay, remove, nullptr);
-		iwashi->runAction(sequence_iwahi);
-
-		// スプライトの解放
-		m_wave[PLAYER_1] = nullptr;
-		m_wave[PLAYER_2] = nullptr;
-
-
-		// 発射状態のリセット
-		canShoot_1p = true;
-		canShoot_2p = true;
-	}	
+	// 発射状態のリセット
+	canShoot_1p = true;
+	canShoot_2p = true;
 }
 // ===========================================
 // @>概　要:スコアの計算
@@ -312,26 +335,16 @@ void Play::UpadateTime()
 	m_TimeLabel->setString(StringUtils::toString(second));
 
 }
+
 void Play::FormIwasHi()
 {
-	MoveTo*MoveByAction = MoveTo::create(10.0, Vec2(-1000, 340));
-	DelayTime*DelayTimeAction = DelayTime::create(3);
+	MoveTo* MoveByAction = MoveTo::create(10.0, Vec2(-1000, 340));
+	DelayTime* DelayTimeAction = DelayTime::create(0);
 	Sequence* SpawnAction = Sequence::create(DelayTimeAction, MoveByAction, nullptr);
 	SpawnAction->setTag(100);
 	iwashi = Sprite::create("Images\\PlaySeen.png");
 	iwashi->setTextureRect(Rect(0,0,150,50));
-	//iwashi->setAnchorPoint(Vec2(0.5f, 0.5f));
-	iwashi->setPosition(1200, 340);
-	this->addChild(iwashi);
-	iwashi->runAction(SpawnAction);
-	//鰯の座標が0以下だったら
-	if (iwashi->getPositionX() <= 0)
-	{
-		iwashi->removeFromParent();//鰯を削除
-								   //iwashi = nullptr;
-		m_flag = true;
-	}
-	
+	iwashi->setAnchorPoint(Vec2(0.5f, 0.5f));
 	m_flag = false;
 }
 void Play::DeletIwashi()
@@ -374,6 +387,7 @@ bool Play::init()
 	{
 		m_wave[i] = nullptr;
 	}
+	iwashi = nullptr;
 
 	// 背景===================================
 	m_bg = Sprite::create("Images\\BG.png");
@@ -395,9 +409,7 @@ bool Play::init()
 	
 	_eventDispatcher->addEventListenerWithSceneGraphPriority(listener, this);
 
-	// BGMのプリロード
-	AudioEngine::preload("Sounds\\SeenBGM.ogg");
-
+	
 	// SEのプリロード
 	AudioEngine::preload("Sounds\\Sonic.ogg");
 	AudioEngine::preload("Sounds\\Splash.ogg");
@@ -405,39 +417,7 @@ bool Play::init()
 	// BGM再生
 	bgm_play = AudioEngine::play2d("Sounds\\SeenBGM.ogg", true);
 
-	_eventDispatcher->addEventListenerWithSceneGraphPriority(listener, this);
-
-
-	//　イワシは3秒に一回くらい
-	/* イワシ */
-	// イワシ生成
-	
-	
-	//Rect rect(float(0.0f), float(0.0f), float(150.0f), float(50.0f));
-
-	//iwashi = Sprite::create("PlaySeen.png");
-	//this->addChild(iwashi);
-	/* アクション？ */
-	// イワシ行動
-	//Sprite*iwashi = Sprite::create("PlaySeen.png");
-	//iwashi->setPosition(Vec2(100.0f, 0.0f));
-	//this->addChild(iwashi);
-
-
-	/* アクション */
-	// イワシ行動
-
-	//iwashi->setPosition(Vec2(iwashi->getContentSize));
-
-	//iwashi = Sprite::create("PlaySeen.png");
-	//iwashi->setPosition(Vec2(iwashi->getContentSize().width / 2, visibleSize.height / 2));
-	/*addChild(iwashi);
-	MoveTo* action1 = MoveTo::create(1, Vec2(visibleSize.width - iwashi->getContentSize().width / 2, visibleSize.height / 2));
-	EaseBackInOut* action2 = EaseBackInOut::create(action1);
-	Sequence*action3 = Sequence::create(action1, action2, action1, nullptr);
-	RepeatForever* action4 = RepeatForever::create(action3);
-*/
-	//iwashi->runAction(action4);
+	FormIwasHi();//鰯の生成
 
 		//////////////////////////////////////////
 	
@@ -452,13 +432,13 @@ bool Play::init()
 //----------------------------------------------------------------------
 void Play::update(float delta)
 {
-	
-
 
 	if (m_flag==true)
 	{
+
 		FormIwasHi();
-		DeletIwashi();
+
+		DeletIwashi();//鰯が画面外に出たら破棄
 	}
 	// アニメーション更新
 	AnimationUpdate();
@@ -468,7 +448,11 @@ void Play::update(float delta)
 
 	// !!!======!!! 暫定的 !!!======!!! //
 	// 当たり判定()
-	Collision();
+	if (Collision())
+	{
+		// 鰯ゲット
+		GetIwashi();
+	}
 
 	//残り時間の更新
 	UpadateTime();
@@ -478,20 +462,26 @@ void Play::update(float delta)
 
 	//残りタイムが0になったらリザルト画面に行く
 	///////////////////////////////////////////
-	if (m_timer <= 0)
+
+	if (m_timer <= 25.0f * 30)
 	{
 		// BGM停止
 		AudioEngine::stop(bgm_play);
 		AudioEngine::uncache("Sounds\\SeenBGM.ogg");
 
 
-		auto director = Director::getInstance();
+		//auto director = Director::getInstance();
 
-		// create a scene. it's an autorelease object
-		auto scene = ResultScene::createScene();
+		//// create a scene. it's an autorelease object
+		//auto scene = ResultScene::createScene();
 
-		// run
-		director->runWithScene(scene);
+		//// run
+		//director->runWithScene(scene);
+		// 次のシーンを作成する
+		Scene* nextScene = ResultScene::create();
+		// 次のシーンに移行
+		_director->replaceScene(nextScene);
+
 
 	}
 
@@ -563,6 +553,7 @@ bool Play::onTouchBegan(cocos2d::Touch* touch, cocos2d::Event* unused_event)
 	}
 	return false;
 }
+
 void Play::ScoreIndicate(int Score)
 {
 	int j;
@@ -629,3 +620,10 @@ void Play::ScoreIndicate(int Score)
 	}
 	m_CountFlag = false;
 }
+
+//鰯を捕獲したら削除する関数
+void Play::IwashiDelete()
+{
+	iwashi = nullptr;
+}
+

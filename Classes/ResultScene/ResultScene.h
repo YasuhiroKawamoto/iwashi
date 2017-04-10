@@ -26,9 +26,7 @@ public:
 	// 初期化する。
 	virtual bool init();
 private:
-	////キーが押されたとき呼び出される関数
-	void onKeyPressed(cocos2d::EventKeyboard::KeyCode keycode, cocos2d::Event* event);
-
+	//タッチされたら
 	bool onTouchBegan(cocos2d::Touch * touch, cocos2d::Event * pEvent);
 
 	//BGM

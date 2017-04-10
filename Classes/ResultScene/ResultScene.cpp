@@ -83,7 +83,7 @@ bool ResultScene::onTouchBegan(Touch* touch, Event* pEvent)
 	//nextScene = TransitionOriginal::create(1.0f, nextScene);
 	if (Score::SceneFlag == true)
 	{
-	
+		Score::SceneFlag = false;
 		//BGMI—¹
 		AudioEngine::stop(ResultBGM);
 		// Ÿ‚ÌƒV[ƒ“‚ğì¬‚·‚é

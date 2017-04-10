@@ -51,6 +51,9 @@
     <ClCompile Include="..\Classes\TitleScene\TitleScene.cpp">
       <Filter>TitleScene</Filter>
     </ClCompile>
+    <ClCompile Include="..\Classes\Iwashi.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="main.h">
@@ -85,6 +88,9 @@
     </ClInclude>
     <ClInclude Include="..\Classes\TitleScene\TitleScene.h">
       <Filter>TitleScene</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\Iwashi.h">
+      <Filter>src</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

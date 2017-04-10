@@ -11,6 +11,7 @@
 #include "cocos2d.h"
 #include "Score.h"
 #include "BackGround.h"
+#include "EventListenerGesture.h"
 
 class ResultLayer :public cocos2d::Layer
 {
@@ -22,6 +23,10 @@ public:
 
 
 private:
+	//タッチされたら
+	bool onTouchBegan(cocos2d::Touch * touch, cocos2d::Event * pEvent);
+	//タッチはなされたら
+	void onTouchEnded(cocos2d::Touch * touch, cocos2d::Event * pEvent);
 
 
 	////毎フレーム呼び出される関数
