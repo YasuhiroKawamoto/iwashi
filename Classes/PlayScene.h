@@ -38,6 +38,8 @@ public:
 	void FormIwasHi();
 	//鰯が画面外に出たら削除する関数
 	void DeletIwashi();
+	//鰯を捕獲したら削除する関数
+	void IwashiDelete();
 	// プレイヤー1
 	cocos2d::Sprite* m_player1;
 
@@ -76,7 +78,11 @@ public:
     // implement the "static create()" method manually
     CREATE_FUNC(Play);
 	cocos2d::Sprite* iwashi;
-
+	cocos2d::Rect r_iwashi;
+	cocos2d::Rect r_wave1;
+	cocos2d::Rect r_wave2;
+	bool isHit1;
+	bool isHit2;
 };
 
 #endif // __HELLOWORLD_SCENE_H__
