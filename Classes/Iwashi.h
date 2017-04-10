@@ -24,6 +24,6 @@ public:
 	{
 		return m_sprIwashi;
 	}
-	static Iwashi GenerateIwashi();
+	static Iwashi* GenerateIwashi();
 	
 };

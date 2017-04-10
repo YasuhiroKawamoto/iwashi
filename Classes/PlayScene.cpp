@@ -165,7 +165,7 @@ void Play::AnimationUpdate()
 // ===========================================
 bool Play::Collision()
 {
-	Rect r_iwashi;
+	
 	if (iwashi != nullptr)
 	{
 		// 鰯スプライトのバウンディングボックスを取得
@@ -173,16 +173,16 @@ bool Play::Collision()
 
 
 		// 1P音波のバウンディングボックスを取得
-		Rect r_wave1;
-		bool isHit1 = false;
+		
+		isHit1 = false;
 		if (m_wave[PLAYER_1] != nullptr)
 		{
 			r_wave1 = m_wave[PLAYER_1]->getBoundingBox();
 		}
 
 		// 1P音波のバウンディングボックスを取得
-		Rect r_wave2;
-		bool isHit2 = false;
+	
+		isHit2 = false;
 		if (m_wave[PLAYER_2] != nullptr)
 		{
 			r_wave2 = m_wave[PLAYER_2]->getBoundingBox();
@@ -195,6 +195,8 @@ bool Play::Collision()
 		// どちらとものスプライトと当たったとき
 		if (isHit1 && isHit2)
 		{
+			isHit1 = false;
+			isHit2 = false;
 			return true;
 		}
 	}
@@ -232,9 +234,10 @@ void Play::GetIwashi()
 	Spawn* spawn = Spawn::create(scale, move, nullptr);
 	DelayTime* delay = DelayTime::create(1.5f);
 	RemoveSelf* remove = RemoveSelf::create();
-	Sequence* sequence_iwahi = Sequence::create(spawn, delay, remove, nullptr);
+	CallFunc* call = CallFunc::create(CC_CALLBACK_0(Play::IwashiDelete,this));
+	Sequence* sequence_iwahi = Sequence::create(spawn, delay, remove, call, nullptr);
 	iwashi->runAction(sequence_iwahi);
-
+	
 	// スプライトの解放
 	if (m_wave[PLAYER_1] != nullptr)
 	{
@@ -445,9 +448,7 @@ bool Play::init()
 	
 	_eventDispatcher->addEventListenerWithSceneGraphPriority(listener, this);
 
-	// BGMのプリロード
-	AudioEngine::preload("Sounds\\SeenBGM.ogg");
-
+	
 	// SEのプリロード
 	AudioEngine::preload("Sounds\\Sonic.ogg");
 	AudioEngine::preload("Sounds\\Splash.ogg");
@@ -529,20 +530,25 @@ void Play::update(float delta)
 
 	//残りタイムが0になったらリザルト画面に行く
 	///////////////////////////////////////////
-	if (m_timer <= 0)
+	if (m_timer <= 25.0f * 30)
 	{
 		// BGM停止
 		AudioEngine::stop(bgm_play);
 		AudioEngine::uncache("Sounds\\SeenBGM.ogg");
 
 
-		auto director = Director::getInstance();
+		//auto director = Director::getInstance();
 
-		// create a scene. it's an autorelease object
-		auto scene = ResultScene::createScene();
+		//// create a scene. it's an autorelease object
+		//auto scene = ResultScene::createScene();
 
-		// run
-		director->runWithScene(scene);
+		//// run
+		//director->runWithScene(scene);
+		// 次のシーンを作成する
+		Scene* nextScene = ResultScene::create();
+		// 次のシーンに移行
+		_director->replaceScene(nextScene);
+
 
 	}
 
@@ -613,4 +619,10 @@ bool Play::onTouchBegan(cocos2d::Touch* touch, cocos2d::Event* unused_event)
 		}
 	}
 	return false;
+}
+
+//鰯を捕獲したら削除する関数
+void Play::IwashiDelete()
+{
+	iwashi = nullptr;
 }
