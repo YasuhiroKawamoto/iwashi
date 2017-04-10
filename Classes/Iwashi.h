@@ -17,6 +17,8 @@ class Iwashi
 private:
 	cocos2d::Sprite* m_sprIwashi;				// スプライト
 	bool isFisshed;								// 釣ったかどうか
+	cocos2d::Rect m_bounding_box;
+	int m_pattern;
 
 	Iwashi(int putturn, cocos2d::Vec2 pos);		// 非公開コンストラクタ
 public:
@@ -24,6 +26,7 @@ public:
 	{
 		return m_sprIwashi;
 	}
+	Iwashi();
 	static Iwashi* GenerateIwashi();
 	
 };

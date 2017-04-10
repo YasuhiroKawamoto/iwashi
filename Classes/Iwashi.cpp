@@ -8,21 +8,37 @@
 //! @Author 河本恭宏
 //__/__/__/__/__/__/__/__/__/__/__/__/__/__/__/__/__/__/__/__/__/__/__/__/__/__/
 //
-//#include "cocos2d.h"
+#include "cocos2d.h"
+
+#include "Iwashi.h"
+
+USING_NS_CC;
+
+// ===========================================
+// @>概　要:鰯を生成する関数
 //
-//#include "Iwashi.h"
+// @>引　数:なし
 //
-//USING_NS_CC;
+// @>戻り値:成功:true 失敗:fasle
+// ===========================================
+Iwashi* Iwashi::GenerateIwashi()
+{
+	Iwashi* iwashi = new Iwashi(1, Vec2(0, 0));
+	return iwashi;
+}
+
+// ===========================================
+// @>概　要:イワシのコンストラクタ
 //
-//// ===========================================
-//// @>概　要:鰯を生成する関数
-////
-//// @>引　数:なし
-////
-//// @>戻り値:成功:true 失敗:fasle
-//// ===========================================
-//Iwashi* Iwashi::GenerateIwashi()
-//{
-//	Iwashi* iwashi = new Iwashi(1, Vec2(0, 0));
-//	return iwashi;
-//}
+// @>引　数:なし
+// ===========================================
+Iwashi::Iwashi(int putturn, cocos2d::Vec2 pos)
+{
+	m_pattern = putturn;
+
+}
+
+Iwashi::Iwashi()
+{
+
+}

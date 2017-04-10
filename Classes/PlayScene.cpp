@@ -229,6 +229,7 @@ void Play::GetIwashi()
 
 	// 魚にアクション
 	iwashi->stopActionByTag(100);
+	iwashi->setAnchorPoint(Vec2(0, 0));
 	MoveTo* move = MoveTo::create(0.25f, Vec2(480, 500));
 	ScaleTo* scale = ScaleTo::create(0.2f, 2.5f);
 	Spawn* spawn = Spawn::create(scale, move, nullptr);
@@ -455,40 +456,6 @@ bool Play::init()
 
 	// BGM再生
 	bgm_play = AudioEngine::play2d("Sounds\\SeenBGM.ogg", true);
-
-	_eventDispatcher->addEventListenerWithSceneGraphPriority(listener, this);
-
-
-	//　イワシは3秒に一回くらい
-	/* イワシ */
-	// イワシ生成
-	
-	
-	//Rect rect(float(0.0f), float(0.0f), float(150.0f), float(50.0f));
-
-	//iwashi = Sprite::create("PlaySeen.png");
-	//this->addChild(iwashi);
-	/* アクション？ */
-	// イワシ行動
-	//Sprite*iwashi = Sprite::create("PlaySeen.png");
-	//iwashi->setPosition(Vec2(100.0f, 0.0f));
-	//this->addChild(iwashi);
-
-
-	/* アクション */
-	// イワシ行動
-
-	//iwashi->setPosition(Vec2(iwashi->getContentSize));
-
-	//iwashi = Sprite::create("PlaySeen.png");
-	//iwashi->setPosition(Vec2(iwashi->getContentSize().width / 2, visibleSize.height / 2));
-	/*addChild(iwashi);
-	MoveTo* action1 = MoveTo::create(1, Vec2(visibleSize.width - iwashi->getContentSize().width / 2, visibleSize.height / 2));
-	EaseBackInOut* action2 = EaseBackInOut::create(action1);
-	Sequence*action3 = Sequence::create(action1, action2, action1, nullptr);
-	RepeatForever* action4 = RepeatForever::create(action3);
-*/
-	//iwashi->runAction(action4);
 
 	FormIwasHi();//鰯の生成
 
