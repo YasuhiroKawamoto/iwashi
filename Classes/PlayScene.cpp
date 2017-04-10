@@ -345,7 +345,7 @@ void Play::FormIwasHi()
 	//m_flag = false;
 	for (int i = 0; i < 10; i++)
 	{
-		if(iwashies[i] == nullptr)
+		if(iwashies[i] != nullptr)
 		iwashies[i] = Iwashi::GenerateIwashi();
 
 		// イワシのスプライトをシーンに追加
