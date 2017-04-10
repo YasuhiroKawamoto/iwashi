@@ -175,18 +175,18 @@ void Score::ScoreIndicate(int Ranking)
 			//ランキングによって画像を変える
 			switch (Ranking)
 			{
-			//case First:
-			//	//数字のスプライトを作成する
-			//	s_Number = Sprite::create("Images\\.png");
-			//	break;
-			//case Scound:
-			//	//数字のスプライトを作成する
-			//	s_Number = Sprite::create("Images\\.png");
-			//	break;
-			//case Third:
-			//	//数字のスプライトを作成する
-			//	s_Number = Sprite::create("Images\\.png");
-			//	break;
+			case First:
+				//数字のスプライトを作成する
+				s_Number = Sprite::create("Images\\Number1.png");
+				break;
+			case Scound:
+				//数字のスプライトを作成する
+				s_Number = Sprite::create("Images\\Number2.png");
+				break;
+			case Third:
+				//数字のスプライトを作成する
+				s_Number = Sprite::create("Images\\Number3.png");
+				break;
 			default:
 				//数字のスプライトを作成する
 				s_Number = Sprite::create("Images\\Number.png");

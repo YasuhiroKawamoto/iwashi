@@ -334,6 +334,16 @@ void Play::UpadateTime()
 void Play::FormIwasHi()
 {
 
+	for (int i = 0; i < 10; i++)
+	{
+		if(iwashies[i] != nullptr)
+		iwashies[i] = Iwashi::GenerateIwashi();
+
+		// イワシのスプライトをシーンに追加
+		this->addChild(iwashies[i]->GetSprite());
+		break;
+	}
+
 	MoveTo* MoveByAction = MoveTo::create(10.0, Vec2(-1000, 340));
 	DelayTime* DelayTimeAction = DelayTime::create(0);
 	Sequence* SpawnAction = Sequence::create(DelayTimeAction, MoveByAction, nullptr);
