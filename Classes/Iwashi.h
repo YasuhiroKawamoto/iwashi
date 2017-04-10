@@ -16,7 +16,8 @@ class Iwashi
 {
 private:
 	cocos2d::Sprite* m_sprIwashi;				// スプライト
-	bool m_isFisshed;								// 釣ったかどうか
+	cocos2d::Action* m_action;					// 実行すべきアクション
+	bool m_isFisshed;							// 釣ったかどうか
 	bool m_isUsing;								// 現在使用中かどうか
 	cocos2d::Rect m_bounding_box;
 	int m_pattern;								// イワシのパターン
@@ -47,8 +48,18 @@ public:
 	{
 		return m_isUsing;
 	}
+
+	// アクション取得
+	cocos2d::Action* GetAction()
+	{
+		return m_action;
+	}
+
 	void Update();
 private:
-	void setAction();
+	void SetAction(cocos2d::Action* action)
+	{
+		m_action = action;
+	}
 	
 };

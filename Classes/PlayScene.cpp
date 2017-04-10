@@ -332,14 +332,14 @@ void Play::FormIwasHi()
 			// イワシのスプライトをシーンに追加
 			this->addChild(iwashies[i]->GetSprite());
 
-			// アクションを作成
-			MoveTo* MoveByAction = MoveTo::create(2.0, Vec2(-1000, 340));
+			// イワシからアクションを取得
+			Action* action = iwashies[i]->GetAction();
 
 			// アクションにタグを設定
-			MoveByAction->setTag(100);
-
+			action->setTag(100);
+			
 			// アクションを実行
-			iwashies[i]->GetSprite()->runAction(MoveByAction);
+			iwashies[i]->GetSprite()->runAction(action);
 
 			break;
 		}
@@ -381,6 +381,8 @@ bool Play::init()
         return false;
     }
 
+	// 乱数シード
+	srand(static_cast<unsigned int>(time(nullptr)));
     
 	// 変数初期化==============================
 	m_animation_cnt = 0;
@@ -394,13 +396,14 @@ bool Play::init()
 		m_wave[i] = nullptr;
 	}
 
-	// イワシ
+	// 空のイワシオブジェクトを作成
 	for (int i = 0; i < 10; i++)
 	{
 		iwashies[i] = new Iwashi();
 	}
 
-	iwashi = nullptr;
+	// 3秒ごとにイワシ出現をさせるスケジューリング
+	schedule(CC_CALLBACK_0(Play::FormIwasHi, this), 1.5f, "appear");
 
 	// 背景===================================
 	m_bg = Sprite::create("Images/BG.png");
@@ -452,9 +455,6 @@ void Play::update(float delta)
 
 	//if (m_flag==true)
 	{
-
-		FormIwasHi();
-
 		for (int i = 0; i < 10; i++)
 		{
 			if (iwashies[i]->GetUsingFlag())
@@ -490,7 +490,7 @@ void Play::update(float delta)
 	///////////////////////////////////////////
 
 
-	if (TIME_LIMIT_SECOND <= 25)
+	if (TIME_LIMIT_SECOND <= 0)
 
 	{
 		// BGM停止
