@@ -5,16 +5,10 @@
 #include "Iwashi.h"
 
 class Play : public cocos2d::Scene
-<<<<<<< HEAD
+
 {
 private:
-	//スコア
-	int m_FirstScore;
-	int m_SeconScore;
-	int m_ThirdScore;
-	int m_BonusScore;
-	int m_BatScore;
-	int m_TotalScore;
+
 
 	cocos2d::Sprite* iwashi;
 	cocos2d::Rect r_iwashi;
@@ -25,7 +19,8 @@ private:
 
 	// 背景
 	cocos2d::Sprite* m_bg;
-
+	//数字
+	cocos2d::Sprite* s_Number;
 	// 音波	
 	cocos2d::Sprite* m_wave[2];		// 音波のスプライト
 
@@ -87,42 +82,28 @@ public:
 	// プレイヤー1
 	cocos2d::Sprite* m_player1;
 
-	// アニメーション更新
-	void AnimationUpdate();
 
-	// 当たり判定
-	void Collision();
+
 
 	//スコアの描画
-	void Play::ScoreIndicate(int Score);
-	//数字
-	cocos2d::Sprite* s_Number;
-
-	// 背景
-	cocos2d::Sprite* m_bg;
-
-	// 音波	
-	cocos2d::Sprite* m_wave[2];		// 音波のスプライト
+	void ScoreIndicate(int Score);
+	
 
 	int SumScore(int score);
-	// それぞれのプレイヤが音波を発射出来るか
-	bool canShoot_1p;
-	bool canShoot_2p;
 
-	int se_wave;
-	int bgm_play;
-	int m_animation_cnt;
+
+	
 	//桁数
 	int Digit;
 	//現在のスコアを保存する
 	int Score2;
-	// 鰯
-	bool m_flag;//鰯を生成させるフラグ
+
 	float m_posX;
 	bool m_CountFlag;
 	//鰯を捕獲したら削除する関数
 	void IwashiDelete();
-
+	//合計スコア
+	int m_TotalScore;
 	CC_SYNTHESIZE(float, m_timer, Second);//残り秒数をfloatに変換する
 	CC_SYNTHESIZE_RETAIN(cocos2d::Label*, m_TimeLabel, TimeLabel);//ラベルを新しくセットする関数をつくる
 

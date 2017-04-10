@@ -46,12 +46,6 @@ Play::Play()
 	:m_timer(TIME_LIMIT_SECOND)
 	, m_TimeLabel(NULL)
 	,m_flag(true)
-	, m_FirstScore(0)
-	, m_SeconScore(0)
-	, m_ThirdScore(0)
-	, m_BonusScore(0)
-	,m_BatScore(0)
-	,m_TotalScore(100)
 	,m_CountFlag(true)
 {
 }
