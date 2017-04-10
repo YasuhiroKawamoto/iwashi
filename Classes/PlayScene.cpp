@@ -286,7 +286,7 @@ void Play::RenderTimeLabel()
 	int second = static_cast < int >(m_timer); // int 型 に キャスト する
 	auto timeLabel = Label::createWithSystemFont(StringUtils::toString(second), "Default Font", 16);
 	timeLabel->setColor(Color3B::BLACK);
-	timeLabel->setPosition(Vec2(300,570));
+	timeLabel->setPosition(Vec2(700,570));
 	timeLabel->setScale(SCALSE_SIZE);
 	this->setTimeLabel(timeLabel);
 	this->addChild(m_TimeLabel);
@@ -308,7 +308,7 @@ void Play::RendertextTimeLabel()
 	// タイマーヘッダーの追加
 	auto textTimeLabel = Label::createWithSystemFont(" TIME", "Default Font", 16);
 	textTimeLabel->setColor(Color3B::BLACK);
-	textTimeLabel->setPosition(Vec2(150, 570));
+	textTimeLabel->setPosition(Vec2(500, 570));
 	textTimeLabel->setScale(SCALSE_SIZE);
 	this->addChild(textTimeLabel);
 }
@@ -628,6 +628,10 @@ void Play::ScoreIndicate(int Score)
 			//Digit桁の値を求める
 			Score /= Digit;
 		}
+		//SCOREのスプライトの作成
+		m_ScoreImage= Sprite::create("Images\\Score.png");
+		m_ScoreImage->setPosition(Vec2(100, 570));
+		this->addChild(m_ScoreImage);
 		//数字のスプライトを作成する
 		s_Number = Sprite::create("Images\\Number.png");
 		//レクトを設定する
@@ -636,7 +640,7 @@ void Play::ScoreIndicate(int Score)
 		if (m_CountFlag==true)
 		{
 			//座標
-			s_Number->setPosition(Vec2(100 + 64 * j, 500));
+			s_Number->setPosition(Vec2(250 + 64 * j, 570));
 			this->addChild(s_Number);
 		}
 		//スコアから求めた値を引く

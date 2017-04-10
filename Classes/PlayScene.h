@@ -79,7 +79,8 @@ public:
 
 	// プレイヤー1
 	cocos2d::Sprite* m_player1;
-
+	//SCOREのスプライト
+	cocos2d::Sprite* m_ScoreImage;
 
 
 
