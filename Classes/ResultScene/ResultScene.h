@@ -31,5 +31,6 @@ private:
 
 	//BGM
 	int ResultBGM;
+	int bubble;
 };
 //#endif // __

@@ -5,7 +5,8 @@
 #include "Iwashi.h"
 
 class Play : public cocos2d::Scene
-{	
+
+{
 private:
 	cocos2d::Sprite* iwashi;
 	cocos2d::Rect r_iwashi;
@@ -16,7 +17,8 @@ private:
 
 	// 背景
 	cocos2d::Sprite* m_bg;
-
+	//数字
+	cocos2d::Sprite* s_Number;
 	// 音波	
 	cocos2d::Sprite* m_wave[2];		// 音波のスプライト
 
@@ -33,6 +35,7 @@ private:
 
 	bool m_flag;//鰯を生成させるフラグ
 
+public:
 	Play();
 	~Play();
     // there's no 'id' in cpp, so we recommend returning the class instance pointer
@@ -73,12 +76,32 @@ private:
 	void FormIwasHi();
 	//鰯が画面外に出たら削除する関数
 	void DeletIwashi();
+
+	// プレイヤー1
+	cocos2d::Sprite* m_player1;
+
+
+
+
+	//スコアの描画
+	void ScoreIndicate(int Score);
+	
+
+	int SumScore(int score);
+
+
+	
+	//桁数
+	int Digit;
+	//現在のスコアを保存する
+	int Score2;
+
+	float m_posX;
+	bool m_CountFlag;
 	//鰯を捕獲したら削除する関数
 	void IwashiDelete();
-
-
-
-
+	//合計スコア
+	int m_TotalScore;
 	CC_SYNTHESIZE(float, m_timer, Second);//残り秒数をfloatに変換する
 	CC_SYNTHESIZE_RETAIN(cocos2d::Label*, m_TimeLabel, TimeLabel);//ラベルを新しくセットする関数をつくる
 
