@@ -16,7 +16,8 @@ class Iwashi
 {
 private:
 	cocos2d::Sprite* m_sprIwashi;				// スプライト
-	bool isFisshed;								// 釣ったかどうか
+	bool m_isFisshed;								// 釣ったかどうか
+	bool m_isUsing;								// 現在使用中かどうか
 	cocos2d::Rect m_bounding_box;
 	int m_pattern;								// イワシのパターン
 	int m_score;								// イワシの点数
@@ -30,8 +31,22 @@ public:
 			return m_sprIwashi;
 		}
 	}
+
+	// デフォルトコンストラクタ 
 	Iwashi();
 	static Iwashi* GenerateIwashi();
+
+	// 使用中フラグセット
+	void SetUsingFlag(bool isUsing)
+	{
+		m_isUsing = isUsing;
+	}
+
+	// 使用中フラグゲット
+	bool GetUsingFlag()
+	{
+		return m_isUsing;
+	}
 	void Update();
 private:
 	void setAction();

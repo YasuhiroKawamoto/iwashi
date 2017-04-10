@@ -76,7 +76,7 @@ public:
 	//鰯の生成関数
 	void FormIwasHi();
 	//鰯が画面外に出たら削除する関数
-	void DeletIwashi();
+	void DeletIwashi(Iwashi* iwashi);
 
 	// プレイヤー1
 	cocos2d::Sprite* m_player1;
