@@ -61,10 +61,10 @@ public:
 	void AnimationUpdate();
 
 	// 当たり判定
-	bool Collision();
+	bool Collision(Iwashi* iwashi);
 
 	// 鰯をゲット
-	void GetIwashi();
+	void GetIwashi(Iwashi* iwashi);
 
 	// 音波が画面外に出たら再発射可能にする
 	void Reload();
@@ -77,6 +77,8 @@ public:
 	void FormIwasHi();
 	//鰯が画面外に出たら削除する関数
 	void DeletIwashi(Iwashi* iwashi);
+	//鰯を捕獲したら削除する関数
+	void IwashiDelete();
 
 	// プレイヤー1
 	cocos2d::Sprite* m_player1;
@@ -103,8 +105,7 @@ public:
 	int m_TimeCnt;
 	float m_posX;
 	bool m_CountFlag;
-	//鰯を捕獲したら削除する関数
-	void IwashiDelete();
+
 	//合計スコア
 	int m_TotalScore;
 	CC_SYNTHESIZE(float, m_timer, Second);//残り秒数をfloatに変換する

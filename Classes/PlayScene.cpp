@@ -168,47 +168,52 @@ void Play::AnimationUpdate()
 //
 // @>戻り値:bool(true:当たった)
 // ===========================================
-bool Play::Collision()
+bool Play::Collision(Iwashi* iwashi)
 {
-	
-	if (iwashi != nullptr)
+	Sprite* sprite = iwashi->GetSprite();
+
+	// 使っている鰯だけ判定
+	if (iwashi->GetUsingFlag())
 	{
-		// 鰯スプライトのバウンディングボックスを取得
-		r_iwashi = iwashi->getBoundingBox();
-
-
-		// 1P音波のバウンディングボックスを取得
-		
-		isHit1 = false;
-		if (m_wave[PLAYER_1] != nullptr)
+		if (sprite != nullptr)
 		{
-			r_wave1 = m_wave[PLAYER_1]->getBoundingBox();
-		}
+			// 鰯スプライトのバウンディングボックスを取得
+			r_iwashi = sprite->getBoundingBox();
 
-		// 1P音波のバウンディングボックスを取得
-	
-		isHit2 = false;
-		if (m_wave[PLAYER_2] != nullptr)
-		{
-			r_wave2 = m_wave[PLAYER_2]->getBoundingBox();
-		}
 
-		// 矩形同士で当たり判定を取得
-		isHit1 = r_iwashi.intersectsRect(r_wave1);
-		isHit2 = r_iwashi.intersectsRect(r_wave2);
+			// 1P音波のバウンディングボックスを取得
 
-		// どちらとものスプライトと当たったとき
-		if (isHit1 && isHit2)
-		{
 			isHit1 = false;
+			if (m_wave[PLAYER_1] != nullptr)
+			{
+				r_wave1 = m_wave[PLAYER_1]->getBoundingBox();
+			}
+
+			// 1P音波のバウンディングボックスを取得
+
 			isHit2 = false;
-			return true;
+			if (m_wave[PLAYER_2] != nullptr)
+			{
+				r_wave2 = m_wave[PLAYER_2]->getBoundingBox();
+			}
+
+			// 矩形同士で当たり判定を取得
+			isHit1 = r_iwashi.intersectsRect(r_wave1);
+			isHit2 = r_iwashi.intersectsRect(r_wave2);
+
+			// どちらとものスプライトと当たったとき
+			if (isHit1 && isHit2)
+			{
+				isHit1 = false;
+				isHit2 = false;
+				return true;
+			}
 		}
 	}
 	return false;
 }
 
-void Play::GetIwashi()
+void Play::GetIwashi(Iwashi* iwashi)
 {
 	// SE
 	AudioEngine::play2d("Sounds/Splash.ogg");
@@ -233,16 +238,20 @@ void Play::GetIwashi()
 	particle = nullptr;
 
 	// 魚にアクション
-	iwashi->stopActionByTag(100);
-	iwashi->setAnchorPoint(Vec2(0.5f, 0.5f));
+	Sprite* sprite = iwashi->GetSprite();
+
+	sprite->stopActionByTag(100);
+	sprite->setAnchorPoint(Vec2(0.5f, 0.5f));
 	MoveTo* move = MoveTo::create(0.25f, Vec2(480, 500));		// バグってる
 	ScaleTo* scale = ScaleTo::create(0.2f, 2.5f);
 	Spawn* spawn = Spawn::create(scale, move, nullptr);
 	DelayTime* delay = DelayTime::create(1.5f);
 	RemoveSelf* remove = RemoveSelf::create();
-	CallFunc* call = CallFunc::create(CC_CALLBACK_0(Play::IwashiDelete,this));
+
+	CallFunc* call = CallFunc::create(CC_CALLBACK_0(Play::IwashiDelete, this));
 	Sequence* sequence_iwahi = Sequence::create(spawn, delay, remove, call, nullptr);
-	iwashi->runAction(sequence_iwahi);
+
+	sprite->runAction(sequence_iwahi);
 	
 	// スプライトの解放
 	if (m_wave[PLAYER_1] != nullptr)
@@ -329,17 +338,19 @@ void Play::FormIwasHi()
 			// 配列の内使っていないところに生成
 			iwashies[i] = Iwashi::GenerateIwashi();
 			
+			Sprite* sprite = iwashies[i]->GetSprite();
+
 			// イワシのスプライトをシーンに追加
-			this->addChild(iwashies[i]->GetSprite());
+			this->addChild(sprite);
 
 			// イワシからアクションを取得
-			Action* action = iwashies[i]->GetAction();
+			MoveBy* action = iwashies[i]->GetAction();
 
 			// アクションにタグを設定
 			action->setTag(100);
 			
 			// アクションを実行
-			iwashies[i]->GetSprite()->runAction(action);
+			sprite->runAction(action);
 
 			break;
 		}
@@ -354,8 +365,8 @@ void Play::DeletIwashi(Iwashi* iwashi)
 
 	if (sprite != nullptr)
 	{
-		//鰯の座標が0以下だったら
-		if (sprite->getPositionX() <= 0)
+		//鰯の座標が画面外だったら
+		if (sprite->getPositionX() <= -50 || sprite->getPositionX() > 1001)
 		{
 			sprite->removeFromParent();//鰯を削除
 			sprite = nullptr;
@@ -437,7 +448,7 @@ bool Play::init()
 	// BGM再生
 	bgm_play = AudioEngine::play2d("Sounds/PlayBGM.mp3");
 	AudioEngine::setLoop(bgm_play, true);
-	FormIwasHi();//鰯の生成
+
 
 		//////////////////////////////////////////
 	
@@ -469,12 +480,32 @@ void Play::update(float delta)
 	// 画面外に出たら発射状態を回復
 	Reload();
 
-	// !!!======!!! 暫定的 !!!======!!! //
 	// 当たり判定()
-	if (Collision())
+	
+	for (int i = 0; i < 10; i++)
 	{
-		// 鰯ゲット
-		GetIwashi();
+		// もし当たり判定があったら
+		if (Collision(iwashies[i]))
+		{
+			iwashies[i]->SetFisshed(true);
+		}
+		else
+		{
+			iwashies[i]->SetFisshed(false);
+		}
+	}
+
+	for (int i = 0; i < 10; i++)
+	{
+		// イワシに釣った判定があれば
+		if (iwashies[i]->GetFisshed())
+		{
+			// 鰯ゲット
+			GetIwashi(iwashies[i]);
+
+			iwashies[i]->DeleteSprite();
+			iwashies[i]->SetUsingFlag(false);
+		}
 	}
 
 	////残り時間の更新
@@ -670,6 +701,15 @@ void Play::ScoreIndicate(int Score, bool flag)
 //鰯を捕獲したら削除する関数
 void Play::IwashiDelete()
 {
-	iwashi = nullptr;
+	for (int i = 0; i < 10; i++)
+	{
+		if (iwashies[i]->GetUsingFlag())
+		{
+			// スプライトの解放
+			iwashies[i]->DeleteSprite();
+
+			iwashies[i]->SetFisshed(false);
+		}
+	}
 }
 

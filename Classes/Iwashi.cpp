@@ -30,22 +30,24 @@ enum LR
 Iwashi* Iwashi::GenerateIwashi()
 {
 	int lr = rand() % 2;		// 左に出るか右に出るか(0:左, 1:右)
+	int puttern = rand() % 3;
 	Vec2 appear_pos;
 	MoveBy* move;
 
 	if (lr == LEFT)
 	{
 		appear_pos = Vec2(-40, rand() % 300 + 100);		// 100以上300以下の高さ
-		move = MoveBy::create(6.0f, Vec2(1100, 0));
+		move = MoveBy::create(6.0f - puttern, Vec2(1100, 0));
 	}
 	else if (lr == RIGHT)
 	{
 		appear_pos = Vec2(1000, rand() % 300 + 100);	// 100以上300以下の高さ
-		move = MoveBy::create(6.0f, Vec2(-1100, 0));
+		move = MoveBy::create(6.0f - puttern, Vec2(-1100, 0));
 	}
 
-	Iwashi* iwashi = new Iwashi(rand()%3, appear_pos);
+	Iwashi* iwashi = new Iwashi(puttern, appear_pos);
 	iwashi->SetAction(move);
+	iwashi->SetUsingFlag(true);
 	if (lr == LEFT)
 	{
 		iwashi->GetSprite()->setFlippedX(true);
@@ -56,10 +58,6 @@ Iwashi* Iwashi::GenerateIwashi()
 	return iwashi;
 }
 
-void Iwashi::Update()
-{
-
-}
 
 // ===========================================
 // @>概　要:イワシのコンストラクタ
@@ -104,8 +102,10 @@ Iwashi::Iwashi(int putturn, cocos2d::Vec2 pos)
 }
 
 Iwashi::Iwashi()
-	:m_sprIwashi(nullptr),
+	:m_isFisshed(false),
+	m_sprIwashi(nullptr),
 	m_isUsing(false)
+	
 
 {
 
