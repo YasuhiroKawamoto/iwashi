@@ -50,7 +50,12 @@ bool TitleScene::init()
 	{
 		return false;
 	}
-
+	//タイトルのスプライトの作成
+	m_TotleBG = Sprite::create("Images\\TITLE.png");
+	//アンカーポイントの設定
+	m_TotleBG->setAnchorPoint(Vec2(0, 0));
+	//タイトルの描画
+	this->addChild(m_TotleBG);
 	// キャラクター呼び出し
 	auto title_layer = TitleLayer::create();
 	// キャラクター関連のレイヤ
@@ -61,7 +66,7 @@ bool TitleScene::init()
 	BGM = AudioEngine::play2d("Sounds/TitleBGM.mp3");
 	//BGMループ再生
 	AudioEngine::setLoop(BGM, true);
-	
+
 
 	// タッチイベントリスナーを作成
 	EventListenerTouchOneByOne* listener = EventListenerTouchOneByOne::create();
