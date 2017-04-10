@@ -18,7 +18,7 @@ private:
 	// 背景
 	cocos2d::Sprite* m_bg;
 	//数字
-	cocos2d::Sprite* s_Number[6];
+	cocos2d::Sprite* s_Number[100];
 	// 音波	
 	cocos2d::Sprite* m_wave[2];		// 音波のスプライト
 
@@ -38,6 +38,9 @@ private:
 	int m_Number_Cnt;
 	//描画関数のカウント
 	int SpriteCnt;
+	int SpriteCnt2;
+	cocos2d::Sprite* m_cloud[2];
+	float CloudPosx[2];
 public:
 	Play();
 	~Play();
@@ -84,8 +87,8 @@ public:
 	cocos2d::Sprite* m_player1;
 	//SCOREのスプライト
 	cocos2d::Sprite* m_ScoreImage;
-
-
+	//TIMEの文字のスプライト
+	cocos2d::Sprite* m_TIME;
 
 	//スコアの描画
 	void ScoreIndicate(int Score, bool flag);
@@ -108,6 +111,11 @@ public:
 
 	//合計スコア
 	int m_TotalScore;
+
+	//スタートサウンド
+	int m_startSe;
+	//終了サウンド
+	int m_endSe;
 	CC_SYNTHESIZE(float, m_timer, Second);//残り秒数をfloatに変換する
 	CC_SYNTHESIZE_RETAIN(cocos2d::Label*, m_TimeLabel, TimeLabel);//ラベルを新しくセットする関数をつくる
 

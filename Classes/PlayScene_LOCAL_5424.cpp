@@ -47,7 +47,7 @@ Play::Play()
 	,m_TimeLabel(NULL)
 	,m_flag(true)
 	,m_CountFlag(true)
-	,m_TotalScore(0)
+	,m_TotalScore(321)
 	, m_TimeCnt(0)
 	, m_Number_Cnt(0)
 	, SpriteCnt(0)
@@ -168,52 +168,47 @@ void Play::AnimationUpdate()
 //
 // @>戻り値:bool(true:当たった)
 // ===========================================
-bool Play::Collision(Iwashi* iwashi)
+bool Play::Collision()
 {
-	Sprite* sprite = iwashi->GetSprite();
-
-	// 使っている鰯だけ判定
-	if (iwashi->GetUsingFlag())
+	
+	if (iwashi != nullptr)
 	{
-		if (sprite != nullptr)
+		// 鰯スプライトのバウンディングボックスを取得
+		r_iwashi = iwashi->getBoundingBox();
+
+
+		// 1P音波のバウンディングボックスを取得
+		
+		isHit1 = false;
+		if (m_wave[PLAYER_1] != nullptr)
 		{
-			// 鰯スプライトのバウンディングボックスを取得
-			r_iwashi = sprite->getBoundingBox();
+			r_wave1 = m_wave[PLAYER_1]->getBoundingBox();
+		}
 
+		// 1P音波のバウンディングボックスを取得
+	
+		isHit2 = false;
+		if (m_wave[PLAYER_2] != nullptr)
+		{
+			r_wave2 = m_wave[PLAYER_2]->getBoundingBox();
+		}
 
-			// 1P音波のバウンディングボックスを取得
+		// 矩形同士で当たり判定を取得
+		isHit1 = r_iwashi.intersectsRect(r_wave1);
+		isHit2 = r_iwashi.intersectsRect(r_wave2);
 
+		// どちらとものスプライトと当たったとき
+		if (isHit1 && isHit2)
+		{
 			isHit1 = false;
-			if (m_wave[PLAYER_1] != nullptr)
-			{
-				r_wave1 = m_wave[PLAYER_1]->getBoundingBox();
-			}
-
-			// 1P音波のバウンディングボックスを取得
-
 			isHit2 = false;
-			if (m_wave[PLAYER_2] != nullptr)
-			{
-				r_wave2 = m_wave[PLAYER_2]->getBoundingBox();
-			}
-
-			// 矩形同士で当たり判定を取得
-			isHit1 = r_iwashi.intersectsRect(r_wave1);
-			isHit2 = r_iwashi.intersectsRect(r_wave2);
-
-			// どちらとものスプライトと当たったとき
-			if (isHit1 && isHit2)
-			{
-				isHit1 = false;
-				isHit2 = false;
-				return true;
-			}
+			return true;
 		}
 	}
 	return false;
 }
 
-void Play::GetIwashi(Iwashi* iwashi)
+void Play::GetIwashi()
 {
 	// SE
 	AudioEngine::play2d("Sounds/Splash.ogg");
@@ -238,20 +233,16 @@ void Play::GetIwashi(Iwashi* iwashi)
 	particle = nullptr;
 
 	// 魚にアクション
-	Sprite* sprite = iwashi->GetSprite();
-
-	sprite->stopActionByTag(100);
-	sprite->setAnchorPoint(Vec2(0.5f, 0.5f));
+	iwashi->stopActionByTag(100);
+	iwashi->setAnchorPoint(Vec2(0.5f, 0.5f));
 	MoveTo* move = MoveTo::create(0.25f, Vec2(480, 500));		// バグってる
 	ScaleTo* scale = ScaleTo::create(0.2f, 2.5f);
 	Spawn* spawn = Spawn::create(scale, move, nullptr);
 	DelayTime* delay = DelayTime::create(1.5f);
 	RemoveSelf* remove = RemoveSelf::create();
-
-	CallFunc* call = CallFunc::create(CC_CALLBACK_0(Play::IwashiDelete, this));
+	CallFunc* call = CallFunc::create(CC_CALLBACK_0(Play::IwashiDelete,this));
 	Sequence* sequence_iwahi = Sequence::create(spawn, delay, remove, call, nullptr);
-
-	sprite->runAction(sequence_iwahi);
+	iwashi->runAction(sequence_iwahi);
 	
 	// スプライトの解放
 	if (m_wave[PLAYER_1] != nullptr)
@@ -332,20 +323,17 @@ void Play::FormIwasHi()
 			// 配列の内使っていないところに生成
 			iwashies[i] = Iwashi::GenerateIwashi();
 			
-			Sprite* sprite = iwashies[i]->GetSprite();
-
 			// イワシのスプライトをシーンに追加
-			this->addChild(sprite);
+			this->addChild(iwashies[i]->GetSprite());
 
-			// イワシからアクションを取得
-			MoveBy* action = iwashies[i]->GetAction();
+			// アクションを作成
+			MoveTo* MoveByAction = MoveTo::create(2.0, Vec2(-1000, 340));
 
 			// アクションにタグを設定
-			action->setTag(100);
+			MoveByAction->setTag(100);
 
 			// アクションを実行
-			sprite->runAction(action);
-
+			iwashies[i]->GetSprite()->runAction(MoveByAction);
 
 			break;
 		}
@@ -360,8 +348,8 @@ void Play::DeletIwashi(Iwashi* iwashi)
 
 	if (sprite != nullptr)
 	{
-		//鰯の座標が画面外だったら
-		if (sprite->getPositionX() <= -50 || sprite->getPositionX() > 1001)
+		//鰯の座標が0以下だったら
+		if (sprite->getPositionX() <= 0)
 		{
 			sprite->removeFromParent();//鰯を削除
 			sprite = nullptr;
@@ -406,41 +394,19 @@ bool Play::init()
 		iwashies[i] = new Iwashi();
 	}
 
-	RenderTimeLabel();
-
-	// 3秒ごとにイワシ出現をさせるスケジューリング
-	schedule(CC_CALLBACK_0(Play::FormIwasHi, this), 1.5f, "appear");
-
 	iwashi = nullptr;
 
 	// 背景===================================
-	m_bg = Sprite::create("Images/BG1.png");
+	m_bg = Sprite::create("Images/BG.png");
 	m_bg->setAnchorPoint(Vec2(0, 0));
 	this->addChild(m_bg);
-
-	//雲
-	for (int i = 0; i < 2; i++)
-	{
-		m_cloud[i] = Sprite::create("Images\\cloud3.png");
-		m_cloud[i]->setAnchorPoint(Vec2(0, 1.0));
-		this->addChild(m_cloud[i]);
-		CloudPosx[i] = 1920 * i;
-	}
-
-	RenderTimeLabel();
-
 
 	m_ScoreImage = Sprite::create("Images\\Score.png");
 	m_ScoreImage->setPosition(Vec2(680, 580));
 	this->addChild(m_ScoreImage);
 
 
-
-
-
-
-	// TIME描画
-	//RenderTimeLabel();
+	
 
 	// updateを呼び出す設定
 	this->scheduleUpdate();
@@ -466,7 +432,7 @@ bool Play::init()
 	m_startSe= AudioEngine::play2d("Sounds/StartSE.mp3");
 
 	AudioEngine::setLoop(bgm_play, true);
-
+	FormIwasHi();//鰯の生成
 
 		//////////////////////////////////////////
 	
@@ -481,11 +447,7 @@ bool Play::init()
 //----------------------------------------------------------------------
 void Play::update(float delta)
 {
-	if (m_TotalScore < 999)
-	{
-		m_TotalScore++;
 
-	}
 	//if (m_flag==true)
 	{
 
@@ -505,46 +467,13 @@ void Play::update(float delta)
 	// 画面外に出たら発射状態を回復
 	Reload();
 
+	// !!!======!!! 暫定的 !!!======!!! //
 	// 当たり判定()
-	
-	for (int i = 0; i < 10; i++)
+	if (Collision())
 	{
-		// もし当たり判定があったら
-		if (Collision(iwashies[i]))
-		{
-			iwashies[i]->SetFisshed(true);
-		}
-		else
-		{
-			iwashies[i]->SetFisshed(false);
-		}
+		// 鰯ゲット
+		GetIwashi();
 	}
-
-	for (int i = 0; i < 10; i++)
-	{
-		// イワシに釣った判定があれば
-		if (iwashies[i]->GetFisshed())
-		{
-			// 鰯ゲット
-			GetIwashi(iwashies[i]);
-
-			iwashies[i]->DeleteSprite();
-			iwashies[i]->SetUsingFlag(false);
-		}
-	}
-
-	
-	//雲
-	for (int i = 0; i < 2; i++)
-	{
-		CloudPosx[i] -= 1.0f;
-		m_cloud[i]->setPosition(Vec2(CloudPosx[i], 640));
-		if (m_cloud[i]->getPositionX() <= -1920.0f)
-		{
-			CloudPosx[i] = 1920.0f;
-		}
-	}
-	
 
 	////残り時間の更新
 	UpadateTime();
@@ -559,7 +488,7 @@ void Play::update(float delta)
 	///////////////////////////////////////////
 
 	
-	if (TIME_LIMIT_SECOND <= 0)
+	if (TIME_LIMIT_SECOND <= 25)
 
 	{
 		m_endSe = AudioEngine::play2d("Sounds/EndSE.mp3");
@@ -698,10 +627,7 @@ void Play::ScoreIndicate(int Score, bool flag)
 			Score /= Digit;
 		}
 
-		if (TIME_LIMIT_SECOND < 10)
-		{
-			s_Number[1]->removeFromParent();
-		}
+
 
 		if (m_CountFlag == true)
 		{
@@ -722,30 +648,10 @@ void Play::ScoreIndicate(int Score, bool flag)
 
 			}
 			this->addChild(s_Number[SpriteCnt]);
-			SpriteCnt2 = SpriteCnt;
-		
+			RenderTimeLabel();
 		}
 		else
 		{
-			if (SpriteCnt2 < SpriteCnt)
-			{
-				//数字のスプライトを作成する
-				s_Number[SpriteCnt] = Sprite::create("Images\\Number.png");
-
-				if (flag == true)
-				{
-					s_Number[SpriteCnt]->setPosition(Vec2(800 + 64 * j, 580));
-
-				}
-				else
-				{
-					s_Number[SpriteCnt]->setPosition(Vec2(200 + 64 * j, 580));
-
-				}
-				this->addChild(s_Number[SpriteCnt]);
-				SpriteCnt2 = SpriteCnt;
-			}
-	
 			//レクトを設定する
 			s_Number[SpriteCnt]->setTextureRect(Rect(Score * 64, 0, 64, 64));
 
@@ -753,7 +659,6 @@ void Play::ScoreIndicate(int Score, bool flag)
 
 
 		m_Number_Cnt++;
-
 		//スコアから求めた値を引く
 		Score2 -= Score * Digit;
 		Score = Score2;
@@ -767,15 +672,6 @@ void Play::ScoreIndicate(int Score, bool flag)
 //鰯を捕獲したら削除する関数
 void Play::IwashiDelete()
 {
-	for (int i = 0; i < 10; i++)
-	{
-		if (iwashies[i]->GetUsingFlag())
-		{
-			// スプライトの解放
-			iwashies[i]->DeleteSprite();
-
-			iwashies[i]->SetFisshed(false);
-		}
-	}
+	iwashi = nullptr;
 }
 
