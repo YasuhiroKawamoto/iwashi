@@ -195,8 +195,6 @@ bool Play::Collision()
 		// どちらとものスプライトと当たったとき
 		if (isHit1 && isHit2)
 		{
-			isHit1 = false;//要らない？
-			isHit2 = false;//
 			return true;
 		}
 	}
@@ -315,15 +313,15 @@ void Play::UpadateTime()
 	m_TimeLabel->setString(StringUtils::toString(second));
 
 }
+
 void Play::FormIwasHi()
 {
-	MoveTo*MoveByAction = MoveTo::create(10.0, Vec2(-1000, 340));
-	DelayTime*DelayTimeAction = DelayTime::create(3);
+	MoveTo* MoveByAction = MoveTo::create(10.0, Vec2(-1000, 340));
+	DelayTime* DelayTimeAction = DelayTime::create(0);
 	Sequence* SpawnAction = Sequence::create(DelayTimeAction, MoveByAction, nullptr);
 	SpawnAction->setTag(100);
 	iwashi = Sprite::create("Images\\PlaySeen.png");
 	iwashi->setTextureRect(Rect(0,0,150,50));
-	iwashi->setAnchorPoint(Vec2(0.5f, 0.5f));
 	iwashi->setPosition(1200, 340);
 	this->addChild(iwashi);
 	iwashi->runAction(SpawnAction);
@@ -425,6 +423,7 @@ bool Play::init()
 	{
 		m_wave[i] = nullptr;
 	}
+	iwashi = nullptr;
 
 	// 背景===================================
 	m_bg = Sprite::create("Images\\BG.png");
@@ -490,6 +489,8 @@ bool Play::init()
 */
 	//iwashi->runAction(action4);
 
+	FormIwasHi();//鰯の生成
+
 		//////////////////////////////////////////
 	
     return true;
@@ -506,7 +507,6 @@ void Play::update(float delta)
 
 	if (m_flag)
 	{
-		FormIwasHi();//鰯の生成
 		DeletIwashi();//鰯が画面外に出たら破棄
 	}
 	// アニメーション更新
