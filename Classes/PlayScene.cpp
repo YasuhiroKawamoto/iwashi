@@ -469,7 +469,7 @@ bool Play::init()
 //----------------------------------------------------------------------
 void Play::update(float delta)
 {
-	if (m_TotalScore < 1000)
+	if (m_TotalScore < 999)
 	{
 		m_TotalScore++;
 
@@ -516,9 +516,9 @@ void Play::update(float delta)
 
 	////残り時間の更新
 	UpadateTime();
-	//ScoreIndicate(TIME_LIMIT_SECOND, false);
-	////スコアの描画
-	//ScoreIndicate(m_TotalScore, true);
+	ScoreIndicate(TIME_LIMIT_SECOND, false);
+	//スコアの描画
+	ScoreIndicate(m_TotalScore, true);
 	//これ以降数字のスプライトを生成しない
 	m_CountFlag = false;
 
@@ -527,7 +527,7 @@ void Play::update(float delta)
 	///////////////////////////////////////////
 
 	
-	if (TIME_LIMIT_SECOND <= 25)
+	if (TIME_LIMIT_SECOND <= 0)
 
 	{
 		m_endSe = AudioEngine::play2d("Sounds/EndSE.mp3");
