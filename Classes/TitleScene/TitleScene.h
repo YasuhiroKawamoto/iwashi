@@ -15,4 +15,5 @@ public:
 	bool onTouchBegan(cocos2d::Touch * touch, cocos2d::Event * pEvent);
 private:
 	int BGM;
+	cocos2d::Sprite* m_TotleBG;//タイトルのスプライト
 };
