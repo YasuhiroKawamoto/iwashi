@@ -235,7 +235,7 @@ void Play::GetIwashi()
 	// 魚にアクション
 	iwashi->stopActionByTag(100);
 	iwashi->setAnchorPoint(Vec2(0.5f, 0.5f));
-	MoveTo* move = MoveTo::create(0.25f, Vec2(480, 50));		// バグってる
+	MoveTo* move = MoveTo::create(0.25f, Vec2(480, 500));		// バグってる
 	ScaleTo* scale = ScaleTo::create(0.2f, 2.5f);
 	Spawn* spawn = Spawn::create(scale, move, nullptr);
 	DelayTime* delay = DelayTime::create(1.5f);
@@ -321,35 +321,46 @@ void Play::FormIwasHi()
 
 	for (int i = 0; i < 10; i++)
 	{
-		if (iwashies[i] != nullptr)
+		if (iwashies[i]->GetUsingFlag() == false)
 		{
-			iwashies[i] = Iwashi::GenerateIwashi();
+			// 使用中に変更
+			iwashies[i]->SetUsingFlag(true);
 
+			// 配列の内使っていないところに生成
+			iwashies[i] = Iwashi::GenerateIwashi();
+			
 			// イワシのスプライトをシーンに追加
 			this->addChild(iwashies[i]->GetSprite());
+
+			// アクションを作成
+			MoveTo* MoveByAction = MoveTo::create(2.0, Vec2(-1000, 340));
+
+			// アクションにタグを設定
+			MoveByAction->setTag(100);
+
+			// アクションを実行
+			iwashies[i]->GetSprite()->runAction(MoveByAction);
 
 			break;
 		}
 	}
 
-	MoveTo* MoveByAction = MoveTo::create(10.0, Vec2(-1000, 340));
 
-	MoveByAction->setTag(100);
-	iwashi = Sprite::create("Images/PlaySeen.png");
-	iwashi->setTextureRect(Rect(0,0,150,50));
-	iwashi->setPosition(1200, 340);
-	this->addChild(iwashi);
-	iwashi->runAction(MoveByAction);
 	m_flag = false;
 }
-void Play::DeletIwashi()
+void Play::DeletIwashi(Iwashi* iwashi)
 {
-	//鰯の座標が0以下だったら
-	if (iwashi->getPositionX() <= 0)
+	Sprite* sprite = iwashi->GetSprite();
+
+	if (sprite != nullptr)
 	{
-		iwashi->removeFromParent();//鰯を削除
-		iwashi = nullptr;
-		m_flag = true;
+		//鰯の座標が0以下だったら
+		if (sprite->getPositionX() <= 0)
+		{
+			sprite->removeFromParent();//鰯を削除
+			sprite = nullptr;
+			iwashi->SetUsingFlag(false);
+		}
 	}
 }
 //----------------------------------------------------------------------
@@ -386,7 +397,7 @@ bool Play::init()
 	// イワシ
 	for (int i = 0; i < 10; i++)
 	{
-		iwashies[i] = nullptr;
+		iwashies[i] = new Iwashi();
 	}
 
 	iwashi = nullptr;
@@ -402,7 +413,7 @@ bool Play::init()
 
 
 	// TIME描画
-	RenderTimeLabel();
+	//RenderTimeLabel();
 
 	// updateを呼び出す設定
 	this->scheduleUpdate();
@@ -439,12 +450,18 @@ bool Play::init()
 void Play::update(float delta)
 {
 
-	if (m_flag==true)
+	//if (m_flag==true)
 	{
 
 		FormIwasHi();
 
-		DeletIwashi();//鰯が画面外に出たら破棄
+		for (int i = 0; i < 10; i++)
+		{
+			if (iwashies[i]->GetUsingFlag())
+			{
+				DeletIwashi(iwashies[i]);//鰯が画面外に出たら破棄
+			}
+		}
 	}
 	// アニメーション更新
 	AnimationUpdate();
@@ -472,18 +489,11 @@ void Play::update(float delta)
 	//残りタイムが0になったらリザルト画面に行く
 	///////////////////////////////////////////
 
-	if (m_timer <= 25*30)
+	if (m_timer <= 0)
 	{
 		// BGM停止
 		AudioEngine::stop(bgm_play);
 
-		//auto director = Director::getInstance();
-
-		//// create a scene. it's an autorelease object
-		//auto scene = ResultScene::createScene();
-
-		//// run
-		//director->runWithScene(scene);
 		// 次のシーンを作成する
 		Scene* nextScene = ResultScene::create();
 		// 次のシーンに移行

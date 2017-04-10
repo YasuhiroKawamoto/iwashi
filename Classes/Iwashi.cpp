@@ -41,8 +41,8 @@ Iwashi::Iwashi(int putturn, cocos2d::Vec2 pos)
 {
 	// ˆø”‚©‚ç‚ðƒf[ƒ^‚É‘ã“ü
 	m_pattern = putturn;
-	m_sprIwashi = Sprite::create("Images\\PlayScene");
-
+	m_sprIwashi = Sprite::create("Images/PlayScene.png");
+	m_sprIwashi->setPosition(pos);
 
 	switch (m_pattern)
 	{
@@ -75,6 +75,9 @@ Iwashi::Iwashi(int putturn, cocos2d::Vec2 pos)
 }
 
 Iwashi::Iwashi()
+	:m_sprIwashi(nullptr),
+	m_isUsing(false)
+
 {
 
 }
