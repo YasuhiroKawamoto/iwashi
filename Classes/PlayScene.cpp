@@ -492,7 +492,7 @@ void Play::update(float delta)
 	//残りタイムが0になったらリザルト画面に行く
 	///////////////////////////////////////////
 
-	if (m_timer <= 0)
+	if (m_timer <= 25*30)
 	{
 		// BGM停止
 		AudioEngine::stop(bgm_play);
@@ -641,6 +641,7 @@ void Play::ScoreIndicate(int Score)
 		}
 		//スコアから求めた値を引く
 		Score2 -= Score * Digit;
+		Score = Score2 ;
 		//次はDigit-1桁を見る
 		Digit /= 10;
 		j++;

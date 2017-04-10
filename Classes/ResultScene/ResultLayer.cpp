@@ -31,7 +31,7 @@ bool ResultLayer::init()
 	
 	
 	//ランキング取得
-	score->sortAllChildren();
+	score->ScoreAcquisition();
 	//ランキング変更
 	score->RankingSort();
 	//ランキング保存

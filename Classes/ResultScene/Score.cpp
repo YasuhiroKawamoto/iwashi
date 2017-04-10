@@ -23,7 +23,7 @@ bool Score::init()
 
 		return false;
 	}
-
+	m_Score = rand()%100;
 	////初期化
 	//Score::SceneFlag = false;
 	//ScoreActionSpd = 1.0f;
@@ -210,8 +210,10 @@ void Score::ScoreIndicate(int Ranking)
 			//基盤ノードにぶら下げる
 			m_NodeNumber[Ranking]->addChild(s_Number);
 			this->addChild(m_NodeNumber[Ranking]);
+
 			//スコアから求めた値を引く
 			ScoreNumber2 -= ScoreNumber * Digit;
+			ScoreNumber = ScoreNumber2;
 			//次はDigit-1桁を見る
 			Digit /= 10;
 			j++;
