@@ -47,7 +47,7 @@ Play::Play()
 	,m_TimeLabel(NULL)
 	,m_flag(true)
 	,m_CountFlag(true)
-	, m_TotalScore(321)
+	,m_TotalScore(321)
 {
 }
 //デストラクター
@@ -336,11 +336,13 @@ void Play::FormIwasHi()
 
 	for (int i = 0; i < 10; i++)
 	{
-		if(iwashies[i] != nullptr)
-		iwashies[i] = Iwashi::GenerateIwashi();
+		if (iwashies[i] != nullptr)
+		{
+			iwashies[i] = Iwashi::GenerateIwashi();
 
-		// イワシのスプライトをシーンに追加
-	//	this->addChild(iwashies[i]->GetSprite());
+			// イワシのスプライトをシーンに追加
+			this->addChild(iwashies[i]->GetSprite());
+		}
 		break;
 	}
 
@@ -354,18 +356,6 @@ void Play::FormIwasHi()
 	this->addChild(iwashi);
 	iwashi->runAction(SpawnAction);
 	m_flag = false;
-	for (int i = 0; i < 10; i++)
-	{
-		if (iwashies[i] != nullptr)
-		{
-			iwashies[i] = Iwashi::GenerateIwashi();
-
-			// イワシのスプライトをシーンに追加
-
-			this->addChild(iwashies[i]->GetSprite());
-		}
-		break;
-	}
 
 
 }
@@ -492,7 +482,7 @@ void Play::update(float delta)
 	//残りタイムが0になったらリザルト画面に行く
 	///////////////////////////////////////////
 
-	if (m_timer <= 0)
+	if (m_timer <= 25*30)
 	{
 		// BGM停止
 		AudioEngine::stop(bgm_play);
@@ -645,6 +635,7 @@ void Play::ScoreIndicate(int Score)
 		}
 		//スコアから求めた値を引く
 		Score2 -= Score * Digit;
+		Score = Score2 ;
 		//次はDigit-1桁を見る
 		Digit /= 10;
 		j++;

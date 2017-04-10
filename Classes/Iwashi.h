@@ -33,5 +33,7 @@ public:
 	Iwashi();
 	static Iwashi* GenerateIwashi();
 	void Update();
+private:
+	void setAction();
 	
 };
