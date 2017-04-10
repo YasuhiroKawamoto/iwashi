@@ -38,6 +38,9 @@ private:
 	int m_Number_Cnt;
 	//•`‰æŠÖ”‚ÌƒJƒEƒ“ƒg
 	int SpriteCnt;
+
+	cocos2d::Sprite* m_cloud[2];
+	float CloudPosx[2];
 public:
 	Play();
 	~Play();

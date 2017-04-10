@@ -402,17 +402,31 @@ bool Play::init()
 		iwashies[i] = new Iwashi();
 	}
 
+
 	// 3秒ごとにイワシ出現をさせるスケジューリング
 	schedule(CC_CALLBACK_0(Play::FormIwasHi, this), 1.5f, "appear");
 
 	// 背景===================================
-	m_bg = Sprite::create("Images/BG.png");
+	m_bg = Sprite::create("Images/BG1.png");
 	m_bg->setAnchorPoint(Vec2(0, 0));
 	this->addChild(m_bg);
+
+	//雲
+	for (int i = 0; i < 2; i++)
+	{
+		m_cloud[i] = Sprite::create("Images\\cloud3.png");
+		m_cloud[i]->setAnchorPoint(Vec2(0, 1.0));
+		this->addChild(m_cloud[i]);
+		CloudPosx[i] = 1920 * i;
+	}
+
 
 	m_ScoreImage = Sprite::create("Images\\Score.png");
 	m_ScoreImage->setPosition(Vec2(680, 580));
 	this->addChild(m_ScoreImage);
+
+
+
 
 
 	// TIME描画
@@ -476,6 +490,19 @@ void Play::update(float delta)
 		// 鰯ゲット
 		GetIwashi();
 	}
+
+	
+	//雲
+	for (int i = 0; i < 2; i++)
+	{
+		CloudPosx[i] -= 5.0f;
+		m_cloud[i]->setPosition(Vec2(CloudPosx[i], 640));
+		if (m_cloud[i]->getPositionX() == -1820.0f)
+		{
+			CloudPosx[i] = 1280.0f;
+		}
+	}
+	
 
 	////残り時間の更新
 	UpadateTime();
