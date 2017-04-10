@@ -16,4 +16,5 @@ public:
 private:
 	int BGM;
 	cocos2d::Sprite* m_TotleBG;//タイトルのスプライト
+
 };

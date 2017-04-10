@@ -326,14 +326,14 @@ void Play::FormIwasHi()
 			// イワシのスプライトをシーンに追加
 			this->addChild(iwashies[i]->GetSprite());
 
-			// アクションを作成
-			MoveTo* MoveByAction = MoveTo::create(2.0, Vec2(-1000, 340));
+			// イワシからアクションを取得
+			Action* action = iwashies[i]->GetAction();
 
 			// アクションにタグを設定
-			MoveByAction->setTag(100);
-
+			action->setTag(100);
+			
 			// アクションを実行
-			iwashies[i]->GetSprite()->runAction(MoveByAction);
+			iwashies[i]->GetSprite()->runAction(action);
 
 			break;
 		}
@@ -375,6 +375,8 @@ bool Play::init()
         return false;
     }
 
+	// 乱数シード
+	srand(static_cast<unsigned int>(time(nullptr)));
     
 	// 変数初期化==============================
 	m_animation_cnt = 0;
@@ -388,44 +390,26 @@ bool Play::init()
 		m_wave[i] = nullptr;
 	}
 
-	// イワシ
+	// 空のイワシオブジェクトを作成
 	for (int i = 0; i < 10; i++)
 	{
 		iwashies[i] = new Iwashi();
 	}
 
-
 	// 3秒ごとにイワシ出現をさせるスケジューリング
 	schedule(CC_CALLBACK_0(Play::FormIwasHi, this), 1.5f, "appear");
 
-	iwashi = nullptr;
-
 	// 背景===================================
-	m_bg = Sprite::create("Images/BG1.png");
+	m_bg = Sprite::create("Images/BG.png");
 	m_bg->setAnchorPoint(Vec2(0, 0));
 	this->addChild(m_bg);
-
-	//雲
-	for (int i = 0; i < 2; i++)
-	{
-		m_cloud[i] = Sprite::create("Images\\cloud3.png");
-		m_cloud[i]->setAnchorPoint(Vec2(0, 1.0));
-		this->addChild(m_cloud[i]);
-		CloudPosx[i] = 1920 * i;
-	}
-
 
 	m_ScoreImage = Sprite::create("Images\\Score.png");
 	m_ScoreImage->setPosition(Vec2(680, 580));
 	this->addChild(m_ScoreImage);
 
 
-
-
-
-
-	// TIME描画
-	//RenderTimeLabel();
+	
 
 	// updateを呼び出す設定
 	this->scheduleUpdate();
@@ -469,9 +453,6 @@ void Play::update(float delta)
 
 	//if (m_flag==true)
 	{
-
-		FormIwasHi();
-
 		for (int i = 0; i < 10; i++)
 		{
 			if (iwashies[i]->GetUsingFlag())
@@ -494,19 +475,6 @@ void Play::update(float delta)
 		GetIwashi();
 	}
 
-	
-	//雲
-	for (int i = 0; i < 2; i++)
-	{
-		CloudPosx[i] -= 5.0f;
-		m_cloud[i]->setPosition(Vec2(CloudPosx[i], 640));
-		if (m_cloud[i]->getPositionX() == -1820.0f)
-		{
-			CloudPosx[i] = 1280.0f;
-		}
-	}
-	
-
 	////残り時間の更新
 	UpadateTime();
 	ScoreIndicate(TIME_LIMIT_SECOND, false);
@@ -519,9 +487,9 @@ void Play::update(float delta)
 	//残りタイムが0になったらリザルト画面に行く
 	///////////////////////////////////////////
 
-	
-	if (TIME_LIMIT_SECOND <= 25)
 
+
+	if (TIME_LIMIT_SECOND <= 0)
 	{
 		m_endSe = AudioEngine::play2d("Sounds/EndSE.mp3");
 		// BGM停止

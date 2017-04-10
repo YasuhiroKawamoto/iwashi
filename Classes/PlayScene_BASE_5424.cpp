@@ -283,10 +283,16 @@ int Play::SumScore(int score)
 //----------------------------------------------------------------------
 void Play::RenderTimeLabel()
 {
-	m_TIME = Sprite::create("Images/TIME.png");
-	m_TIME->setPosition(Vec2(80,580));
-	m_TIME->setScale(0.75);
-	this->addChild(m_TIME);
+	//中心座標
+	auto size = Director::getInstance()->getWinSize();
+	//タイマー ラベルの追加
+	int second = static_cast < int >(m_timer); // int 型 に キャスト する
+	auto timeLabel = Label::createWithSystemFont(StringUtils::toString(second), "Default Font", 16);
+	timeLabel->setColor(Color3B::BLACK);
+	timeLabel->setPosition(Vec2(300,570));
+	timeLabel->setScale(SCALSE_SIZE);
+	this->setTimeLabel(timeLabel);
+	this->addChild(m_TimeLabel);
 }
 
 
@@ -394,34 +400,16 @@ bool Play::init()
 		iwashies[i] = new Iwashi();
 	}
 
-
-	// 3秒ごとにイワシ出現をさせるスケジューリング
-	schedule(CC_CALLBACK_0(Play::FormIwasHi, this), 1.5f, "appear");
-
 	iwashi = nullptr;
 
 	// 背景===================================
-	m_bg = Sprite::create("Images/BG1.png");
+	m_bg = Sprite::create("Images/BG.png");
 	m_bg->setAnchorPoint(Vec2(0, 0));
 	this->addChild(m_bg);
-
-	//雲
-	for (int i = 0; i < 2; i++)
-	{
-		m_cloud[i] = Sprite::create("Images\\cloud3.png");
-		m_cloud[i]->setAnchorPoint(Vec2(0, 1.0));
-		this->addChild(m_cloud[i]);
-		CloudPosx[i] = 1920 * i;
-	}
-
 
 	m_ScoreImage = Sprite::create("Images\\Score.png");
 	m_ScoreImage->setPosition(Vec2(680, 580));
 	this->addChild(m_ScoreImage);
-
-
-
-
 
 
 	// TIME描画
@@ -442,14 +430,9 @@ bool Play::init()
 	// SEのプリロード
 	AudioEngine::preload("Sounds/SonicSE.mp3");
 	AudioEngine::preload("Sounds/Splash.ogg");
-	AudioEngine::preload("Sounds/StartSE.mp3");
-	AudioEngine::preload("Sounds/EndSE.mp3");
+
 	// BGM再生
 	bgm_play = AudioEngine::play2d("Sounds/PlayBGM.mp3");
-
-	//スタート合図のSE
-	m_startSe= AudioEngine::play2d("Sounds/StartSE.mp3");
-
 	AudioEngine::setLoop(bgm_play, true);
 	FormIwasHi();//鰯の生成
 
@@ -494,19 +477,6 @@ void Play::update(float delta)
 		GetIwashi();
 	}
 
-	
-	//雲
-	for (int i = 0; i < 2; i++)
-	{
-		CloudPosx[i] -= 5.0f;
-		m_cloud[i]->setPosition(Vec2(CloudPosx[i], 640));
-		if (m_cloud[i]->getPositionX() == -1820.0f)
-		{
-			CloudPosx[i] = 1280.0f;
-		}
-	}
-	
-
 	////残り時間の更新
 	UpadateTime();
 	ScoreIndicate(TIME_LIMIT_SECOND, false);
@@ -519,20 +489,17 @@ void Play::update(float delta)
 	//残りタイムが0になったらリザルト画面に行く
 	///////////////////////////////////////////
 
-	
+
 	if (TIME_LIMIT_SECOND <= 25)
 
 	{
-		m_endSe = AudioEngine::play2d("Sounds/EndSE.mp3");
 		// BGM停止
 		AudioEngine::stop(bgm_play);
-		DelayTime* action = DelayTime::create(3);
-	
+
 		// 次のシーンを作成する
 		Scene* nextScene = ResultScene::create();
 		// 次のシーンに移行
 		_director->replaceScene(nextScene);
-		
 	}
 
 }
@@ -609,7 +576,6 @@ void Play::ScoreIndicate(int Score, bool flag)
 {
 	int j;
 
-
 	if ((m_CountFlag == false) && (flag == false))
 	{
 		SpriteCnt = 0;
@@ -680,7 +646,7 @@ void Play::ScoreIndicate(int Score, bool flag)
 
 			}
 			this->addChild(s_Number[SpriteCnt]);
-			RenderTimeLabel();
+
 		}
 		else
 		{
