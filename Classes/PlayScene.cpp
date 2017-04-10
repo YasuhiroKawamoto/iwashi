@@ -206,9 +206,10 @@ bool Play::Collision(Iwashi* iwashi)
 			{
 				isHit1 = false;
 				isHit2 = false;
-				r_wave1 = Rect(0, 0, 0, 0);
 
-				r_wave2 = Rect(0, 0, 0, 0);
+				// 全矩形を初期化
+				r_iwashi = r_wave1  = r_wave2 =Rect(0, 0, 0, 0);
+
 				return true;
 			}
 		}
@@ -367,7 +368,7 @@ void Play::DeletIwashi(Iwashi* iwashi)
 	if (sprite != nullptr)
 	{
 		//鰯の座標が画面外だったら
-		if (sprite->getPositionX() <= -50 || sprite->getPositionX() > 1100)
+		if (sprite->getPosition().x <= -50 || sprite->getPosition().x > 1100)
 		{
 			sprite->removeFromParent();//鰯を削除
 			sprite = nullptr;
@@ -556,7 +557,7 @@ void Play::update(float delta)
 	///////////////////////////////////////////
 
 	
-	if (TIME_LIMIT_SECOND <= 25)
+	if (TIME_LIMIT_SECOND <= 0)
 
 	{
 		m_endSe = AudioEngine::play2d("Sounds/EndSE.mp3");

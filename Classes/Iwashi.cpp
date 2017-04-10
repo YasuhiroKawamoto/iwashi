@@ -86,7 +86,7 @@ Iwashi::Iwashi(int putturn, cocos2d::Vec2 pos)
 		if (m_sprIwashi != nullptr)
 		{
 			m_sprIwashi->setTextureRect(Rect(0, 42, 150, 83));
-			m_score = 3;
+			m_score = 5;
 		}
 
 		break;
@@ -95,7 +95,7 @@ Iwashi::Iwashi(int putturn, cocos2d::Vec2 pos)
 		if (m_sprIwashi != nullptr)
 		{
 			m_sprIwashi->setTextureRect(Rect(0, 155, 150, 85));
-			m_score = 5;
+			m_score = 10;
 		}
 		break;
 	}
