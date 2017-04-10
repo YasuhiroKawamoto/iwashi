@@ -394,6 +394,7 @@ bool Play::init()
 		iwashies[i] = new Iwashi();
 	}
 
+	RenderTimeLabel();
 
 	// 3秒ごとにイワシ出現をさせるスケジューリング
 	schedule(CC_CALLBACK_0(Play::FormIwasHi, this), 1.5f, "appear");
@@ -413,6 +414,8 @@ bool Play::init()
 		this->addChild(m_cloud[i]);
 		CloudPosx[i] = 1920 * i;
 	}
+
+	RenderTimeLabel();
 
 
 	m_ScoreImage = Sprite::create("Images\\Score.png");
@@ -466,7 +469,11 @@ bool Play::init()
 //----------------------------------------------------------------------
 void Play::update(float delta)
 {
-	m_TotalScore++;
+	if (m_TotalScore < 1000)
+	{
+		m_TotalScore++;
+
+	}
 	//if (m_flag==true)
 	{
 
@@ -498,20 +505,20 @@ void Play::update(float delta)
 	//雲
 	for (int i = 0; i < 2; i++)
 	{
-		CloudPosx[i] -= 5.0f;
+		CloudPosx[i] -= 1.0f;
 		m_cloud[i]->setPosition(Vec2(CloudPosx[i], 640));
-		if (m_cloud[i]->getPositionX() == -1820.0f)
+		if (m_cloud[i]->getPositionX() <= -1920.0f)
 		{
-			CloudPosx[i] = 1280.0f;
+			CloudPosx[i] = 1920.0f;
 		}
 	}
 	
 
 	////残り時間の更新
 	UpadateTime();
-	ScoreIndicate(TIME_LIMIT_SECOND, false);
-	//スコアの描画
-	ScoreIndicate(m_TotalScore, true);
+	//ScoreIndicate(TIME_LIMIT_SECOND, false);
+	////スコアの描画
+	//ScoreIndicate(m_TotalScore, true);
 	//これ以降数字のスプライトを生成しない
 	m_CountFlag = false;
 
@@ -520,7 +527,7 @@ void Play::update(float delta)
 	///////////////////////////////////////////
 
 	
-	if (TIME_LIMIT_SECOND <= 0)
+	if (TIME_LIMIT_SECOND <= 25)
 
 	{
 		m_endSe = AudioEngine::play2d("Sounds/EndSE.mp3");
@@ -684,7 +691,7 @@ void Play::ScoreIndicate(int Score, bool flag)
 			}
 			this->addChild(s_Number[SpriteCnt]);
 			SpriteCnt2 = SpriteCnt;
-			RenderTimeLabel();
+		
 		}
 		else
 		{

@@ -66,7 +66,7 @@ bool ResultLayer::init()
 bool ResultLayer::onTouchBegan(cocos2d::Touch * touch, cocos2d::Event * pEvent)
 {
 	//スコアのアクションの速度
-	Score::ScoreActionSpd = 0.5f;
+	Score::ScoreActionSpd = 0.25f;
 	ActionCnt++;
 	return true;
 }
