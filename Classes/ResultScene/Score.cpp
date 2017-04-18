@@ -15,7 +15,7 @@ using namespace cocos2d::experimental;
 
 bool  Score::SceneFlag = false;
 float Score::ScoreActionSpd = 1.0f;		//スコアのアクションの速度
-
+int Score::m_Score;
 
 bool Score::init()
 {
@@ -24,7 +24,7 @@ bool Score::init()
 		return false;
 	}
 
-	m_Score = rand()%999;
+	
 
 	////初期化
 	//Score::SceneFlag = false;

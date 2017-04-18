@@ -42,7 +42,7 @@ public:
 	//スコアの桁数
 	int Digit;
 	//今回のスコア
-	int m_Score;
+	static int m_Score;
 
 	//ランキングスコア
 	int RankingScore[MAX_SCORE];

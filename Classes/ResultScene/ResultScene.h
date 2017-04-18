@@ -20,11 +20,11 @@ class ResultScene : public cocos2d::Scene
 {
 public:
 	// シーンを作成する
-	static cocos2d::Scene* createScene();
+	static cocos2d::Scene* create(int score);
 	/*void update(float date)override;*/
-	CREATE_FUNC(ResultScene);
+
 	// 初期化する。
-	virtual bool init();
+	virtual bool init(int score);
 private:
 	//タッチされたら
 	bool onTouchBegan(cocos2d::Touch * touch, cocos2d::Event * pEvent);

@@ -557,7 +557,7 @@ void Play::update(float delta)
 	///////////////////////////////////////////
 
 	
-	if (TIME_LIMIT_SECOND <= 0)
+	if (TIME_LIMIT_SECOND <= 20)
 
 	{
 		m_endSe = AudioEngine::play2d("Sounds/EndSE.mp3");
@@ -568,7 +568,7 @@ void Play::update(float delta)
 		DelayTime* action = DelayTime::create(3);
 	
 		// 次のシーンを作成する
-		Scene* nextScene = ResultScene::create();
+		Scene* nextScene = ResultScene::create(m_TotalScore);
 		// 次のシーンに移行
 		_director->replaceScene(nextScene);
 		

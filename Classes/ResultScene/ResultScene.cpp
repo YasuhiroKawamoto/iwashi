@@ -13,8 +13,10 @@
 #include "ResultScene\Score.h"
 #include "audio\include\AudioEngine.h"
 #include "TitleScene\TitleScene.h"
+#include "Score.h"
 USING_NS_CC;
 using namespace cocos2d::experimental;
+
 
 /* ---- メンバー関数の定義 ---------------- */
 /***************************************************************************
@@ -22,20 +24,22 @@ using namespace cocos2d::experimental;
 *|	引数　　無し
 *|　戻り値　シーンのアドレス
 ****************************************************************************/
-Scene* ResultScene::createScene()
+Scene* ResultScene::create(int score)
 {
+	//メモリ確保
+	ResultScene *pRet = new(std::nothrow)ResultScene();
 
-	// シーンを作成する
-	auto scene = Scene::create();
-
-	// レイヤーを作成する
-	auto layer = ResultScene::create();
-
-	// レイヤーをシーンに追加する
-	scene->addChild(layer);
-
-	// シーンを返す
-	return scene;
+	if (pRet && pRet->init(score))
+    { 
+        pRet->autorelease(); 
+        return pRet; 
+    } 
+    else 
+    { 
+        delete pRet; 
+        pRet = nullptr; 
+        return nullptr; 
+    } 
 }
 
 /***************************************************************************
@@ -44,13 +48,14 @@ Scene* ResultScene::createScene()
 *|　戻り値　無し
 ****************************************************************************/
 
-bool ResultScene::init()
+bool ResultScene::init(int score)
 {
 	// 親クラスを初期化する
 	if (!Scene::init())
 	{
 		return false;
 	}
+	Score::m_Score = score;
 
 	// キャラクター呼び出し
 	auto result_layer = ResultLayer::create();
@@ -67,7 +72,7 @@ bool ResultScene::init()
 	ResultBGM = AudioEngine::play2d("Sounds/ResultBGM.mp3", true);
 	bubble = AudioEngine::play2d("Sounds/bubble.mp3");
 	AudioEngine::setLoop(bubble, true);
-
+	
 	return true;
 }
 

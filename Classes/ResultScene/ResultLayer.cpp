@@ -22,8 +22,12 @@ bool ResultLayer::init()
 	BackGround* background = BackGround::create();
 	this->addChild(background);
 
+
 	score = Score::create();
 	this->addChild(score);
+
+
+
 
 	//ƒJƒEƒ“ƒg‚ğ‰Šú‰»‚·‚é
 	ActionCnt = 0;
